@@ -1,0 +1,21 @@
+{
+  "name": "NyumbaLink - Tanzania Housing Platform",
+  "short_name": "NyumbaLink",
+  "description": "Find your perfect home in Tanzania with NyumbaLink",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ea6d32",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["lifestyle", "business"],
+  "lang": "sw",
+  "scope": "/",
+  "prefer_related_applications": false
+}

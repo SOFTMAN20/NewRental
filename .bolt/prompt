@@ -1,0 +1,151 @@
+# 🏠 NyumbaLink — Product Requirements Document (PRD)
+
+## 📌 Overview
+
+**NyumbaLink** is a mobile-first web application that connects tenants looking for rental houses with landlords offering properties. The platform allows landlords to list available houses, while tenants can browse, filter, and contact landlords directly via phone. The MVP focuses on simplicity, usability, and mobile responsiveness — with no in-app messaging or payment systems.
+
+## 🎯 Goals
+
+- Help **tenants** easily find rental houses.
+- Enable **landlords** to post and manage their property listings.
+- Provide **direct phone communication** (tap-to-call).
+- Prioritize **mobile-first** design and performance.
+- Launch a lightweight, MVP-ready version quickly.
+
+## 👤 Target Users
+
+- **Tenants**: People looking for houses to rent.
+- **Landlords**: Property owners or agents with available rental properties.
+
+## ⚙️ Core Features (MVP)
+
+### 🏠 Landlord Features
+- Sign up / Login (via Supabase Auth)
+- Add a property listing:
+  - Title
+  - Rent price
+  - Location
+  - Description
+  - Contact phone number
+  - Upload photos
+- View, edit, or delete own listings
+- Mark property as "Rented"
+
+### 🔍 Tenant Features
+- Browse property listings (no login needed)
+- Filter listings by:
+  - Location
+  - Price range
+- View listing details
+- Tap to call landlord (`tel:` link)
+- Responsive and optimized for mobile
+
+## 🔄 User Flows
+
+### 📲 Tenant Flow
+```
+Homepage → Browse Listings → Filter Listings → View Details → Tap Phone Number → Call Landlord
+```
+
+### 🏠 Landlord Flow
+```
+Signup/Login → Dashboard → Add Listing → Upload Photos → Submit → Manage Listings → Logout
+```
+
+## 🧱 Tech Stack
+
+| Layer          | Technology         |
+|----------------|--------------------|
+| Frontend       | React.js           |
+| Styling        | TailwindCSS        |
+| Backend        | Supabase (Auth, DB, Storage) |
+| Database       | Supabase PostgreSQL |
+| Hosting        | Vercel / Netlify   |
+| Image Upload   | Supabase Storage   |
+| Phone Calling  | `tel:` HTML links  |
+
+## 📱 Mobile-First Design Principles
+
+- Built using TailwindCSS’s mobile-first utility classes.
+- Optimized layouts for small screens (scrollable cards, large buttons).
+- Responsive filters and forms.
+- Touch-friendly navigation (hamburger menu / bottom nav).
+- Minimalist animations to ensure smooth performance on low-end devices.
+
+## 📊 Database Schema (Supabase)
+
+### `users` Table
+| Field   | Type   | Description           |
+|---------|--------|-----------------------|
+| id      | UUID   | Supabase Auth User ID |
+| role    | enum   | Only `landlord`       |
+
+### `listings` Table
+| Field      | Type         | Description                    |
+|------------|--------------|--------------------------------|
+| id         | UUID         | Primary key                    |
+| title      | Text         | Property title                 |
+| description| Text         | Description of the property    |
+| location   | Text         | Area or city                   |
+| price      | Numeric      | Monthly rent                   |
+| phone      | Text         | Contact number                 |
+| images     | Array<Text>  | Image URLs from Supabase       |
+| is_rented  | Boolean      | Listing availability           |
+| user_id    | UUID         | FK to users table              |
+| created_at | Timestamp    | Listing creation timestamp     |
+
+## 🔐 Authentication & Authorization
+
+- **Landlords** must register/login using Supabase Auth (email & password).
+- **Tenants** access listings without authentication.
+- **Supabase RLS** policies ensure landlords can only modify their own listings.
+
+## 📦 Non-Functional Requirements
+
+- Fast load times, even on 3G
+- Mobile-responsive and accessible
+- SEO-friendly (basic meta tags)
+- Secure form validation (e.g. required fields, safe file types)
+- Scalable Supabase schema for future expansion
+
+## 🚫 Out of Scope (MVP)
+
+- In-app messaging/chat
+- Payment or booking functionality
+- Rating/review system
+- Geolocation-based map search
+
+## 🧩 Future Enhancements (Post-MVP)
+
+- Google Maps or Mapbox integration for listings
+- Premium listing option for landlords
+- SMS/email alerts for new listings
+- Tenant accounts with favorites/bookmarks
+- In-app messaging/chat system
+- Admin dashboard for moderation
+
+## 🛠️ Tools & Services
+
+- **React.js** – Frontend framework
+- **TailwindCSS** – Utility-first styling
+- **Supabase** – Backend-as-a-Service (Auth, DB, Storage)
+- **Vercel / Netlify** – Deployment & Hosting
+- **Figma** (optional) – UI wireframes & prototyping
+
+## 📅 Development Milestones
+
+| Task                           | Timeline (Day) |
+|--------------------------------|----------------|
+| Finalize PRD                   | Day 1          |
+| Create UI Wireframes (Figma)   | Day 2–3        |
+| Setup Supabase (Auth, DB)      | Day 4          |
+| Develop Homepage + Listings UI | Day 5–7        |
+| Landlord Auth + Dashboard      | Day 8–10       |
+| Upload Listings + Image Support| Day 11         |
+| Testing & Mobile QA            | Day 12         |
+| Final Deployment               | Day 13         |
+| Feedback & Polish              | Day 14         |
+
+## ✅ Summary
+
+NyumbaLink will be a fast, mobile-first platform for connecting tenants with landlords. The MVP emphasizes simplicity: listings, browsing, filtering, and direct calling — without any messaging or payment integrations. The app is designed to scale, with a clean tech stack (React, Tailwind, Supabase), and a clear roadmap for future features like maps, messaging, and premium tools.
