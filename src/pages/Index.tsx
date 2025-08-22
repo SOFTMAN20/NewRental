@@ -15,8 +15,8 @@
  * COMPONENT STRUCTURE / MUUNDO WA VIPENGELE:
  * 1. Navigation - Top navigation bar (Mstari wa uongozaji juu)
  * 2. HeroSection - Main search and intro (Sehemu ya utafutaji mkuu)
- * 3. PopularDestinations - Featured cities (Miji maarufu)
- * 4. FeaturedProperties - Highlighted properties (Nyumba maalum)
+ * 3. FeaturedProperties - Highlighted properties (Nyumba maalum)
+ * 4. PopularDestinations - Featured cities (Miji maarufu)
  * 5. FeaturesSection - Platform benefits (Faida za mfumo)
  * 6. Footer - Bottom information (Maelezo ya chini)
  * 
@@ -50,14 +50,14 @@ const Index = () => {
       {/* Main hero section with search - Sehemu ya utafutaji mkuu */}
       <HeroSection />
       
-      {/* Popular cities and destinations - Miji na maeneo maarufu */}
-      <PopularDestinations />
-      
       {/* Highlighted property listings - Nyumba zilizoangaziwa */}
       <FeaturedProperties />
       
+      {/* Popular cities and destinations - Miji na maeneo maarufu */}
+      <PopularDestinations />
+      
       {/* Call to Action Section - Sehemu ya Wito wa Kitendo */}
-      <section className="py-20 bg-gradient-to-b from-white to-safari-50">
+      <section className="py-10 bg-gradient-to-b from-white to-safari-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="bg-gradient-to-r from-primary to-serengeti-500 rounded-2xl p-8 text-white">

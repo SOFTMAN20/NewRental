@@ -31,6 +31,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { 
   ArrowLeft, 
   Heart, 
@@ -47,7 +48,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Home,
-  AlertCircle
+  AlertCircle,
+  Images
 } from 'lucide-react';
 import { useProperties } from '@/hooks/useProperties';
 import { useTranslation } from 'react-i18next';
@@ -71,6 +73,7 @@ const PropertyDetail = () => {
   // UI state management - Usimamizi wa hali ya UI
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFavorited, setIsFavorited] = useState(false);
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
   // Scroll to top when component mounts
   useEffect(() => {
@@ -252,8 +255,8 @@ const PropertyDetail = () => {
             {/* Image Gallery Section - Sehemu ya galeri ya picha */}
             <Card>
               <CardContent className="p-0">
-                <div className="relative aspect-[4/3] sm:aspect-[16/10] lg:aspect-[4/3] overflow-hidden rounded-t-lg">
-                  {/* Main Image Display - Onyesho la picha kuu */}
+                {/* Mobile/Tablet carousel - Onyesho la simu na tablet */}
+                <div className="relative aspect-[4/3] sm:aspect-[16/10] overflow-hidden rounded-t-lg lg:hidden">
                   <img
                     src={
                       property.images && property.images.length > 0 
@@ -263,8 +266,7 @@ const PropertyDetail = () => {
                     alt={property.title}
                     className="w-full h-full object-cover"
                   />
-                  
-                  {/* Image Navigation Arrows - Mishale ya uongozaji wa picha */}
+
                   {property.images && property.images.length > 1 && (
                     <>
                       <Button
@@ -286,38 +288,83 @@ const PropertyDetail = () => {
                     </>
                   )}
 
-                  {/* Image Counter - Kihesabu cha picha */}
                   {property.images && property.images.length > 1 && (
                     <div className="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 bg-black/50 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm">
                       {currentImageIndex + 1} / {property.images.length}
                     </div>
                   )}
+                </div>
 
-                  {/* Action Buttons - Vitufe vya vitendo */}
-                  <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex space-x-1 sm:space-x-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setIsFavorited(!isFavorited)}
-                      className={`bg-white/80 hover:bg-white h-8 w-8 sm:h-10 sm:w-10 ${
-                        isFavorited ? 'text-red-500' : 'text-gray-600'
-                      }`}
+                {/* Desktop grid - Muundo wa picha kama Airbnb kwa skrini kubwa */}
+                <div className="hidden lg:block">
+                  <div className="relative grid grid-cols-4 grid-rows-2 gap-2 h-[420px] rounded-t-lg overflow-hidden">
+                    {/* Large left image */}
+                    <button
+                      type="button"
+                      onClick={() => setIsGalleryOpen(true)}
+                      className="col-span-2 row-span-2 w-full h-full"
                     >
-                      <Heart className={`h-3 w-3 sm:h-4 sm:w-4 ${isFavorited ? 'fill-current' : ''}`} />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="bg-white/80 hover:bg-white text-gray-600 h-8 w-8 sm:h-10 sm:w-10"
-                    >
-                      <Share2 className="h-3 w-3 sm:h-4 sm:w-4" />
-                    </Button>
+                      <img
+                        src={(property.images && property.images[0]) || 'https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=1200&h=900&fit=crop'}
+                        alt={property.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </button>
+
+                    {/* Four small images on the right */}
+                    {[1,2,3,4].map((i) => (
+                      <button
+                        type="button"
+                        onClick={() => setIsGalleryOpen(true)}
+                        key={i}
+                        className="w-full h-full"
+                      >
+                        <img
+                          src={(property.images && property.images[i]) || (property.images && property.images[0]) || 'https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=800&h=600&fit=crop'}
+                          alt={`${property.title} ${i+1}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </button>
+                    ))}
+
+                    {/* Show all photos button */}
+                    <div className="absolute bottom-3 right-3">
+                      <Button
+                        variant="secondary"
+                        onClick={() => setIsGalleryOpen(true)}
+                        className="bg-white/90 hover:bg-white rounded-full shadow-sm text-sm"
+                      >
+                        <Images className="h-4 w-4 mr-2" />
+                        Show all photos
+                      </Button>
+                    </div>
+
+                    {/* Action Buttons - top-right */}
+                    <div className="absolute top-3 right-3 flex space-x-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setIsFavorited(!isFavorited)}
+                        className={`bg-white/80 hover:bg-white h-10 w-10 ${
+                          isFavorited ? 'text-red-500' : 'text-gray-600'
+                        }`}
+                      >
+                        <Heart className={`h-4 w-4 ${isFavorited ? 'fill-current' : ''}`} />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="bg-white/80 hover:bg-white text-gray-600 h-10 w-10"
+                      >
+                        <Share2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
 
-                {/* Image Thumbnails - Picha ndogo za uchaguzi */}
+                {/* Image Thumbnails (mobile only) */}
                 {property.images && property.images.length > 1 && (
-                  <div className="p-3 sm:p-4 flex space-x-2 overflow-x-auto">
+                  <div className="p-3 sm:p-4 flex space-x-2 overflow-x-auto lg:hidden">
                     {property.images.map((image, index) => (
                       <button
                         key={index}
@@ -337,6 +384,23 @@ const PropertyDetail = () => {
                     ))}
                   </div>
                 )}
+
+                {/* Full gallery dialog */}
+                <Dialog open={isGalleryOpen} onOpenChange={setIsGalleryOpen}>
+                  <DialogContent className="max-w-6xl w-full">
+                    <DialogHeader>
+                      <DialogTitle>{property.title} — Photos</DialogTitle>
+                    </DialogHeader>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                      {(property.images && property.images.length > 0
+                        ? property.images
+                        : ['https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=1200&h=900&fit=crop']
+                      ).map((src, idx) => (
+                        <img key={idx} src={src} alt={`Photo ${idx+1}`} className="w-full h-64 object-cover rounded-md" />
+                      ))}
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </CardContent>
             </Card>
 

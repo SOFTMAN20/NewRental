@@ -46,7 +46,7 @@ const PopularDestinations = () => {
   ];
 
   return (
-    <section className="py-16 bg-background">
+    <section className="py-10 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
@@ -57,7 +57,7 @@ const PopularDestinations = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-4 sm:grid-cols-4 lg:grid-cols-6 gap-3">
           {destinations.map((destination, index) => (
             <Link 
               key={index}

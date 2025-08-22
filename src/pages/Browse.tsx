@@ -36,7 +36,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import LoadingSpinner from '@/components/ui/loading-spinner';
-import { Search, MapPin, SlidersHorizontal, X, Grid3X3, List } from 'lucide-react';
+import { Search, MapPin, SlidersHorizontal, X } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { useProperties } from '@/hooks/useProperties';
 import type { Property } from '@/hooks/useProperties';
@@ -383,7 +383,7 @@ const Browse = () => {
               <div className="flex flex-col lg:flex-row gap-4">
                 {/* Location Search Input */}
                 <div className="flex-1">
-                  <div className="relative">
+                  <div className="relative border rounded-md">
                     <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                     <Input
                       placeholder={t('browse.cityPlaceholder')}
@@ -538,7 +538,7 @@ const Browse = () => {
 
       {/* Results Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Results Header with View Mode Toggle */}
+        {/* Results Header */}
         <div className="flex justify-between items-center mb-6">
           <div>
             <h2 className="text-2xl font-semibold text-gray-900">
@@ -547,28 +547,6 @@ const Browse = () => {
             {filters.searchQuery && (
               <p className="text-gray-600 mt-1">{t('browse.inLocation', { location: filters.searchQuery })}</p>
             )}
-          </div>
-
-          {/* View Mode Toggle */}
-          <div className="flex items-center gap-4">
-            <div className="flex border rounded-lg">
-              <Button
-                variant={uiState.viewMode === 'grid' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => updateUIState('viewMode', 'grid')}
-                className="rounded-r-none"
-              >
-                <Grid3X3 className="h-4 w-4" />
-              </Button>
-              <Button
-                variant={uiState.viewMode === 'list' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => updateUIState('viewMode', 'list')}
-                className="rounded-l-none"
-              >
-                <List className="h-4 w-4" />
-              </Button>
-            </div>
           </div>
         </div>
 

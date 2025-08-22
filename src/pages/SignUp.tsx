@@ -11,6 +11,7 @@ import { Eye, EyeOff, Home, Check } from 'lucide-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
 
 const SignUp = () => {
   const [searchParams] = useSearchParams();
@@ -86,7 +87,12 @@ const SignUp = () => {
       <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
           {/* Header */}
-          <div className="text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+            className="text-center"
+          >
             <Link to="/" className="flex items-center justify-center space-x-2 mb-6">
               <Home className="h-8 w-8 text-primary" />
               <span className="text-2xl font-bold text-primary">Nyumba Link</span>
@@ -97,15 +103,20 @@ const SignUp = () => {
             <p className="mt-2 text-gray-600">
               {t('auth.signUpSubtitle')}
             </p>
-          </div>
+          </motion.div>
 
           {/* Sign up form */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-center">{t('auth.signUp')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut', delay: 0.05 }}
+          >
+            <Card className="border-0 shadow-xl backdrop-blur-sm bg-white/80">
+              <CardHeader>
+                <CardTitle className="text-center">{t('auth.signUp')}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <Label htmlFor="fullName">{t('auth.fullName')}</Label>
                   <Input
@@ -217,11 +228,17 @@ const SignUp = () => {
                   </Link>
                 </p>
               </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </motion.div>
 
           {/* Benefits */}
-          <div className="bg-blue-50 rounded-lg p-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
+            className="bg-blue-50/90 rounded-lg p-4 shadow-sm"
+          >
             <h3 className="font-semibold text-blue-900 mb-3 flex items-center">
               <Check className="h-4 w-4 mr-2" />
               {t('auth.landlordBenefits')}
@@ -233,7 +250,7 @@ const SignUp = () => {
               <li>{t('auth.directContact')}</li>
               <li>{t('auth.getAnalytics')}</li>
             </ul>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>

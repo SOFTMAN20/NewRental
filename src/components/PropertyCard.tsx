@@ -244,7 +244,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             <div className="flex-1 p-6">
               <div className="space-y-3">
                 <div>
-                  <h3 className="font-semibold text-xl text-gray-900 group-hover:text-primary transition-colors line-clamp-1">
+                  <h3 className="font-semibold text-xl text-primary group-hover:text-gray-900 transition-colors line-clamp-1">
                     {title}
                   </h3>
                   <div className="flex items-center text-gray-600 text-sm mt-1">
@@ -260,45 +260,42 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
                  * Shows property amenities and provides contact options.
                  * WhatsApp integration for direct communication.
                  */}
-                <div className="flex items-center justify-between pt-2">
-                  <div className="flex items-center space-x-3">
-                    {electricity && (
-                      <div className="flex items-center text-green-600" title="Umeme">
-                        <Zap className="h-4 w-4" />
-                      </div>
-                    )}
-                    {water && (
-                      <div className="flex items-center text-blue-600" title="Maji">
-                        <Droplets className="h-4 w-4" />
-                      </div>
-                    )}
-                    {bedrooms && bedrooms > 0 && (
-                      <div className="flex items-center text-gray-600" title="Vyumba vya kulala">
-                        <Bed className="h-4 w-4 mr-1" />
-                        <span className="text-sm">{bedrooms} {t('propertyCard.bedrooms')}</span>
-                      </div>
-                    )}
-                  </div>
-                  
-                  {/* 
-                   * WHATSAPP CONTACT BUTTON
-                   * ======================
-                   * 
-                   * Direct WhatsApp integration for instant communication.
-                   * Opens WhatsApp with pre-filled message.
-                   */}
-                  {(contactWhatsappPhone || contactPhone) && (
-                    <a
-                      href={`https://wa.me/${(contactWhatsappPhone || contactPhone || '').replace(/[^0-9]/g, '')}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="flex items-center bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded-full text-xs transition-colors"
-                    >
-                      <Phone className="h-3 w-3 mr-1" />
-                      {t('propertyCard.call')}
-                    </a>
+                <div className="flex items-center space-x-3">
+                  {electricity && (
+                    <div className="flex items-center text-green-600" title="Umeme">
+                      <Zap className="h-4 w-4" />
+                    </div>
                   )}
+                  {water && (
+                    <div className="flex items-center text-blue-600" title="Maji">
+                      <Droplets className="h-4 w-4" />
+                    </div>
+                  )}
+                  {bedrooms && bedrooms > 0 && (
+                    <div className="flex items-center text-gray-600" title="Vyumba vya kulala">
+                      <Bed className="h-4 w-4 mr-1" />
+                      <span className="text-sm">{bedrooms} {t('propertyCard.bedrooms')}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* 
+                 * VIEW DETAILS BUTTON - LIST VIEW
+                 * ==============================
+                 * 
+                 * Button to navigate to property details page.
+                 */}
+                <div className="pt-3">
+                  <Button 
+                    className="w-full bg-primary hover:bg-primary/90 text-white text-sm py-2"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      window.location.href = `/property/${id}`;
+                    }}
+                  >
+                    View Details
+                  </Button>
                 </div>
               </div>
             </div>
@@ -407,7 +404,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
              * Hover effects for better interactivity.
              */}
             <div>
-              <h3 className="font-semibold text-lg line-clamp-1 group-hover:text-primary transition-colors">
+                             <h3 className="font-semibold text-lg line-clamp-1 text-primary group-hover:text-gray-900 transition-colors">
                 {title}
               </h3>
               <div className="flex items-center text-gray-500 text-sm">
@@ -435,49 +432,47 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
                   {t('browse.water')}
                 </Badge>
               )}
-              {bedrooms && bedrooms > 0 && (
-                <Badge variant="secondary" className="text-xs px-2 py-1">
-                  <Bed className="h-3 w-3 mr-1" />
-                  {bedrooms} {t('propertyCard.bedrooms')}
-                </Badge>
-              )}
+                             {bedrooms && bedrooms > 0 && (
+                 <Badge variant="secondary" className="text-xs px-2 py-1">
+                   <Bed className="h-3 w-3" />
+                   <span className="ml-1">{bedrooms}</span>
+                 </Badge>
+               )}
             </div>
 
-            {/* 
-             * PRICE AND CONTACT SECTION
-             * ========================
-             * 
-             * Displays price and contact button side by side.
-             * WhatsApp integration for instant communication.
-             */}
-            <div className="pt-1 flex items-center justify-between">
-              <div className="flex items-baseline">
-                <span className="text-lg font-bold text-gray-900">
-                  TZS {price.toLocaleString()}
-                </span>
-                <span className="text-gray-500 ml-1 text-sm">{t('propertyCard.perMonth')}</span>
-              </div>
-              
-              {/* 
-               * WHATSAPP CONTACT BUTTON - GRID VIEW
-               * ==================================
-               * 
-               * Compact contact button with WhatsApp integration.
-               * Pre-filled message for better user experience.
-               */}
-              {(contactWhatsappPhone || contactPhone) && (
-                <a
-                  href={`https://wa.me/${(contactWhatsappPhone || contactPhone || '').replace(/[^0-9]/g, '')}?text=${encodeURIComponent(t('propertyCard.whatsappMessage', { title }))}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className="flex items-center bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded-full text-xs transition-colors"
-                >
-                  <Phone className="h-3 w-3 mr-1" />
-                  {t('propertyCard.call')}
-                </a>
-              )}
-            </div>
+                         {/* 
+              * PRICE SECTION
+              * =============
+              * 
+              * Displays price information.
+              */}
+             <div className="pt-1">
+               <div className="flex items-baseline">
+                 <span className="text-lg font-bold text-gray-900">
+                   TZS {price.toLocaleString()}
+                 </span>
+                 <span className="text-gray-500 ml-1 text-sm">{t('propertyCard.perMonth')}</span>
+               </div>
+             </div>
+
+             {/* 
+              * VIEW DETAILS BUTTON
+              * ===================
+              * 
+              * Button to navigate to property details page.
+              */}
+             <div className="pt-2">
+               <Button 
+                 className="w-full bg-primary hover:bg-primary/90 text-white text-sm py-2"
+                 onClick={(e) => {
+                   e.preventDefault();
+                   e.stopPropagation();
+                   window.location.href = `/property/${id}`;
+                 }}
+               >
+                 View Details
+               </Button>
+             </div>
           </div>
         </CardContent>
       </Link>

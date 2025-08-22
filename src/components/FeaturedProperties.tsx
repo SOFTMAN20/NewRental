@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Star, MapPin, Wifi, Car, Utensils } from 'lucide-react';
+import { Star, MapPin, Wifi, Car, Utensils, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useProperties } from '@/hooks/useProperties';
 import LoadingSpinner from '@/components/ui/loading-spinner';
@@ -11,12 +11,12 @@ const FeaturedProperties = () => {
   const { t } = useTranslation();
   const { data: allProperties = [], isLoading, error } = useProperties();
   
-  // Get featured properties (limit to 4 for homepage display)
-  const properties = allProperties.slice(0, 4);
+  // Get featured properties (limit to 16 for homepage display)
+  const properties = allProperties.slice(0, 16);
 
   const getAmenityIcon = (amenity: string) => {
     switch (amenity) {
-      case 'WiFi': return <Wifi className="h-3 w-3" />;
+      case 'Zap': return <Zap className="h-3 w-3" />;
       case 'Parking': return <Car className="h-3 w-3" />;
       case 'Kitchen': return <Utensils className="h-3 w-3" />;
       default: return null;
@@ -113,7 +113,7 @@ const FeaturedProperties = () => {
                     <div className="flex items-center gap-1 mb-3">
                       {property.electricity && (
                         <Badge variant="secondary" className="text-xs px-2 py-1">
-                          <span className="mr-1">{getAmenityIcon('WiFi')}</span>
+                          <span className="mr-1">{getAmenityIcon('Zap')}</span>
                           Umeme
                         </Badge>
                       )}
