@@ -101,7 +101,7 @@ const FeaturedProperties = () => {
                   
                   <CardContent className="p-4">
                     <div className="mb-2">
-                      <h3 className="font-semibold text-foreground mb-1 line-clamp-1">
+                      <h3 className="font-semibold text-base text-gray-900 mb-1 line-clamp-1">
                         {property.title}
                       </h3>
                       <div className="flex items-center text-muted-foreground text-sm mb-2">
@@ -133,11 +133,11 @@ const FeaturedProperties = () => {
 
                     <div className="flex items-center justify-between">
                       <div>
-                        <span className="text-lg font-bold text-foreground">
+                        <span className="text-base font-bold text-gray-900">
                           TSh {Number(property.price).toLocaleString()}
                         </span>
-                        <span className="text-muted-foreground text-sm">{t('featuredProperties.perMonth')}</span>
-                        <div className="text-xs text-muted-foreground mt-1">
+                        <span className="text-gray-500 text-sm">{t('featuredProperties.perMonth')}</span>
+                        <div className="text-xs text-gray-500 mt-1">
                           {Math.floor(Math.random() * 50) + 10} {t('featuredProperties.reviews')}
                         </div>
                       </div>

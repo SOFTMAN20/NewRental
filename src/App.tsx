@@ -67,6 +67,10 @@ import SignUp from "./pages/SignUp";
 import PropertyExample from "./pages/PropertyExample";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
+import ColorPalette from "./components/ColorPalette";
+import Typography from "./components/Typography";
+import LoadingStates from "./components/LoadingStates";
+import ComponentLibrary from "./components/ui/ComponentLibrary";
 
 /**
  * REACT QUERY CLIENT CONFIGURATION
@@ -122,6 +126,10 @@ const App = () => (
             <Route path="/browse" element={<Browse />} />
             <Route path="/property/:id" element={<PropertyDetail />} />
             <Route path="/about" element={<About />} />
+                         <Route path="/color-palette" element={<ColorPalette />} />
+             <Route path="/typography" element={<Typography />} />
+             <Route path="/loading-states" element={<LoadingStates />} />
+             <Route path="/component-library" element={<ComponentLibrary />} />
             
             {/* User-specific routes - Njia za mtumiaji */}
             <Route path="/dashboard" element={<Dashboard />} />

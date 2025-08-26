@@ -397,7 +397,7 @@ const Browse = () => {
                 {/* Price Range Selector */}
                 <div className="flex gap-4">
                   <Select value={filters.priceRange} onValueChange={(value) => updateFilter('priceRange', value)}>
-                    <SelectTrigger className="w-48 h-14 border-0">
+                    <SelectTrigger className="flex-1 h-14 border-0 min-w-0">
                       <SelectValue placeholder={t('browse.priceLabel')} />
                     </SelectTrigger>
                     <SelectContent>
@@ -414,16 +414,18 @@ const Browse = () => {
                   <Button
                     variant="outline"
                     onClick={() => updateUIState('showFilters', !uiState.showFilters)}
-                    className="h-14 px-6 border-2"
+                    className="flex-1 h-14 min-w-0 border-2 flex items-center justify-center px-2"
                   >
-                    <SlidersHorizontal className="h-5 w-5 mr-2" />
-                    {t('browse.filters')}
+                    <SlidersHorizontal className="h-4 w-4 mr-1" />
+                    <span className="text-sm whitespace-nowrap">{t('browse.filters')}</span>
                   </Button>
 
-                  {/* Search Button */}
-                  <Button className="h-14 px-8 bg-primary hover:bg-primary/90">
-                    <Search className="h-5 w-5 mr-2" />
-                    {t('browse.search')}
+                  {/* Search Button - icon only, responsive width */}
+                  <Button
+                    className="flex-1 h-14 min-w-0 bg-primary hover:bg-primary/90 flex items-center justify-center px-0"
+                    aria-label={t('browse.search')}
+                  >
+                    <Search className="h-5 w-5" />
                   </Button>
                 </div>
               </div>

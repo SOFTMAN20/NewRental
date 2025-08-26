@@ -21,6 +21,7 @@
  * - Direct WhatsApp integration
  * - Responsive design for all devices
  * - Accessibility features
+ * - Enhanced hover effects and visual appeal
  * 
  * SCALABILITY / UKUAJI:
  * - Easy to extend with new view modes
@@ -39,8 +40,7 @@ import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import Map from '@/components/ui/map';
-import { Heart, MapPin, Phone, Zap, Droplets, Bed } from 'lucide-react';
+import { Heart, MapPin, Zap, Droplets, Bed, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -185,109 +185,94 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
    */
   if (viewMode === 'list') {
     return (
-      <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 border-0 shadow-sm">
+      <Card className="group overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-0 shadow-lg bg-white">
         <Link to={`/property/${id}`} className="block">
           <div className="flex">
-            {/* 
-             * LIST VIEW IMAGE SECTION
-             * ======================
-             * 
-             * Fixed-width image container for list view.
-             * Maintains aspect ratio and provides hover effects.
-             */}
+            {/* LIST VIEW IMAGE SECTION */}
             <div className="w-80 h-60 flex-shrink-0 relative overflow-hidden">
               <img
                 src={images[0] || `https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=300&fit=crop`}
                 alt={title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
               />
               
-              {/* 
-               * FAVORITE BUTTON - LIST VIEW
-               * ==========================
-               * 
-               * Positioned absolutely in top-right corner.
-               * Changes color based on favorite status.
-               */}
+              {/* Enhanced overlay with quick actions */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent 
+                              opacity-0 group-hover:opacity-100 transition-all duration-500">
+                <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center">
+                  <Button size="sm" variant="secondary" className="bg-white/95 text-gray-900 hover:bg-white 
+                                                                   transform hover:scale-105 transition-all duration-300">
+                    <Eye className="w-4 h-4 mr-2" />
+                    Quick View
+                  </Button>
+                                    <Button size="sm" className="bg-primary hover:bg-primary/90 transform hover:scale-105 
+                                             transition-all duration-300">
+                    View Details
+                  </Button>
+
+                </div>
+              </div>
+              
+              {/* FAVORITE BUTTON - LIST VIEW */}
               <Button
                 variant="ghost"
                 size="sm"
-                className={`absolute top-3 right-3 p-2 rounded-full ${
-                  isFavorited ? 'text-red-500' : 'text-white'
-                } hover:text-red-500 bg-black/20 hover:bg-white/90`}
+                className={`absolute top-3 right-3 p-2 rounded-full transition-all duration-300 ${
+                  isFavorited ? 'text-red-500 bg-white/95' : 'text-white bg-black/30'
+                } hover:text-red-500 hover:bg-white/95 transform hover:scale-110`}
                 onClick={handleToggleFavorite}
               >
                 <Heart className={`h-5 w-5 ${isFavorited ? 'fill-current' : ''}`} />
               </Button>
 
-              {/* 
-               * PRICE OVERLAY - LIST VIEW
-               * ========================
-               * 
-               * Displays price prominently on image.
-               * High contrast for readability.
-               */}
+              {/* PRICE OVERLAY - LIST VIEW */}
               <div className="absolute bottom-3 left-3">
-                <Badge className="bg-white text-gray-900 font-bold text-base px-3 py-1 shadow-sm">
+                <Badge className="bg-white/95 text-gray-900 font-bold text-base px-3 py-1 shadow-lg 
+                                  border border-gray-200 transform group-hover:scale-105 transition-transform duration-300">
                   TZS {price.toLocaleString()}/mwezi
                 </Badge>
               </div>
             </div>
 
-            {/* 
-             * LIST VIEW CONTENT SECTION
-             * ========================
-             * 
-             * Expanded content area with detailed information.
-             * Includes title, location, rating, and contact button.
-             */}
+            {/* LIST VIEW CONTENT SECTION */}
             <div className="flex-1 p-6">
               <div className="space-y-3">
                 <div>
-                  <h3 className="font-semibold text-xl text-primary group-hover:text-gray-900 transition-colors line-clamp-1">
+                  <h3 className="font-semibold text-xl text-primary group-hover:text-gray-900 transition-colors duration-300 line-clamp-1">
                     {title}
                   </h3>
-                  <div className="flex items-center text-gray-600 text-sm mt-1">
+                  <div className="flex items-center text-gray-600 text-sm mt-1 group-hover:text-gray-700 transition-colors duration-300">
                     <MapPin className="h-4 w-4 mr-1" />
                     <span>{location}</span>
                   </div>
                 </div>
 
-                {/* 
-                 * RATING AND CONTACT SECTION
-                 * ==========================
-                 * 
-                 * Shows property amenities and provides contact options.
-                 * WhatsApp integration for direct communication.
-                 */}
+                {/* RATING AND CONTACT SECTION */}
                 <div className="flex items-center space-x-3">
                   {electricity && (
-                    <div className="flex items-center text-green-600" title="Umeme">
+                    <div className="flex items-center text-green-600 group-hover:text-green-700 transition-colors duration-300" title="Umeme">
                       <Zap className="h-4 w-4" />
                     </div>
                   )}
                   {water && (
-                    <div className="flex items-center text-blue-600" title="Maji">
+                    <div className="flex items-center text-blue-600 group-hover:text-blue-700 transition-colors duration-300" title="Maji">
                       <Droplets className="h-4 w-4" />
                     </div>
                   )}
                   {bedrooms && bedrooms > 0 && (
-                    <div className="flex items-center text-gray-600" title="Vyumba vya kulala">
+                    <div className="flex items-center text-gray-600 group-hover:text-gray-700 transition-colors duration-300" title="Vyumba vya kulala">
                       <Bed className="h-4 w-4 mr-1" />
                       <span className="text-sm">{bedrooms} {t('propertyCard.bedrooms')}</span>
                     </div>
                   )}
                 </div>
 
-                {/* 
-                 * VIEW DETAILS BUTTON - LIST VIEW
-                 * ==============================
-                 * 
-                 * Button to navigate to property details page.
-                 */}
+                 {/* VIEW DETAILS BUTTON - LIST VIEW */}
                 <div className="pt-3">
                   <Button 
-                    className="w-full bg-primary hover:bg-primary/90 text-white text-sm py-2"
+                    className="w-full bg-gradient-to-r from-primary to-serengeti-500 hover:from-primary/90 
+                               hover:to-serengeti-400 text-white text-sm py-2 transform hover:scale-105 
+                               transition-all duration-300 shadow-lg hover:shadow-xl"
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
@@ -297,6 +282,8 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
                     View Details
                   </Button>
                 </div>
+
+               
               </div>
             </div>
           </div>
@@ -325,31 +312,36 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
    * - Touch-friendly interactions
    */
   return (
-    <Card className="group overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border-0 shadow-sm">
+    <Card className="group overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 
+                     border-0 shadow-lg bg-white hover:border-primary/20">
       <Link to={`/property/${id}`} className="block">
         <div className="relative">
-          {/* 
-           * GRID VIEW IMAGE SECTION
-           * ======================
-           * 
-           * Square aspect ratio image with carousel functionality.
-           * Includes navigation and indicators for multiple images.
-           */}
+          {/* GRID VIEW IMAGE SECTION */}
           <div className="aspect-[4/3] overflow-hidden relative">
             <img
               src={images[currentImageIndex] || `https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=300&fit=crop`}
               alt={title}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
             />
+            
+            {/* Enhanced overlay with quick actions */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent 
+                            opacity-0 group-hover:opacity-100 transition-all duration-500">
+              <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center">
+                <Button size="sm" variant="secondary" className="bg-white/95 text-gray-900 hover:bg-white 
+                                                                 transform hover:scale-105 transition-all duration-300">
+                  <Eye className="w-4 h-4 mr-2" />
+                  Quick View
+                </Button>
+                <Button size="sm" className="bg-primary hover:bg-primary/90 transform hover:scale-105 
+                                           transition-all duration-300">
+                  View Details
+                </Button>
+              </div>
+            </div>
           </div>
 
-          {/* 
-           * IMAGE CAROUSEL INDICATORS
-           * ========================
-           * 
-           * Shows dots for each image and allows navigation.
-           * Only displayed when multiple images are available.
-           */}
+          {/* IMAGE CAROUSEL INDICATORS */}
           {images.length > 1 && (
             <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-1">
               {images.map((_, index) => (
@@ -360,119 +352,101 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
                     e.stopPropagation();
                     setCurrentImageIndex(index);
                   }}
-                  className={`w-2 h-2 rounded-full transition-colors ${
-                    index === currentImageIndex ? 'bg-white' : 'bg-white/60'
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    index === currentImageIndex ? 'bg-white scale-125' : 'bg-white/60 hover:bg-white/80'
                   }`}
                 />
               ))}
             </div>
           )}
 
-          {/* 
-           * FAVORITE BUTTON - GRID VIEW
-           * ===========================
-           * 
-           * Heart icon for adding/removing from favorites.
-           * Visual feedback based on current state.
-           */}
+          {/* FAVORITE BUTTON - GRID VIEW */}
           <Button
             variant="ghost"
             size="sm"
-            className={`absolute top-3 right-3 p-2 rounded-full ${
-              isFavorited ? 'text-red-500' : 'text-white'
-            } hover:text-red-500 bg-black/20 hover:bg-white/90 transition-all`}
+            className={`absolute top-3 right-3 p-2 rounded-full transition-all duration-300 ${
+              isFavorited ? 'text-red-500 bg-white/95' : 'text-white bg-black/30'
+            } hover:text-red-500 hover:bg-white/95 transform hover:scale-110`}
             onClick={handleToggleFavorite}
           >
             <Heart className={`h-5 w-5 ${isFavorited ? 'fill-current' : ''}`} />
           </Button>
+          
+          {/* Price badge overlay */}
+          <div className="absolute top-3 left-3">
+            <Badge className="bg-white/95 text-gray-900 font-bold text-sm px-2 py-1 shadow-lg 
+                              border border-gray-200 transform group-hover:scale-105 transition-transform duration-300">
+              TZS {price.toLocaleString()}
+            </Badge>
+          </div>
         </div>
 
-        {/* 
-         * GRID VIEW CONTENT SECTION
-         * ========================
-         * 
-         * Compact content area with essential information.
-         * Optimized for quick scanning and comparison.
-         */}
+        {/* GRID VIEW CONTENT SECTION */}
         <CardContent className="p-4">
-          <div className="space-y-2">
-            {/* 
-             * TITLE AND LOCATION
-             * =================
-             * 
-             * Property name and location with truncation.
-             * Hover effects for better interactivity.
-             */}
+          <div className="space-y-3">
+            {/* TITLE AND LOCATION */}
             <div>
-                             <h3 className="font-semibold text-lg line-clamp-1 text-primary group-hover:text-gray-900 transition-colors">
+              <h3 className="font-semibold text-base line-clamp-1 text-primary group-hover:text-gray-900 transition-colors duration-300">
                 {title}
               </h3>
-              <div className="flex items-center text-gray-500 text-sm">
+              <div className="flex items-center text-gray-500 text-sm group-hover:text-gray-600 transition-colors duration-300">
+                <MapPin className="h-3 w-3 mr-1 flex-shrink-0" />
                 <span className="line-clamp-1">{location}</span>
               </div>
             </div>
 
-            {/* 
-             * AMENITIES DISPLAY
-             * ================
-             * 
-             * Shows property amenities like electricity, water, and bedrooms.
-             * Provides quick overview of property features.
-             */}
-            <div className="flex items-center space-x-3">
+            {/* AMENITIES DISPLAY */}
+            <div className="flex items-center space-x-2">
               {electricity && (
-                <Badge variant="secondary" className="text-xs px-2 py-1 bg-green-100 text-green-800">
+                <Badge variant="secondary" className="text-xs px-2 py-1 bg-green-100 text-green-800 
+                                                     border border-green-200 group-hover:bg-green-200 transition-colors duration-300">
                   <Zap className="h-3 w-3 mr-1" />
                   {t('browse.electricity')}
                 </Badge>
               )}
               {water && (
-                <Badge variant="secondary" className="text-xs px-2 py-1 bg-blue-100 text-blue-800">
+                <Badge variant="secondary" className="text-xs px-2 py-1 bg-blue-100 text-blue-800 
+                                                     border border-blue-200 group-hover:bg-blue-200 transition-colors duration-300">
                   <Droplets className="h-3 w-3 mr-1" />
                   {t('browse.water')}
                 </Badge>
               )}
-                             {bedrooms && bedrooms > 0 && (
-                 <Badge variant="secondary" className="text-xs px-2 py-1">
-                   <Bed className="h-3 w-3" />
-                   <span className="ml-1">{bedrooms}</span>
-                 </Badge>
-               )}
+              {bedrooms && bedrooms > 0 && (
+                <Badge variant="secondary" className="text-xs px-2 py-1 bg-gray-100 text-gray-800 
+                                                     border border-gray-200 group-hover:bg-gray-200 transition-colors duration-300">
+                  <Bed className="h-3 w-3 mr-1" />
+                  <span>{bedrooms}</span>
+                </Badge>
+              )}
             </div>
 
-                         {/* 
-              * PRICE SECTION
-              * =============
-              * 
-              * Displays price information.
-              */}
-             <div className="pt-1">
-               <div className="flex items-baseline">
-                 <span className="text-lg font-bold text-gray-900">
-                   TZS {price.toLocaleString()}
-                 </span>
-                 <span className="text-gray-500 ml-1 text-sm">{t('propertyCard.perMonth')}</span>
-               </div>
-             </div>
+            {/* PRICE SECTION */}
+            <div className="pt-1">
+              <div className="flex items-baseline">
+                <span className="text-base font-bold text-gray-900 group-hover:text-primary transition-colors duration-300">
+                  TZS {price.toLocaleString()}
+                </span>
+                <span className="text-gray-500 ml-1 text-sm group-hover:text-gray-600 transition-colors duration-300">
+                  {t('propertyCard.perMonth')}
+                </span>
+              </div>
+            </div>
 
-             {/* 
-              * VIEW DETAILS BUTTON
-              * ===================
-              * 
-              * Button to navigate to property details page.
-              */}
-             <div className="pt-2">
-               <Button 
-                 className="w-full bg-primary hover:bg-primary/90 text-white text-sm py-2"
-                 onClick={(e) => {
-                   e.preventDefault();
-                   e.stopPropagation();
-                   window.location.href = `/property/${id}`;
-                 }}
-               >
-                 View Details
-               </Button>
-             </div>
+            {/* VIEW DETAILS BUTTON */}
+            <div className="pt-2">
+              <Button 
+                className="w-full bg-gradient-to-r from-primary to-serengeti-500 hover:from-primary/90 
+                           hover:to-serengeti-400 text-white text-sm py-2 transform hover:scale-105 
+                           transition-all duration-300 shadow-lg hover:shadow-xl"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.location.href = `/property/${id}`;
+                }}
+              >
+                View Details
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Link>
