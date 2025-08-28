@@ -171,10 +171,19 @@ const Dashboard = () => {
 
   const initializeDashboard = async (): Promise<void> => {
     try {
-      await Promise.all([
+      // Try to fetch profile and properties, but don't fail completely if profile fetch fails
+      const results = await Promise.allSettled([
         fetchProfile(),
         fetchProperties()
       ]);
+      
+      // Log any failures
+      results.forEach((result, index) => {
+        if (result.status === 'rejected') {
+          const operation = index === 0 ? 'fetchProfile' : 'fetchProperties';
+          console.warn(`${operation} failed:`, result.reason);
+        }
+      });
       
       checkIfNewUser();
     } catch (error) {
@@ -201,7 +210,12 @@ const Dashboard = () => {
    * ===========================
    */
   const fetchProfile = async (): Promise<void> => {
-    if (!user) return;
+    if (!user) {
+      console.error('No user found when trying to fetch profile');
+      return;
+    }
+
+    console.log('Fetching profile for user:', user.id);
 
     try {
       const { data, error } = await supabase
@@ -210,11 +224,60 @@ const Dashboard = () => {
         .eq('user_id', user.id)
         .single();
 
+      console.log('Profile fetch result:', { data, error });
+
       if (error && error.code !== 'PGRST116') {
+        console.error('Profile fetch error:', error);
         throw error;
       }
 
       if (data) {
+        console.log('Profile data found:', data);
+        setProfile(data);
+        setProfileForm({
+          full_name: data.full_name || '',
+          phone: data.phone || '',
+          user_type: data.user_type || 'landlord'
+        });
+      } else {
+        console.log('No profile data found, creating basic profile for user');
+        // Create a basic profile for the user
+        await createBasicProfile();
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+      showErrorToast('Imeshindikana kupata maelezo ya akaunti yako');
+    }
+  };
+
+  const createBasicProfile = async (): Promise<void> => {
+    if (!user) return;
+    
+    try {
+      console.log('Creating basic profile for user:', user.id);
+      const basicProfileData = {
+        user_id: user.id,
+        full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Mtumiaji',
+        phone: '',
+        user_type: 'landlord'
+      };
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .insert([basicProfileData])
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error creating basic profile:', error);
+        // If profile creation fails, set default form data
+        setProfileForm({
+          full_name: basicProfileData.full_name,
+          phone: '',
+          user_type: 'landlord'
+        });
+      } else {
+        console.log('Basic profile created successfully:', data);
         setProfile(data);
         setProfileForm({
           full_name: data.full_name || '',
@@ -223,8 +286,13 @@ const Dashboard = () => {
         });
       }
     } catch (error) {
-      console.error('Error fetching profile:', error);
-      showErrorToast('Imeshindikana kupata maelezo ya akaunti yako');
+      console.error('Error in createBasicProfile:', error);
+      // Fallback to default form data
+      setProfileForm({
+        full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Mtumiaji',
+        phone: '',
+        user_type: 'landlord'
+      });
     }
   };
 
@@ -287,72 +355,103 @@ const Dashboard = () => {
 
   const handlePropertySubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
-    if (!user) return;
+    console.log('handlePropertySubmit called');
+    
+    if (!user) {
+      console.error('No user found when trying to submit property');
+      showErrorToast('Lazima uingie kwanza kabla ya kuongeza nyumba');
+      return;
+    }
 
     try {
+      console.log('Starting property submission...');
       updateUIState({ submitting: true });
       
       const propertyData = buildPropertyData();
+      console.log('Property data built:', propertyData);
       
       if (editingProperty) {
+        console.log('Updating existing property...');
         await updateExistingProperty(propertyData);
       } else {
+        console.log('Creating new property...');
         await createNewProperty(propertyData);
       }
 
+      console.log('Property saved successfully, closing form...');
       handleCloseForm();
       await fetchProperties();
     } catch (error) {
       console.error('Error saving property:', error);
       const errorMessage = editingProperty 
-        ? 'Imeshindikana kusasisha nyumba yako' 
-        : 'Imeshindikana kuongeza nyumba yako';
+        ? 'Imeshindikana kusasisha nyumba yako. Jaribu tena.' 
+        : 'Imeshindikana kuongeza nyumba yako. Jaribu tena.';
       showErrorToast(errorMessage);
     } finally {
+      console.log('Property submission process completed');
       updateUIState({ submitting: false });
     }
   };
 
   const buildPropertyData = () => {
-    return {
+    console.log('Building property data with formData:', formData);
+    
+    const propertyData = {
       landlord_id: user!.id,
-      title: formData.title,
-      description: formData.description,
-      price: parseFloat(formData.price),
-      location: formData.location,
-      full_address: formData.full_address || null,
-      property_type: formData.property_type || null,
+      title: formData.title?.trim(),
+      description: formData.description?.trim(),
+      price: parseFloat(formData.price) || 0,
+      location: formData.location?.trim(),
+      full_address: formData.full_address?.trim() || null,
+      property_type: formData.property_type?.trim() || null,
       bedrooms: formData.bedrooms ? parseInt(formData.bedrooms) : null,
       bathrooms: formData.bathrooms ? parseInt(formData.bathrooms) : null,
       area_sqm: formData.area_sqm ? parseFloat(formData.area_sqm) : null,
-      contact_phone: formData.contact_phone || null,
-      contact_whatsapp_phone: formData.contact_whatsapp_phone || null,
-      electricity: formData.electricity,
-      water: formData.water,
-      furnished: formData.furnished,
-      parking: formData.parking,
-      security: formData.security,
-      nearby_services: formData.nearby_services,
-      images: formData.images
+      contact_phone: formData.contact_phone?.trim() || null,
+      contact_whatsapp_phone: formData.contact_whatsapp_phone?.trim() || null,
+      electricity: !!formData.electricity,
+      water: !!formData.water,
+      furnished: !!formData.furnished,
+      parking: !!formData.parking,
+      security: !!formData.security,
+      nearby_services: formData.nearby_services || [],
+      images: formData.images || []
     };
+    
+    console.log('Built property data:', propertyData);
+    return propertyData;
   };
 
   const updateExistingProperty = async (propertyData: any): Promise<void> => {
-    const { error } = await supabase
+    console.log('Updating property with ID:', editingProperty?.id);
+    const { data, error } = await supabase
       .from('properties')
       .update(propertyData)
-      .eq('id', editingProperty!.id);
+      .eq('id', editingProperty!.id)
+      .select();
 
-    if (error) throw error;
+    console.log('Update result:', { data, error });
+    if (error) {
+      console.error('Update error:', error);
+      throw error;
+    }
+    
     showSuccessToast('Nyumba yako imesasishwa kikamilifu');
   };
 
   const createNewProperty = async (propertyData: any): Promise<void> => {
-    const { error } = await supabase
+    console.log('Creating new property...');
+    const { data, error } = await supabase
       .from('properties')
-      .insert([propertyData]);
+      .insert([propertyData])
+      .select();
 
-    if (error) throw error;
+    console.log('Insert result:', { data, error });
+    if (error) {
+      console.error('Insert error:', error);
+      throw error;
+    }
+    
     showSuccessToast('Nyumba yako imeongezwa kikamilifu');
   };
 

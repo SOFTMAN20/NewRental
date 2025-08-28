@@ -47,10 +47,15 @@ const SignIn = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-safari-50 to-serengeti-50">
+    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50 relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+      <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-primary/20 to-transparent rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 right-0 w-80 h-80 bg-gradient-to-tl from-serengeti-500/20 to-transparent rounded-full blur-3xl"></div>
+      
       <Navigation />
       
-      <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-md w-full space-y-8">
           {/* Header */}
           <motion.div
@@ -77,11 +82,20 @@ const SignIn = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut', delay: 0.05 }}
           >
-            <Card className="border-0 shadow-xl backdrop-blur-sm bg-white/80">
-              <CardHeader>
-                <CardTitle className="text-center">{t('auth.signIn')}</CardTitle>
+            <Card className="border-0 shadow-2xl backdrop-blur-md bg-white/95 relative overflow-hidden rounded-2xl">
+              {/* Card Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/50 via-transparent to-primary/5 pointer-events-none"></div>
+              
+              <CardHeader className="relative z-10 pb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-primary to-serengeti-500 rounded-full mx-auto mb-4 flex items-center justify-center shadow-lg">
+                  <Home className="h-6 w-6 text-white" />
+                </div>
+                <CardTitle className="text-center text-2xl font-bold bg-gradient-to-r from-gray-900 to-primary bg-clip-text text-transparent">
+                  {t('auth.signIn')}
+                </CardTitle>
+                <p className="text-center text-sm text-gray-600 mt-2">Ingia katika akaunti yako</p>
               </CardHeader>
-              <CardContent>
+              <CardContent className="relative z-10">
                 <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <Label htmlFor="email">{t('auth.email')}</Label>
@@ -135,7 +149,7 @@ const SignIn = () => {
 
                 <Button 
                   type="submit" 
-                  className="w-full bg-primary hover:bg-primary/90"
+                  className="w-full bg-gradient-to-r from-primary via-serengeti-500 to-kilimanjaro-600 hover:from-primary/90 hover:via-serengeti-400 hover:to-kilimanjaro-500 text-white font-bold py-3 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
                   disabled={isLoading}
                 >
                   {isLoading ? t('auth.signing') : t('auth.signIn')}
@@ -159,17 +173,37 @@ const SignIn = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
-            className="bg-blue-50/90 rounded-lg p-4 shadow-sm"
+            className="bg-gradient-to-r from-primary/10 via-serengeti-50 to-kilimanjaro-50 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-white/20 relative overflow-hidden"
           >
-            <h3 className="font-semibold text-blue-900 mb-2">
-              {t('auth.whyRegister')}
-            </h3>
-            <ul className="text-sm text-blue-800 space-y-1">
-              <li>{t('auth.saveProperties')}</li>
-              <li>{t('auth.getNotifications')}</li>
-              <li>{t('auth.contactLandlords')}</li>
-              <li>{t('auth.listProperty')}</li>
-            </ul>
+            {/* Info card overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-primary/10 pointer-events-none"></div>
+            
+            <div className="relative z-10">
+              <h3 className="font-bold text-gray-900 mb-4 flex items-center text-lg">
+                <div className="w-8 h-8 bg-gradient-to-r from-primary to-serengeti-500 rounded-full flex items-center justify-center mr-3 shadow-lg">
+                  <Home className="h-4 w-4 text-white" />
+                </div>
+                {t('auth.whyRegister')}
+              </h3>
+              <ul className="text-sm text-gray-700 space-y-2">
+                <li className="flex items-center">
+                  <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
+                  {t('auth.saveProperties')}
+                </li>
+                <li className="flex items-center">
+                  <div className="w-2 h-2 bg-serengeti-500 rounded-full mr-3"></div>
+                  {t('auth.getNotifications')}
+                </li>
+                <li className="flex items-center">
+                  <div className="w-2 h-2 bg-kilimanjaro-600 rounded-full mr-3"></div>
+                  {t('auth.contactLandlords')}
+                </li>
+                <li className="flex items-center">
+                  <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
+                  {t('auth.listProperty')}
+                </li>
+              </ul>
+            </div>
           </motion.div>
         </div>
       </div>

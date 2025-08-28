@@ -57,7 +57,7 @@ const PopularDestinations = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-4 sm:grid-cols-4 lg:grid-cols-6 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
           {destinations.map((destination, index) => (
             <Link 
               key={index}
@@ -69,19 +69,25 @@ const PopularDestinations = () => {
                   <img 
                     src={destination.image} 
                     alt={destination.name}
-                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-32 sm:h-40 md:h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                  <div className="absolute bottom-4 left-4 text-white">
-                    <h3 className="text-xl font-bold mb-1">{destination.name}</h3>
-                    <p className="text-sm opacity-90">{destination.properties} {t('popularDestinations.properties')}</p>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 text-white">
+                    <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold mb-1 drop-shadow-lg text-white">
+                      {destination.name}
+                    </h3>
+                    <p className="text-xs sm:text-sm opacity-95 drop-shadow-md text-white">
+                      {destination.properties} {t('popularDestinations.properties')}
+                    </p>
                   </div>
                 </div>
-                <CardContent className="p-4">
+                <CardContent className="p-2 sm:p-3 md:p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center text-muted-foreground">
-                      <MapPin className="h-4 w-4 mr-1" />
-                      <span className="text-sm">{t('popularDestinations.startingFrom')} {destination.price}</span>
+                      <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                      <span className="text-xs sm:text-sm">
+                        {t('popularDestinations.startingFrom')} {destination.price}
+                      </span>
                     </div>
                   </div>
                 </CardContent>

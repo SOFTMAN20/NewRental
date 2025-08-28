@@ -141,6 +141,38 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   /**
+   * MOBILE TOUCH STATE
+   * ==================
+   * 
+   * Manages the visibility of action buttons on mobile devices.
+   * Shows buttons when user taps on the card.
+   * 
+   * MOBILE UX / TAJRIBA YA SIMU:
+   * - Touch to show action buttons
+   * - Auto-hide after a few seconds
+   * - Better mobile interaction
+   */
+  const [showMobileActions, setShowMobileActions] = useState(false);
+
+  /**
+   * MOBILE TOUCH HANDLERS
+   * ====================
+   * 
+   * Handles touch interactions for mobile devices.
+   * Shows action buttons when user taps on the card.
+   * Does NOT prevent navigation - allows clicking anywhere to go to details.
+   */
+  const handleMobileTouch = (e: React.TouchEvent | React.MouseEvent) => {
+    // Don't prevent default - allow navigation to work
+    setShowMobileActions(true);
+    
+    // Auto-hide buttons after 3 seconds
+    setTimeout(() => {
+      setShowMobileActions(false);
+    }, 3000);
+  };
+
+  /**
    * FAVORITE TOGGLE HANDLER
    * ======================
    * 
@@ -189,27 +221,34 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
         <Link to={`/property/${id}`} className="block">
           <div className="flex">
             {/* LIST VIEW IMAGE SECTION */}
-            <div className="w-80 h-60 flex-shrink-0 relative overflow-hidden">
+            <div 
+              className="w-80 h-60 flex-shrink-0 relative overflow-hidden"
+              onTouchStart={handleMobileTouch}
+              onClick={handleMobileTouch}
+            >
               <img
                 src={images[0] || `https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=300&fit=crop`}
                 alt={title}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
               />
               
-              {/* Enhanced overlay with quick actions */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent 
-                              opacity-0 group-hover:opacity-100 transition-all duration-500">
+              {/* Enhanced overlay with quick actions - shows on hover OR mobile touch */}
+              <div className={`absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent 
+                              transition-all duration-500 ${
+                                showMobileActions 
+                                  ? 'opacity-100' 
+                                  : 'opacity-0 group-hover:opacity-100'
+                              }`}>
                 <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center">
                   <Button size="sm" variant="secondary" className="bg-white/95 text-gray-900 hover:bg-white 
                                                                    transform hover:scale-105 transition-all duration-300">
                     <Eye className="w-4 h-4 mr-2" />
                     Quick View
                   </Button>
-                                    <Button size="sm" className="bg-primary hover:bg-primary/90 transform hover:scale-105 
-                                             transition-all duration-300">
+                  <Button size="sm" className="bg-primary hover:bg-primary/90 transform hover:scale-105 
+                                           transition-all duration-300">
                     View Details
                   </Button>
-
                 </div>
               </div>
               
@@ -267,21 +306,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
                   )}
                 </div>
 
-                 {/* VIEW DETAILS BUTTON - LIST VIEW */}
-                <div className="pt-3">
-                  <Button 
-                    className="w-full bg-gradient-to-r from-primary to-serengeti-500 hover:from-primary/90 
-                               hover:to-serengeti-400 text-white text-sm py-2 transform hover:scale-105 
-                               transition-all duration-300 shadow-lg hover:shadow-xl"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      window.location.href = `/property/${id}`;
-                    }}
-                  >
-                    View Details
-                  </Button>
-                </div>
+
 
                
               </div>
@@ -317,16 +342,24 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
       <Link to={`/property/${id}`} className="block">
         <div className="relative">
           {/* GRID VIEW IMAGE SECTION */}
-          <div className="aspect-[4/3] overflow-hidden relative">
+          <div 
+            className="aspect-[4/3] overflow-hidden relative"
+            onTouchStart={handleMobileTouch}
+            onClick={handleMobileTouch}
+          >
             <img
               src={images[currentImageIndex] || `https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=300&fit=crop`}
               alt={title}
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
             />
             
-            {/* Enhanced overlay with quick actions */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent 
-                            opacity-0 group-hover:opacity-100 transition-all duration-500">
+            {/* Enhanced overlay with quick actions - shows on hover OR mobile touch */}
+            <div className={`absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent 
+                            transition-all duration-500 ${
+                              showMobileActions 
+                                ? 'opacity-100' 
+                                : 'opacity-0 group-hover:opacity-100'
+                            }`}>
               <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center">
                 <Button size="sm" variant="secondary" className="bg-white/95 text-gray-900 hover:bg-white 
                                                                  transform hover:scale-105 transition-all duration-300">
@@ -430,22 +463,6 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
                   {t('propertyCard.perMonth')}
                 </span>
               </div>
-            </div>
-
-            {/* VIEW DETAILS BUTTON */}
-            <div className="pt-2">
-              <Button 
-                className="w-full bg-gradient-to-r from-primary to-serengeti-500 hover:from-primary/90 
-                           hover:to-serengeti-400 text-white text-sm py-2 transform hover:scale-105 
-                           transition-all duration-300 shadow-lg hover:shadow-xl"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  window.location.href = `/property/${id}`;
-                }}
-              >
-                View Details
-              </Button>
             </div>
           </div>
         </CardContent>

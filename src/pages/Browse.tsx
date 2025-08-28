@@ -368,28 +368,19 @@ const Browse = () => {
       {/* Hero Search Section */}
       <div className="bg-gradient-to-r from-primary/5 to-serengeti-50 border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="max-w-2xl">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              {t('browse.title')}
-            </h1>
-            <p className="text-lg text-gray-600 mb-8">
-              {t('browse.propertiesAvailable', { count: sortedProperties.length })}
-            </p>
-          </div>
-
           {/* Main Search Interface */}
-          <Card className="shadow-lg border-0">
-            <CardContent className="p-6">
+          <Card className="shadow-xl border-0 rounded-2xl bg-white/95 backdrop-blur-sm">
+            <CardContent className="p-8">
               <div className="flex flex-col lg:flex-row gap-4">
                 {/* Location Search Input */}
                 <div className="flex-1">
-                  <div className="relative border rounded-md">
+                  <div className="relative border-2 border-gray-300 rounded-xl hover:border-primary/50 transition-colors duration-200 focus-within:border-primary shadow-sm">
                     <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                     <Input
                       placeholder={t('browse.cityPlaceholder')}
                       value={filters.searchQuery}
                       onChange={(e) => updateFilter('searchQuery', e.target.value)}
-                      className="pl-12 h-14 text-lg border-0 focus-visible:ring-2 focus-visible:ring-primary"
+                      className="pl-12 h-14 text-lg border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 rounded-xl"
                     />
                   </div>
                 </div>
@@ -397,7 +388,7 @@ const Browse = () => {
                 {/* Price Range Selector */}
                 <div className="flex gap-4">
                   <Select value={filters.priceRange} onValueChange={(value) => updateFilter('priceRange', value)}>
-                    <SelectTrigger className="flex-1 h-14 border-0 min-w-0">
+                    <SelectTrigger className="flex-1 h-14 border-2 border-gray-300 rounded-xl hover:border-primary/50 min-w-0 focus:ring-2 focus:ring-primary/20 transition-all duration-200">
                       <SelectValue placeholder={t('browse.priceLabel')} />
                     </SelectTrigger>
                     <SelectContent>
@@ -414,7 +405,7 @@ const Browse = () => {
                   <Button
                     variant="outline"
                     onClick={() => updateUIState('showFilters', !uiState.showFilters)}
-                    className="flex-1 h-14 min-w-0 border-2 flex items-center justify-center px-2"
+                    className="flex-1 h-14 min-w-0 border-2 border-gray-300 rounded-xl hover:border-primary hover:bg-primary/5 flex items-center justify-center px-2 transition-all duration-200"
                   >
                     <SlidersHorizontal className="h-4 w-4 mr-1" />
                     <span className="text-sm whitespace-nowrap">{t('browse.filters')}</span>
@@ -422,7 +413,7 @@ const Browse = () => {
 
                   {/* Search Button - icon only, responsive width */}
                   <Button
-                    className="flex-1 h-14 min-w-0 bg-primary hover:bg-primary/90 flex items-center justify-center px-0"
+                    className="flex-1 h-14 min-w-0 bg-primary hover:bg-primary/90 rounded-xl shadow-md hover:shadow-lg flex items-center justify-center px-0 transition-all duration-200"
                     aria-label={t('browse.search')}
                   >
                     <Search className="h-5 w-5" />
@@ -650,7 +641,7 @@ const Browse = () => {
         {!isLoading && sortedProperties.length > 0 ? (
           <div className={`grid gap-6 ${
             uiState.viewMode === 'grid' 
-              ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+              ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'
               : 'grid-cols-1'
           }`}>
             {sortedProperties.map((property) => (

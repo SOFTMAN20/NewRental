@@ -306,6 +306,8 @@
     "adding": "Inaongeza...",
     "updatePropertyAction": "Sasisha Nyumba",
     "addPropertyAction": "Ongeza Nyumba",
+    "areaSqm": "Eneo (sqm)",
+    "areaSqmDescription": "Jumla ya eneo kwa mita za mraba",
     "expertHelp": "Msaada wa Wataalamu",
     "helpDescription": "Tuko hapa kukusaidia kila wakati. Wasiliana nasi kwa msaada wa haraka na wa ubora.",
     "responseTime": "Muda wa kujibu",

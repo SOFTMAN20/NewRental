@@ -306,6 +306,8 @@
     "adding": "Adding...",
     "updatePropertyAction": "Update Property",
     "addPropertyAction": "Add Property",
+    "areaSqm": "Area (sqm)",
+    "areaSqmDescription": "Total area in square meters",
     "expertHelp": "Expert Help",
     "helpDescription": "We're here to help you anytime. Contact us for quick and quality support.",
     "responseTime": "Response time",
