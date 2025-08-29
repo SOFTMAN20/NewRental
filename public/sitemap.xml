@@ -24,10 +24,11 @@ url>
     <priority>0.7</priority>
   </url>
 
-       <!-- Example: Listings/Properties Page -->
+      
   <url>
     <loc>https://nyumba-link.com/signup?type=landlord</loc>
     <lastmod>2025-08-29</lastmod>
     <priority>0.9</priority>
   </url>
 </urlset>
+
