@@ -33,7 +33,7 @@
  */
 
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Home, Search, User, Menu, X, Globe, Building2, LogOut } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
@@ -54,6 +54,7 @@ const Navigation = () => {
   // Usimamizi wa hali ya kipengee
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Mobile menu visibility
   const location = useLocation(); // Current page location for active states
+  const navigate = useNavigate(); // Navigation function
   const { user, signOut } = useAuth(); // Authentication state
   const { t, i18n } = useTranslation();
 
@@ -170,7 +171,7 @@ const Navigation = () => {
                 </Link>
                 <Button
                   variant="ghost"
-                  onClick={signOut}
+                  onClick={() => signOut(navigate)}
                   className="flex items-center space-x-2 px-3 py-2 rounded-full hover:bg-red-50 
                              hover:text-red-600 hover:scale-105 transition-all duration-300"
                 >
@@ -349,7 +350,7 @@ const Navigation = () => {
                 {user ? (
                   <Button
                     variant="ghost"
-                    onClick={signOut}
+                    onClick={() => signOut(navigate)}
                     className="w-full justify-start px-4 py-3 hover:bg-red-50 hover:text-red-600 
                                rounded-xl mt-2 text-sm sm:text-base transition-all duration-300 hover:scale-105"
                   >

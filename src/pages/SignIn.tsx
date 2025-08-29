@@ -19,15 +19,15 @@ const SignIn = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { signIn, user, loading } = useAuth();
+  const { signIn, user, loading, checkUserTypeAndRedirect } = useAuth();
   const { t } = useTranslation();
 
   // Redirect if already authenticated
   useEffect(() => {
     if (!loading && user) {
-      navigate('/', { replace: true });
+      checkUserTypeAndRedirect(navigate);
     }
-  }, [user, loading, navigate]);
+  }, [user, loading, navigate, checkUserTypeAndRedirect]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +36,10 @@ const SignIn = () => {
     const { error } = await signIn(formData.email, formData.password);
     
     if (!error) {
-      navigate('/', { replace: true });
+      // Wait a moment for the user state to update, then check user type and redirect
+      setTimeout(() => {
+        checkUserTypeAndRedirect(navigate);
+      }, 500);
     }
     
     setIsLoading(false);

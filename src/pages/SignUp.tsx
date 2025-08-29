@@ -28,15 +28,15 @@ const SignUp = () => {
     userType: 'landlord' // Always landlord since only landlords register
   });
   const navigate = useNavigate();
-  const { signUp, user, loading } = useAuth();
+  const { signUp, user, loading, checkUserTypeAndRedirect } = useAuth();
   const { t } = useTranslation();
 
   // Redirect if already authenticated
   useEffect(() => {
     if (!loading && user) {
-      navigate('/', { replace: true });
+      checkUserTypeAndRedirect(navigate);
     }
-  }, [user, loading, navigate]);
+  }, [user, loading, navigate, checkUserTypeAndRedirect]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,12 +55,14 @@ const SignUp = () => {
     });
 
     if (!error) {
-      // Navigate landlords to dashboard, tenants stay on current page
+      // Navigate landlords to dashboard using the new redirect function
       if (formData.userType === 'landlord') {
         // Small delay to ensure profile is created
         setTimeout(() => {
-          navigate('/dashboard', { replace: true });
+          checkUserTypeAndRedirect(navigate);
         }, 1000);
+      } else {
+        navigate('/', { replace: true });
       }
       
       setFormData({

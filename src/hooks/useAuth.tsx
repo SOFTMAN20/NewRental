@@ -63,7 +63,8 @@ interface AuthContextType {
   loading: boolean;
   signUp: (email: string, password: string, metadata: any) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
-  signOut: () => Promise<void>;
+  signOut: (navigate?: (path: string, options?: any) => void) => Promise<void>;
+  checkUserTypeAndRedirect: (navigate: (path: string, options?: any) => void) => Promise<void>;
 }
 
 /**
@@ -261,26 +262,82 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
    * SIGN OUT FUNCTION
    * ================
    * 
-   * Handles user logout and session cleanup.
+   * Handles user logout and session cleanup with smart redirect.
    * 
    * CLEANUP PROCESS / MCHAKATO WA USAFISHAJI:
-   * 1. Clear Supabase session
-   * 2. Remove local storage tokens
-   * 3. Reset authentication state
-   * 4. Show confirmation message
+   * 1. Check user type before signing out
+   * 2. Clear Supabase session
+   * 3. Remove local storage tokens
+   * 4. Reset authentication state
+   * 5. Show confirmation message
+   * 6. Redirect landlords to browse page
    * 
    * SECURITY / USALAMA:
    * - Complete session invalidation
    * - Secure token cleanup
    * - Prevents unauthorized access
    */
-  const signOut = async () => {
+  const signOut = async (navigate?: (path: string, options?: any) => void) => {
+    // Check if user is a landlord before signing out
+    let isLandlord = false;
+    if (user && navigate) {
+      try {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('user_type')
+          .eq('user_id', user.id)
+          .single();
+        
+        isLandlord = profile?.user_type === 'landlord';
+      } catch (error) {
+        console.error('Error checking user type before signout:', error);
+      }
+    }
+
     const { error } = await supabase.auth.signOut();
     if (!error) {
       toast({
         title: "Umetoka nje",
         description: "Tutakuona tena!"
       });
+
+      // Redirect landlords to browse page after sign out
+      if (isLandlord && navigate) {
+        navigate('/browse', { replace: true });
+      }
+    }
+  };
+
+  /**
+   * CHECK USER TYPE AND REDIRECT
+   * ===========================
+   * 
+   * Checks the user's profile to determine if they are a landlord
+   * and redirects them to the dashboard if so.
+   */
+  const checkUserTypeAndRedirect = async (navigate: (path: string, options?: any) => void) => {
+    if (!user) return;
+
+    try {
+      const { data: profile, error } = await supabase
+        .from('profiles')
+        .select('user_type')
+        .eq('user_id', user.id)
+        .single();
+
+      if (error) {
+        console.error('Error fetching user profile:', error);
+        return;
+      }
+
+      if (profile?.user_type === 'landlord') {
+        navigate('/dashboard', { replace: true });
+      } else {
+        navigate('/', { replace: true });
+      }
+    } catch (error) {
+      console.error('Error checking user type:', error);
+      navigate('/', { replace: true });
     }
   };
 
@@ -306,7 +363,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       loading,
       signUp,
       signIn,
-      signOut
+      signOut,
+      checkUserTypeAndRedirect
     }}>
       {children}
     </AuthContext.Provider>
