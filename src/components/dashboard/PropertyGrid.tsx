@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Home, Plus, Eye, Edit, Trash2, Phone, MapPin, DollarSign } from 'lucide-react';
+import { Home, Plus, Eye, Edit, Trash2, MapPin, DollarSign } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Property } from '@/hooks/useProperties';
 
@@ -148,12 +148,6 @@ const PropertyGrid: React.FC<PropertyGridProps> = ({
           <p className="text-gray-600 text-sm line-clamp-2">
             {property.description}
           </p>
-
-          {/* Contact Info */}
-          <div className="flex items-center gap-2 text-gray-600">
-            <Phone className="w-4 h-4" />
-            <span className="text-sm">{property.phone}</span>
-          </div>
 
           {/* Action Buttons */}
           <div className="flex gap-2 pt-2">

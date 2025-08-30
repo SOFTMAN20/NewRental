@@ -642,46 +642,59 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
   );
 
   /**
-   * STEP NAVIGATION COMPONENT
-   * ========================
+   * STEP NAVIGATION COMPONENT - MOBILE RESPONSIVE
+   * ============================================
    * 
    * Renders interactive step navigation with progress indicators.
+   * Optimized for mobile with smaller sizes and proper spacing.
    */
   const renderStepNavigation = () => (
-    <div className="flex items-center justify-between mb-8">
-      {steps.map((step, index) => {
-        const isActive = step.id === currentStep;
-        const isCompleted = step.id < currentStep || (step.id <= currentStep && isStepValid(step.id));
-        const Icon = step.icon;
-        
-        return (
-          <div key={step.id} className="flex items-center">
-            <button
-              type="button"
-              onClick={() => setCurrentStep(step.id)}
-              className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${
-                isActive 
-                  ? 'bg-primary text-white shadow-lg scale-110' 
-                  : isCompleted 
-                  ? 'bg-green-500 text-white shadow-md hover:shadow-lg' 
-                  : 'bg-gray-200 text-gray-400 hover:bg-gray-300'
-              }`}
-            >
-              {isCompleted && step.id < currentStep ? (
-                <CheckCircle className="h-6 w-6" />
-              ) : (
-                <Icon className="h-6 w-6" />
+    <div className="mb-6 sm:mb-8">
+      {/* Mobile step indicator */}
+      <div className="block sm:hidden mb-4">
+        <div className="flex items-center justify-between text-sm text-gray-600">
+          <span>Hatua {currentStep} ya {totalSteps}</span>
+          <span>{Math.round(progress)}% kamili</span>
+        </div>
+        <Progress value={progress} className="mt-2" />
+      </div>
+      
+      {/* Desktop step navigation */}
+      <div className="hidden sm:flex items-center justify-between">
+        {steps.map((step, index) => {
+          const isActive = step.id === currentStep;
+          const isCompleted = step.id < currentStep || (step.id <= currentStep && isStepValid(step.id));
+          const Icon = step.icon;
+          
+          return (
+            <div key={step.id} className="flex items-center">
+              <button
+                type="button"
+                onClick={() => setCurrentStep(step.id)}
+                className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${
+                  isActive 
+                    ? 'bg-primary text-white shadow-lg scale-110' 
+                    : isCompleted 
+                    ? 'bg-green-500 text-white shadow-md hover:shadow-lg' 
+                    : 'bg-gray-200 text-gray-400 hover:bg-gray-300'
+                }`}
+              >
+                {isCompleted && step.id < currentStep ? (
+                  <CheckCircle className="h-6 w-6" />
+                ) : (
+                  <Icon className="h-6 w-6" />
+                )}
+              </button>
+              
+              {index < steps.length - 1 && (
+                <div className={`w-8 h-1 mx-2 transition-colors duration-200 ${
+                  step.id < currentStep ? 'bg-green-500' : 'bg-gray-200'
+                }`} />
               )}
-            </button>
-            
-            {index < steps.length - 1 && (
-              <div className={`w-8 h-1 mx-2 transition-colors duration-200 ${
-                step.id < currentStep ? 'bg-green-500' : 'bg-gray-200'
-              }`} />
-            )}
-          </div>
-        );
-      })}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 
@@ -785,32 +798,13 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
     };
 
     return (
-      <div className="flex justify-between items-center pt-6 border-t bg-gray-50 -mx-6 px-6 -mb-6 pb-6">
-      <Button 
-        type="button" 
-        variant="outline"
-          onClick={currentStep === 1 ? onClose : prevStep}
-        disabled={submitting}
-          className="flex items-center gap-2"
-      >
-          {currentStep === 1 ? (
-            <>
-              <X className="h-4 w-4" />
-        {t('dashboard.cancel')}
-            </>
-          ) : (
-            <>
-              <ChevronLeft className="h-4 w-4" />
-              Rudi Nyuma
-            </>
-          )}
-        </Button>
-
-        <div className="flex items-center gap-3">
-          {/* Progress indicator */}
-          <div className="flex items-center gap-2 text-sm text-gray-600">
+      <div className="pt-6 border-t bg-gray-50 -mx-6 px-4 sm:px-6 -mb-6 pb-6">
+        {/* Mobile Layout - Stack vertically */}
+        <div className="block sm:hidden space-y-4">
+          {/* Progress indicator - Mobile */}
+          <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
             <span>{currentStep} ya {totalSteps}</span>
-            <div className="w-16 bg-gray-200 rounded-full h-2">
+            <div className="w-20 bg-gray-200 rounded-full h-2">
               <div 
                 className="bg-primary h-2 rounded-full transition-all duration-300"
                 style={{ width: `${(currentStep / totalSteps) * 100}%` }}
@@ -818,42 +812,139 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             </div>
             <span>{Math.round(progress)}% kamili</span>
           </div>
-
-          {/* Next/Submit button */}
-          {currentStep < totalSteps ? (
+          
+          {/* Buttons - Mobile */}
+          <div className="flex gap-3">
             <Button 
-              type="button"
-              onClick={nextStep}
-              disabled={!isStepValid(currentStep)}
-              className="flex items-center gap-2"
+              type="button" 
+              variant="outline"
+              onClick={currentStep === 1 ? onClose : prevStep}
+              disabled={submitting}
+              className="flex-1 flex items-center justify-center gap-2 min-h-[44px]"
             >
-              Endelea
-              <ChevronRight className="h-4 w-4" />
-      </Button>
-          ) : (
-      <Button 
-              type="button"
-              onClick={handleSubmitClick}
-              className="bg-gradient-to-r from-primary to-serengeti-500 hover:from-primary/90 hover:to-serengeti-400 flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
-        disabled={submitting}
-        title={`Submit button - Current step: ${currentStep}, Total steps: ${totalSteps}, Submitting: ${submitting}`}
-      >
-        {submitting ? (
-          <>
-                  <RefreshCw className="h-4 w-4 animate-spin" />
-            {editingProperty ? t('dashboard.updating') : t('dashboard.adding')}
-          </>
-        ) : (
-          <>
-                  <Save className="h-4 w-4" />
-                  {editingProperty ? 'Sasisha Nyumba' : 'Ongeza Nyumba'}
-          </>
-        )}
-      </Button>
-          )}
+              {currentStep === 1 ? (
+                <>
+                  <X className="h-4 w-4" />
+                  <span className="hidden xs:inline">{t('dashboard.cancel')}</span>
+                  <span className="inline xs:hidden">Funga</span>
+                </>
+              ) : (
+                <>
+                  <ChevronLeft className="h-4 w-4" />
+                  <span className="hidden xs:inline">Rudi Nyuma</span>
+                  <span className="inline xs:hidden">Rudi</span>
+                </>
+              )}
+            </Button>
+
+            {/* Next/Submit button - Mobile */}
+            {currentStep < totalSteps ? (
+              <Button 
+                type="button"
+                onClick={nextStep}
+                disabled={!isStepValid(currentStep)}
+                className="flex-1 flex items-center justify-center gap-2 min-h-[44px]"
+              >
+                <span>Endelea</span>
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            ) : (
+              <Button 
+                type="button"
+                onClick={handleSubmitClick}
+                className="flex-1 bg-gradient-to-r from-primary to-serengeti-500 hover:from-primary/90 hover:to-serengeti-400 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all duration-200 min-h-[44px]"
+                disabled={submitting}
+                title={`Submit button - Current step: ${currentStep}, Total steps: ${totalSteps}, Submitting: ${submitting}`}
+              >
+                {submitting ? (
+                  <>
+                    <RefreshCw className="h-4 w-4 animate-spin" />
+                    <span className="hidden xs:inline">{editingProperty ? t('dashboard.updating') : t('dashboard.adding')}</span>
+                    <span className="inline xs:hidden">{editingProperty ? 'Sasisha' : 'Ongeza'}</span>
+                  </>
+                ) : (
+                  <>
+                    <Save className="h-4 w-4" />
+                    <span className="hidden xs:inline">{editingProperty ? 'Sasisha Nyumba' : 'Ongeza Nyumba'}</span>
+                    <span className="inline xs:hidden">{editingProperty ? 'Sasisha' : 'Ongeza'}</span>
+                  </>
+                )}
+              </Button>
+            )}
+          </div>
         </div>
-    </div>
-  );
+
+        {/* Desktop Layout - Original horizontal */}
+        <div className="hidden sm:flex justify-between items-center">
+          <Button 
+            type="button" 
+            variant="outline"
+            onClick={currentStep === 1 ? onClose : prevStep}
+            disabled={submitting}
+            className="flex items-center gap-2"
+          >
+            {currentStep === 1 ? (
+              <>
+                <X className="h-4 w-4" />
+                {t('dashboard.cancel')}
+              </>
+            ) : (
+              <>
+                <ChevronLeft className="h-4 w-4" />
+                Rudi Nyuma
+              </>
+            )}
+          </Button>
+
+          <div className="flex items-center gap-3">
+            {/* Progress indicator - Desktop */}
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <span>{currentStep} ya {totalSteps}</span>
+              <div className="w-16 bg-gray-200 rounded-full h-2">
+                <div 
+                  className="bg-primary h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${(currentStep / totalSteps) * 100}%` }}
+                />
+              </div>
+              <span>{Math.round(progress)}% kamili</span>
+            </div>
+
+            {/* Next/Submit button - Desktop */}
+            {currentStep < totalSteps ? (
+              <Button 
+                type="button"
+                onClick={nextStep}
+                disabled={!isStepValid(currentStep)}
+                className="flex items-center gap-2"
+              >
+                Endelea
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            ) : (
+              <Button 
+                type="button"
+                onClick={handleSubmitClick}
+                className="bg-gradient-to-r from-primary to-serengeti-500 hover:from-primary/90 hover:to-serengeti-400 flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                disabled={submitting}
+                title={`Submit button - Current step: ${currentStep}, Total steps: ${totalSteps}, Submitting: ${submitting}`}
+              >
+                {submitting ? (
+                  <>
+                    <RefreshCw className="h-4 w-4 animate-spin" />
+                    {editingProperty ? t('dashboard.updating') : t('dashboard.adding')}
+                  </>
+                ) : (
+                  <>
+                    <Save className="h-4 w-4" />
+                    {editingProperty ? 'Sasisha Nyumba' : 'Ongeza Nyumba'}
+                  </>
+                )}
+              </Button>
+            )}
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
