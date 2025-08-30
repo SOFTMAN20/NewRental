@@ -407,11 +407,11 @@ const PropertyDetail = () => {
             {/* Property Details Card - Kadi ya maelezo ya nyumba */}
             <Card>
               <CardContent className="p-4 sm:p-6">
-                <div className="space-y-4 sm:space-y-6">
+                <div className="space-y-4 sm:space-y-6 overflow-hidden">
                   {/* Property Header - Kichwa cha nyumba */}
-                  <div>
+                  <div className="overflow-hidden">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 space-y-2 sm:space-y-0">
-                      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 break-words overflow-hidden">
                         {property.title}
                       </h1>
                       <div className="text-left sm:text-right">
@@ -424,7 +424,7 @@ const PropertyDetail = () => {
                     
                     <div className="flex items-center text-gray-600 mb-4">
                       <MapPin className="h-4 w-4 sm:h-5 sm:w-5 mr-2 flex-shrink-0" />
-                      <span className="text-sm sm:text-base">{property.full_address || property.location}</span>
+                      <span className="text-sm sm:text-base break-words overflow-hidden">{property.full_address || property.location}</span>
                     </div>
 
                     {/* Utilities and Services Badges - Lebo za huduma na vifaa */}
@@ -473,9 +473,9 @@ const PropertyDetail = () => {
                   <Separator />
 
                   {/* Property Description - Maelezo ya nyumba */}
-                  <div>
+                  <div className="overflow-hidden">
                     <h3 className="text-lg sm:text-xl font-semibold mb-3">{t('propertyDetail.description')}</h3>
-                    <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
+                    <p className="text-sm sm:text-base text-gray-700 leading-relaxed break-words overflow-hidden whitespace-normal">
                       {property.description || t('propertyDetail.noDescription')}
                     </p>
                   </div>
@@ -483,33 +483,33 @@ const PropertyDetail = () => {
                   <Separator />
 
                   {/* Property Features - Vipengele vya nyumba */}
-                  <div>
+                  <div className="overflow-hidden">
                     <h3 className="text-lg sm:text-xl font-semibold mb-3">{t('propertyDetail.propertyFeatures')}</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                       {property.property_type && (
                         <div className="flex items-center">
-                          <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
-                          <span className="text-sm sm:text-base text-gray-700">
+                          <div className="w-2 h-2 bg-primary rounded-full mr-3 flex-shrink-0"></div>
+                          <span className="text-sm sm:text-base text-gray-700 break-words overflow-hidden">
                             {t('propertyDetail.type')}: {t(`propertyDetail.propertyTypes.${property.property_type}`)}
                           </span>
                         </div>
                       )}
                       {property.bedrooms && (
                         <div className="flex items-center">
-                          <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
-                          <span className="text-sm sm:text-base text-gray-700">{t('propertyDetail.bedroomsCount', { count: property.bedrooms })}</span>
+                          <div className="w-2 h-2 bg-primary rounded-full mr-3 flex-shrink-0"></div>
+                          <span className="text-sm sm:text-base text-gray-700 break-words overflow-hidden">{t('propertyDetail.bedroomsCount', { count: property.bedrooms })}</span>
                         </div>
                       )}
                       {property.bathrooms && (
                         <div className="flex items-center">
-                          <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
-                          <span className="text-sm sm:text-base text-gray-700">{t('propertyDetail.bathroomsCount', { count: property.bathrooms })}</span>
+                          <div className="w-2 h-2 bg-primary rounded-full mr-3 flex-shrink-0"></div>
+                          <span className="text-sm sm:text-base text-gray-700 break-words overflow-hidden">{t('propertyDetail.bathroomsCount', { count: property.bathrooms })}</span>
                         </div>
                       )}
                       {property.area_sqm && (
                         <div className="flex items-center">
-                          <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
-                          <span className="text-sm sm:text-base text-gray-700">{t('propertyDetail.size', { size: property.area_sqm })}</span>
+                          <div className="w-2 h-2 bg-primary rounded-full mr-3 flex-shrink-0"></div>
+                          <span className="text-sm sm:text-base text-gray-700 break-words overflow-hidden">{t('propertyDetail.size', { size: property.area_sqm })}</span>
                         </div>
                       )}
                     </div>
