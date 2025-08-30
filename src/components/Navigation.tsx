@@ -156,6 +156,19 @@ const Navigation = () => {
 
           {/* Enhanced Desktop Right Side Controls - Vidhibiti vya upande wa kulia vya kompyuta */}
           <div className="hidden md:flex items-center space-x-3 sm:space-x-4">
+            {/* Search Icon - Aikoni ya kutafuta */}
+            <Link to="/browse">
+              <Button
+                variant="ghost"
+                className="flex items-center space-x-2 px-3 py-2 rounded-full hover:bg-primary/10 
+                           hover:text-primary hover:scale-105 transition-all duration-300"
+                title={t('navigation.browse')}
+              >
+                <Search className="h-4 w-4" />
+                <span className="hidden lg:inline text-sm font-medium">{t('common.search')}</span>
+              </Button>
+            </Link>
+
             {/* Enhanced User Account Menu - Menyu ya akaunti ya mtumiaji */}
             {user ? (
               <div className="flex items-center space-x-2 sm:space-x-3">

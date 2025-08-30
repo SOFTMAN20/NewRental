@@ -362,7 +362,7 @@ const Browse = () => {
    * Renders the complete browse page with all sections.
    */
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50">
       <Navigation />
       
       {/* Hero Search Section */}

@@ -43,7 +43,7 @@ import Footer from "@/components/Footer";
  */
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50">
       {/* Global navigation - Uongozaji wa kimataifa */}
       <Navigation />
       

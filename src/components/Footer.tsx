@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Phone, Mail, Heart, Home, Shield, Users, Award, ExternalLink, ArrowRight } from 'lucide-react';
+import { MapPin, Phone, Mail, Home, Shield, Users, Award, ExternalLink, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
@@ -146,73 +146,13 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* App Statistics */}
-        <div className="border-t border-gray-700/50 py-8 sm:py-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 text-center">
-            {[
-              { value: "1000+", label: t('footer.registeredHouses'), color: "from-primary to-serengeti-500" },
-              { value: "500+", label: t('footer.landlords'), color: "from-kilimanjaro-500 to-safari-500" },
-              { value: "50+", label: t('footer.cities'), color: "from-green-500 to-blue-500" },
-              { value: "5000+", label: t('footer.users'), color: "from-yellow-500 to-blue-500" }
-            ].map((stat, index) => (
-              <div key={index} className="group">
-                <div className={`text-2xl sm:text-3xl font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300`}>
-                  {stat.value}
-            </div>
-                <div className="text-gray-400 text-xs sm:text-sm group-hover:text-gray-300 transition-colors duration-300">
-                  {stat.label}
-            </div>
-            </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Bottom section with creator info */}
+
+        {/* Bottom section */}
         <div className="border-t border-gray-700/50 py-6 sm:py-8">
-          <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
-            <div className="text-gray-300 text-xs sm:text-sm text-center sm:text-left">
+          <div className="text-center">
+            <div className="text-gray-300 text-xs sm:text-sm">
               © {currentYear} Nyumba Link. {t('footer.rightsReserved')}
-            </div>
-            
-            {/* Creator Attribution */}
-            <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-6 lg:space-x-8">
-              <div className="flex items-center text-gray-300 text-xs sm:text-sm group">
-                <span>{t('footer.createdWith')}</span>
-                <Heart className="h-3 w-3 sm:h-4 sm:w-4 text-red-500 mx-2 fill-current group-hover:scale-110 transition-transform duration-300" />
-                <span className="font-semibold text-primary group-hover:text-serengeti-400 transition-colors duration-300">StarLabs AI</span>
-              </div>
-              
-              <div className="hidden sm:block w-px h-4 bg-gray-600"></div>
-              
-              <div className="flex items-center text-gray-300 text-xs sm:text-sm group">
-                <Phone className="h-3 w-3 mr-2 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" />
-                <a href="tel:+255750929317" className="hover:text-primary transition-colors duration-300">
-                  +255 750 929 317
-                </a>
-              </div>
-            </div>
-          </div>
-          
-          {/* Additional creator info */}
-          <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-gray-700/50">
-            <div className="text-center">
-              <p className="text-xs sm:text-sm text-gray-400 mb-4 px-4 leading-relaxed">
-                {t('footer.aiDescription')}
-              </p>
-              <div className="flex justify-center space-x-4">
-                <div className="flex items-center space-x-2 text-xs text-gray-500">
-                  <div className="w-2 h-2 bg-primary rounded-full"></div>
-                  <span>React & TypeScript</span>
-                </div>
-                <div className="flex items-center space-x-2 text-xs text-gray-500">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span>Supabase</span>
-                </div>
-                <div className="flex items-center space-x-2 text-xs text-gray-500">
-                  <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                  <span>Tailwind CSS</span>
-                </div>
-              </div>
             </div>
           </div>
         </div>
