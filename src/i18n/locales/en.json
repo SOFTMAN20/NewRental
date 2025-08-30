@@ -152,7 +152,8 @@
       "apartment": "Apartment",
       "house": "House",
       "room": "Room",
-      "studio": "Studio"
+      "studio": "Studio",
+      "office": "Office"
     },
     "amenities": {
       "electricity": "Electricity",
@@ -276,6 +277,7 @@
     "house": "House",
     "room": "Room",
     "studio": "Studio",
+    "office": "Office",
     "bedrooms": "Bedrooms",
     "bathrooms": "Bathrooms",
     "description": "Description",

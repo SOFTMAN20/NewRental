@@ -152,7 +152,8 @@
       "apartment": "Ghorofa",
       "house": "Nyumba",
       "room": "Chumba",
-      "studio": "Studio"
+      "studio": "Studio",
+      "office": "Ofisi"
     },
     "amenities": {
       "electricity": "Umeme",
@@ -276,6 +277,7 @@
     "house": "Nyumba",
     "room": "Chumba",
     "studio": "Studio",
+    "office": "Ofisi",
     "bedrooms": "Vyumba vya Kulala",
     "bathrooms": "Vyumba vya Kuogea",
     "description": "Maelezo",

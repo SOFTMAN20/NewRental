@@ -28,7 +28,7 @@ import {
   X, Save, RefreshCw, Home, MapPin, Phone, Camera, 
   Building, Bed, Bath, Ruler, Zap, Droplets, Car, 
   Shield, Sofa, ChevronRight, ChevronLeft, CheckCircle,
-  Star, Info, Heart, Users, Award
+  Star, Info, Heart, Users, Award, Briefcase
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { Tables } from '@/integrations/supabase/types';
@@ -294,7 +294,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             { value: 'apartment', label: t('dashboard.apartment'), icon: Building },
             { value: 'house', label: t('dashboard.house'), icon: Home },
             { value: 'room', label: t('dashboard.room'), icon: Bed },
-            { value: 'studio', label: t('dashboard.studio'), icon: Users }
+            { value: 'studio', label: t('dashboard.studio'), icon: Users },
+            { value: 'office', label: t('dashboard.office'), icon: Briefcase }
           ].map(({ value, label, icon: Icon }) => (
             <button
               key={value}
