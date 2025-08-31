@@ -1,17 +1,22 @@
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
 User-agent: *
 Allow: /
 
-# Sitemap
-Sitemap: https://www.nyumba-link.com/sitemap.xml
+# Disallow admin and private areas
+Disallow: /dashboard/
+Disallow: /api/
+Disallow: /admin/
+
+# Allow important pages
+Allow: /browse
+Allow: /about
+Allow: /signin
+Allow: /signup
+Allow: /contact
+Allow: /privacy
+Allow: /terms
+
+# Sitemap location
+Sitemap: https://nyumba-link.com/sitemap.xml
+
+# Crawl delay (optional - helps with server load)
+Crawl-delay: 1
