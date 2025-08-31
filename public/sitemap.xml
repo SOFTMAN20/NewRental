@@ -114,21 +114,21 @@
 
   <!-- Location-based Search -->
   <url>
-    <loc>https://nyumba-link.com/browse?location=nairobi</loc>
+    <loc>https://nyumba-link.com/browse?location=mbeya</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
 
   <url>
-    <loc>https://nyumba-link.com/browse?location=mombasa</loc>
+    <loc>https://nyumba-link.com/browse?location=dar es salaam</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
 
   <url>
-    <loc>https://nyumba-link.com/browse?location=kisumu</loc>
+    <loc>https://nyumba-link.com/browse?location=Arusha</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
