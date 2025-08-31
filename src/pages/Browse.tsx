@@ -367,28 +367,28 @@ const Browse = () => {
       
       {/* Hero Search Section */}
       <div className="bg-gradient-to-r from-primary/5 to-serengeti-50 border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
           {/* Main Search Interface */}
-          <Card className="shadow-xl border-0 rounded-2xl bg-white/95 backdrop-blur-sm">
-            <CardContent className="p-8">
-              <div className="flex flex-col lg:flex-row gap-4">
+          <Card className="shadow-xl border-0 rounded-xl lg:rounded-2xl bg-white/95 backdrop-blur-sm">
+            <CardContent className="p-3 sm:p-4 lg:p-6 xl:p-8">
+              <div className="flex flex-col lg:flex-row gap-2 sm:gap-3 lg:gap-4">
                 {/* Location Search Input */}
                 <div className="flex-1">
-                  <div className="relative border-2 border-gray-300 rounded-xl hover:border-primary/50 transition-colors duration-200 focus-within:border-primary shadow-sm">
-                    <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <div className="relative border-2 border-gray-300 rounded-lg lg:rounded-xl hover:border-primary/50 transition-colors duration-200 focus-within:border-primary shadow-sm">
+                    <MapPin className="absolute left-2 sm:left-3 lg:left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
                     <Input
                       placeholder={t('browse.cityPlaceholder')}
                       value={filters.searchQuery}
                       onChange={(e) => updateFilter('searchQuery', e.target.value)}
-                      className="pl-12 h-14 text-lg border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 rounded-xl"
+                      className="pl-8 sm:pl-10 lg:pl-12 h-10 sm:h-12 lg:h-14 text-sm sm:text-base lg:text-lg border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 rounded-lg lg:rounded-xl"
                     />
                   </div>
                 </div>
 
                 {/* Price Range Selector */}
-                <div className="flex gap-4">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
                   <Select value={filters.priceRange} onValueChange={(value) => updateFilter('priceRange', value)}>
-                    <SelectTrigger className="flex-1 h-14 border-2 border-gray-300 rounded-xl hover:border-primary/50 min-w-0 focus:ring-2 focus:ring-primary/20 transition-all duration-200">
+                    <SelectTrigger className="flex-1 h-10 sm:h-12 lg:h-14 border-2 border-gray-300 rounded-lg lg:rounded-xl hover:border-primary/50 min-w-0 focus:ring-2 focus:ring-primary/20 transition-all duration-200">
                       <SelectValue placeholder={t('browse.priceLabel')} />
                     </SelectTrigger>
                     <SelectContent>
@@ -405,18 +405,18 @@ const Browse = () => {
                   <Button
                     variant="outline"
                     onClick={() => updateUIState('showFilters', !uiState.showFilters)}
-                    className="flex-1 h-14 min-w-0 border-2 border-gray-300 rounded-xl hover:border-primary hover:bg-primary/5 flex items-center justify-center px-2 transition-all duration-200"
+                    className="flex-1 h-10 sm:h-12 lg:h-14 min-w-0 border-2 border-gray-300 rounded-lg lg:rounded-xl hover:border-primary hover:bg-primary/5 flex items-center justify-center px-1 sm:px-2 transition-all duration-200"
                   >
-                    <SlidersHorizontal className="h-4 w-4 mr-1" />
-                    <span className="text-sm whitespace-nowrap">{t('browse.filters')}</span>
+                    <SlidersHorizontal className="h-3 w-3 sm:h-4 sm:w-4 mr-0.5 sm:mr-1" />
+                    <span className="text-xs sm:text-sm whitespace-nowrap">{t('browse.filters')}</span>
                   </Button>
 
                   {/* Search Button - icon only, responsive width */}
                   <Button
-                    className="flex-1 h-14 min-w-0 bg-primary hover:bg-primary/90 rounded-xl shadow-md hover:shadow-lg flex items-center justify-center px-0 transition-all duration-200"
+                    className="flex-1 h-10 sm:h-12 lg:h-14 min-w-0 bg-primary hover:bg-primary/90 rounded-lg lg:rounded-xl shadow-md hover:shadow-lg flex items-center justify-center px-0 transition-all duration-200"
                     aria-label={t('browse.search')}
                   >
-                    <Search className="h-5 w-5" />
+                    <Search className="h-4 w-4 sm:h-5 sm:w-5" />
                   </Button>
                 </div>
               </div>
@@ -530,15 +530,15 @@ const Browse = () => {
       </div>
 
       {/* Results Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
         {/* Results Header */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 gap-2 sm:gap-4">
           <div>
-            <h2 className="text-2xl font-semibold text-gray-900">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-900">
               {t('browse.propertiesFound', { count: sortedProperties.length })}
             </h2>
             {filters.searchQuery && (
-              <p className="text-gray-600 mt-1">{t('browse.inLocation', { location: filters.searchQuery })}</p>
+              <p className="text-gray-600 mt-1 text-sm sm:text-base">{t('browse.inLocation', { location: filters.searchQuery })}</p>
             )}
           </div>
         </div>
@@ -639,9 +639,9 @@ const Browse = () => {
 
         {/* Properties Grid/List Display */}
         {!isLoading && sortedProperties.length > 0 ? (
-          <div className={`grid gap-6 ${
+          <div className={`grid gap-3 sm:gap-4 lg:gap-6 ${
             uiState.viewMode === 'grid' 
-              ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'
+              ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
               : 'grid-cols-1'
           }`}>
             {sortedProperties.map((property) => (

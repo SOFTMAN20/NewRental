@@ -238,20 +238,20 @@ const PropertyDetail = () => {
     <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50 flex flex-col">
       <Navigation />
       
-      <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+      <div className="flex-1 max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-3 sm:py-4 lg:py-6 xl:py-8">
         {/* Back Navigation Button - Kitufe cha kurudi nyuma */}
         <Button
           variant="ghost"
           onClick={() => navigate(-1)}
-          className="mb-4 sm:mb-6"
+          className="mb-3 sm:mb-4 lg:mb-6"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           {t('propertyDetail.goBack')}
         </Button>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {/* Main Content Section - Sehemu ya maudhui makuu */}
-          <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+          <div className="lg:col-span-2 space-y-3 sm:space-y-4 lg:space-y-6">
             {/* Image Gallery Section - Sehemu ya galeri ya picha */}
             <Card>
               <CardContent className="p-0">
@@ -520,22 +520,22 @@ const PropertyDetail = () => {
           </div>
 
           {/* Sidebar Section - Sehemu ya upande */}
-          <div className="space-y-4 sm:space-y-6">
+          <div className="space-y-3 sm:space-y-4 lg:space-y-6">
             {/* Landlord Contact Card - Kadi ya mawasiliano ya mwenye nyumba */}
             <Card>
-              <CardContent className="p-4 sm:p-6">
-                <h3 className="text-lg sm:text-xl font-semibold mb-4">{t('propertyDetail.contactLandlord')}</h3>
+              <CardContent className="p-3 sm:p-4 lg:p-6">
+                <h3 className="text-base sm:text-lg lg:text-xl font-semibold mb-3 sm:mb-4">{t('propertyDetail.contactLandlord')}</h3>
                 
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   {/* Landlord Information - Maelezo ya mwenye nyumba */}
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                      <User className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+                  <div className="flex items-center space-x-2 sm:space-x-3">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                      <User className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-primary" />
                     </div>
-                    <div>
-                      <div className="font-semibold text-gray-900 text-sm sm:text-base">
+                    <div className="min-w-0 flex-1">
+                      <div className="font-semibold text-gray-900 text-sm sm:text-base line-clamp-1">
                         {property.profiles?.full_name || 'Mwenye Nyumba'}
-                        <Badge className="ml-2 bg-green-100 text-green-800 text-xs">
+                        <Badge className="ml-1 sm:ml-2 bg-green-100 text-green-800 text-xs">
                           {t('propertyDetail.verified')}
                         </Badge>
                       </div>

@@ -109,31 +109,31 @@ const WelcomeBanner: React.FC<WelcomeBannerProps> = ({
   if (isNewUser) {
     return (
       <>
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary via-serengeti-500 to-primary text-white mb-8">
+        <div className="relative overflow-hidden rounded-xl lg:rounded-2xl bg-gradient-to-r from-primary via-serengeti-500 to-primary text-white mb-4 sm:mb-6 lg:mb-8">
           <div className="absolute inset-0 bg-black/10" />
-          <div className="relative p-8">
-            <div className="flex items-center justify-between">
-              <div className="space-y-4">
+          <div className="relative p-4 sm:p-6 lg:p-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="space-y-3 sm:space-y-4 flex-1">
                 <div className="flex items-center space-x-2">
-                  <Sparkles className="h-6 w-6 text-white" />
-                  <h2 className="text-3xl font-bold text-white drop-shadow-lg">
+                  <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+                  <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white drop-shadow-lg">
                     🎉 {t('dashboard.welcome')}
                   </h2>
                 </div>
-                <p className="text-xl text-white/95 font-medium max-w-2xl drop-shadow-md leading-relaxed">
+                <p className="text-sm sm:text-base lg:text-xl text-white/95 font-medium max-w-2xl drop-shadow-md leading-relaxed">
                   {t('dashboard.welcomeMessage')}
                 </p>
-                <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-2">
                   <Button 
                     variant="secondary" 
-                    className="bg-white text-primary hover:bg-gray-100"
+                    className="bg-white text-primary hover:bg-gray-100 text-sm sm:text-base"
                   >
-                    <User className="h-4 w-4 mr-2" />
+                    <User className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                     {t('dashboard.completeAccount')}
                   </Button>
                   <Button 
                     variant="outline" 
-                    className="border-white text-white hover:bg-white hover:text-primary"
+                    className="border-white text-white hover:bg-white hover:text-primary text-sm sm:text-base"
                     onClick={() => setShowGuide(true)}
                   >
                     {t('dashboard.viewGuide')}
@@ -143,7 +143,7 @@ const WelcomeBanner: React.FC<WelcomeBannerProps> = ({
               <Button
                 variant="ghost"
                 onClick={onDismissWelcome}
-                className="text-white hover:bg-white/20 h-8 w-8 p-0"
+                className="text-white hover:bg-white/20 h-6 w-6 sm:h-8 sm:w-8 p-0 self-start sm:self-center"
               >
                 ✕
               </Button>
@@ -165,30 +165,30 @@ const WelcomeBanner: React.FC<WelcomeBannerProps> = ({
 
   return (
     <>
-      <Card className="border-0 shadow-lg bg-gradient-to-r from-white to-gray-50 mb-8">
-        <CardContent className="p-6">
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+      <Card className="border-0 shadow-lg bg-gradient-to-r from-white to-gray-50 mb-4 sm:mb-6 lg:mb-8">
+        <CardContent className="p-3 sm:p-4 lg:p-6">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 sm:gap-6">
             {/* User Info */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3 sm:space-x-4">
               <div className="relative">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary to-serengeti-500 rounded-full flex items-center justify-center text-white text-xl font-bold">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-primary to-serengeti-500 rounded-full flex items-center justify-center text-white text-lg sm:text-xl font-bold">
                   {profile?.full_name ? profile.full_name.charAt(0).toUpperCase() : user?.email?.charAt(0).toUpperCase()}
                 </div>
                 {isProfileComplete && (
-                  <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                    <CheckCircle className="h-4 w-4 text-white" />
+                  <div className="absolute -bottom-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 bg-green-500 rounded-full flex items-center justify-center">
+                    <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
                   </div>
                 )}
               </div>
-              <div className="space-y-1">
-                <h1 className="text-2xl font-bold text-gray-900">
+              <div className="space-y-1 min-w-0">
+                <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 line-clamp-1">
                   {t('dashboard.welcomeUser', { name: profile?.full_name || 'Mwenye Nyumba' })}
                 </h1>
-                <p className="text-gray-600">
+                <p className="text-gray-600 text-sm sm:text-base line-clamp-1">
                   {user?.email}
                 </p>
                 {profile?.phone && (
-                  <p className="text-sm text-gray-500">
+                  <p className="text-xs sm:text-sm text-gray-500">
                     📞 {profile.phone}
                   </p>
                 )}

@@ -72,32 +72,32 @@ const Navigation = () => {
 
   return (
     <nav className="bg-white/95 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b border-gray-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16 sm:h-20">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+        <div className="flex justify-between items-center h-14 sm:h-16 lg:h-20">
           
           {/* Enhanced Brand Logo Section - Sehemu ya nembo ya chapa */}
-          <div className="flex items-center space-x-4">
-            <Link to="/" className="flex items-center space-x-3 group">
-              <div className="p-1.5 sm:p-2 bg-gradient-to-br from-primary to-serengeti-500 
-                              rounded-lg sm:rounded-xl transform group-hover:scale-110 transition-all duration-300 
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            <Link to="/" className="flex items-center space-x-2 sm:space-x-3 group">
+              <div className="p-1 sm:p-1.5 lg:p-2 bg-gradient-to-br from-primary to-serengeti-500 
+                              rounded-md sm:rounded-lg lg:rounded-xl transform group-hover:scale-110 transition-all duration-300 
                               shadow-lg group-hover:shadow-xl">
-                <Home className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
+                <Home className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-white" />
               </div>
               <div className="transform group-hover:scale-105 transition-transform duration-300">
-                <span className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-primary to-serengeti-600 
+                <span className="text-base sm:text-lg lg:text-2xl font-bold bg-gradient-to-r from-primary to-serengeti-600 
                                 bg-clip-text text-transparent">
                   Nyumba
                 </span>
-                <span className="text-lg sm:text-2xl font-bold text-serengeti-600">Link</span>
+                <span className="text-base sm:text-lg lg:text-2xl font-bold text-serengeti-600">Link</span>
               </div>
             </Link>
             
             {/* Host Dashboard Link - Kiungo cha dashibodi ya mwenye nyumba (LEFT SIDE) - Only show for non-logged in users */}
             {!user && (
-              <Link to="/signup?type=landlord">
+              <Link to="/signup?type=landlord" className="hidden sm:block">
                 <Button
                   variant="ghost"
-                  className="px-4 py-2 rounded-full transition-all duration-300 text-sm sm:text-base
+                  className="px-2 sm:px-4 py-1 sm:py-2 rounded-full transition-all duration-300 text-xs sm:text-sm lg:text-base
                              hover:bg-primary/10 hover:text-primary hover:scale-105"
                 >
                   {t('navigation.becomeHost')}
@@ -225,15 +225,15 @@ const Navigation = () => {
           </div>
 
           {/* Enhanced Mobile Menu Toggle Button - Kitufe cha menyu ya simu */}
-          <div className="md:hidden flex items-center space-x-2">
+          <div className="md:hidden flex items-center space-x-1">
             {/* Mobile Search Button - Takes user to browse page */}
             <Link to="/browse">
               <Button
                 variant="ghost"
                 size="sm"
-                className="p-2 hover:bg-primary/10 hover:text-primary rounded-full transition-all duration-300 hover:scale-105"
+                className="p-1.5 hover:bg-primary/10 hover:text-primary rounded-full transition-all duration-300 hover:scale-105"
               >
-                <Search className="h-5 w-5 sm:h-6 sm:w-6 text-gray-600" />
+                <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600" />
               </Button>
             </Link>
             
@@ -242,12 +242,12 @@ const Navigation = () => {
               variant="ghost"
               size="sm"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 hover:bg-gray-100 rounded-full transition-all duration-300 hover:scale-105"
+              className="p-1.5 hover:bg-gray-100 rounded-full transition-all duration-300 hover:scale-105"
             >
               {isMenuOpen ? (
-                <X className="h-5 w-5 sm:h-6 sm:w-6 text-gray-600" />
+                <X className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600" />
               ) : (
-                <Menu className="h-5 w-5 sm:h-6 sm:w-6 text-gray-600" />
+                <Menu className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600" />
               )}
             </Button>
           </div>
@@ -266,22 +266,22 @@ const Navigation = () => {
         <div className={`md:hidden absolute top-full left-0 right-0 bg-white/95 backdrop-blur-md 
                          shadow-lg z-50 transform transition-all duration-300 ease-in-out border-t border-gray-200
                          ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}`}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="py-4">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+            <div className="py-3 sm:py-4">
             
             {/* Mobile Menu Content - Maudhui ya menyu ya simu */}
-            <div className="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
+            <div className="flex-1 px-2 sm:px-4 py-2 sm:py-4 space-y-1 sm:space-y-2 overflow-y-auto">
               {/* Enhanced Mobile Home Link - Kiungo cha nyumbani kwa simu */}
               <Link
                 to="/"
-                className={`block px-4 py-3 text-gray-700 hover:bg-primary/10 hover:text-primary 
-                           rounded-xl text-sm sm:text-base transition-all duration-300 ${
+                className={`block px-3 sm:px-4 py-2 sm:py-3 text-gray-700 hover:bg-primary/10 hover:text-primary 
+                           rounded-lg sm:rounded-xl text-sm transition-all duration-300 ${
                   location.pathname === '/' ? 'bg-primary/15 text-primary border border-primary/20' : ''
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 <div className="flex items-center">
-                  <Home className="h-5 w-5 mr-3 text-gray-400" />
+                  <Home className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-gray-400" />
                   {t('navigation.home')}
                 </div>
               </Link>
@@ -289,14 +289,14 @@ const Navigation = () => {
               {/* Enhanced Mobile Browse Link - Kiungo cha kutazama kwa simu */}
               <Link
                 to="/browse"
-                className={`block px-4 py-3 text-gray-700 hover:bg-primary/10 hover:text-primary 
-                           rounded-xl text-sm sm:text-base transition-all duration-300 ${
+                className={`block px-3 sm:px-4 py-2 sm:py-3 text-gray-700 hover:bg-primary/10 hover:text-primary 
+                           rounded-lg sm:rounded-xl text-sm transition-all duration-300 ${
                   location.pathname === '/browse' ? 'bg-primary/15 text-primary border border-primary/20' : ''
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 <div className="flex items-center">
-                  <Search className="h-5 w-5 mr-3 text-gray-400" />
+                  <Search className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-gray-400" />
                   {t('navigation.browse')}
                 </div>
               </Link>
@@ -304,14 +304,14 @@ const Navigation = () => {
               {/* Enhanced Mobile About Link - Kiungo cha kuhusu kwa simu */}
               <Link
                 to="/about"
-                className={`block px-4 py-3 text-gray-700 hover:bg-primary/10 hover:text-primary 
-                           rounded-xl text-sm sm:text-base transition-all duration-300 ${
+                className={`block px-3 sm:px-4 py-2 sm:py-3 text-gray-700 hover:bg-primary/10 hover:text-primary 
+                           rounded-lg sm:rounded-xl text-sm transition-all duration-300 ${
                   location.pathname === '/about' ? 'bg-primary/15 text-primary border border-primary/20' : ''
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 <div className="flex items-center">
-                  <User className="h-5 w-5 mr-3 text-gray-400" />
+                  <User className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-gray-400" />
                   {t('navigation.about')}
                 </div>
               </Link>
@@ -320,14 +320,14 @@ const Navigation = () => {
               {user && (
                 <Link
                   to="/dashboard"
-                  className={`block px-4 py-3 text-gray-700 hover:bg-primary/10 hover:text-primary 
-                             rounded-xl text-sm sm:text-base transition-all duration-300 ${
+                  className={`block px-3 sm:px-4 py-2 sm:py-3 text-gray-700 hover:bg-primary/10 hover:text-primary 
+                             rounded-lg sm:rounded-xl text-sm transition-all duration-300 ${
                     location.pathname === '/dashboard' ? 'bg-primary/15 text-primary border border-primary/20' : ''
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <div className="flex items-center">
-                    <User className="h-5 w-5 mr-3 text-gray-400" />
+                    <User className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-gray-400" />
                     {t('navigation.dashboard')}
                   </div>
                 </Link>
@@ -335,28 +335,28 @@ const Navigation = () => {
               
               <Link
                 to={user ? "/dashboard" : "/signup?type=landlord"}
-                className={`block px-4 py-3 text-gray-700 hover:bg-primary/10 hover:text-primary 
-                           rounded-xl text-sm sm:text-base transition-all duration-300 ${
+                className={`block px-3 sm:px-4 py-2 sm:py-3 text-gray-700 hover:bg-primary/10 hover:text-primary 
+                           rounded-lg sm:rounded-xl text-sm transition-all duration-300 ${
                   location.pathname === '/dashboard' ? 'bg-primary/15 text-primary border border-primary/20' : ''
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 <div className="flex items-center">
-                  <Building2 className="h-5 w-5 mr-3 text-gray-400" />
+                  <Building2 className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-gray-400" />
                   {t('navigation.becomeHost')}
                 </div>
               </Link>
 
               {/* Enhanced Mobile User Actions Section - Sehemu ya vitendo vya mtumiaji kwa simu */}
-              <div className="border-t border-gray-200 pt-4 mt-4">
+              <div className="border-t border-gray-200 pt-2 sm:pt-4 mt-2 sm:mt-4">
                 {/* Enhanced Mobile Language Toggle - Kubadilisha lugha kwa simu */}
                 <Button
                   variant="ghost"
                   onClick={toggleLanguage}
-                  className="w-full justify-start px-4 py-3 hover:bg-gray-100 rounded-xl text-sm sm:text-base
+                  className="w-full justify-start px-3 sm:px-4 py-2 sm:py-3 hover:bg-gray-100 rounded-lg sm:rounded-xl text-sm
                              transition-all duration-300 hover:scale-105"
                 >
-                  <Globe className="h-5 w-5 mr-3 text-gray-400" />
+                  <Globe className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-gray-400" />
                   {t('navigation.language')} ({i18n.language.toUpperCase()})
                 </Button>
                 
@@ -364,28 +364,28 @@ const Navigation = () => {
                   <Button
                     variant="ghost"
                     onClick={() => signOut(navigate)}
-                    className="w-full justify-start px-4 py-3 hover:bg-red-50 hover:text-red-600 
-                               rounded-xl mt-2 text-sm sm:text-base transition-all duration-300 hover:scale-105"
+                    className="w-full justify-start px-3 sm:px-4 py-2 sm:py-3 hover:bg-red-50 hover:text-red-600 
+                               rounded-lg sm:rounded-xl mt-1 sm:mt-2 text-sm transition-all duration-300 hover:scale-105"
                   >
-                    <LogOut className="h-5 w-5 mr-3 text-gray-400" />
+                    <LogOut className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-gray-400" />
                     {t('navigation.signOut')}
                   </Button>
                 ) : (
                   <>
                     {/* Enhanced Mobile Sign In Link - Kiungo cha kuingia kwa simu */}
-                    <Link to="/signin" className="block mt-2">
-                      <Button variant="ghost" className="w-full justify-start px-4 py-3 hover:bg-gray-100 
-                                                       rounded-xl text-sm sm:text-base transition-all duration-300 hover:scale-105">
-                        <User className="h-5 w-5 mr-3 text-gray-400" />
+                    <Link to="/signin" className="block mt-1 sm:mt-2">
+                      <Button variant="ghost" className="w-full justify-start px-3 sm:px-4 py-2 sm:py-3 hover:bg-gray-100 
+                                                       rounded-lg sm:rounded-xl text-sm transition-all duration-300 hover:scale-105">
+                        <User className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-gray-400" />
                         {t('navigation.signIn')}
                       </Button>
                     </Link>
                     
                     {/* Enhanced Mobile Sign Up Button - Kitufe cha kujisajili kwa simu */}
-                    <Link to="/signup" className="block mt-2">
+                    <Link to="/signup" className="block mt-1 sm:mt-2">
                       <Button className="w-full bg-gradient-to-r from-primary to-serengeti-500 
-                                       hover:from-primary/90 hover:to-serengeti-400 text-sm sm:text-base 
-                                       py-3 shadow-lg hover:shadow-xl transform hover:scale-105 
+                                       hover:from-primary/90 hover:to-serengeti-400 text-sm 
+                                       py-2 sm:py-3 shadow-lg hover:shadow-xl transform hover:scale-105 
                                        transition-all duration-300">
                         {t('navigation.signUp')}
                       </Button>

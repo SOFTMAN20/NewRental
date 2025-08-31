@@ -219,10 +219,10 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
     return (
       <Card className="group overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-0 shadow-lg bg-white">
         <Link to={`/property/${id}`} className="block">
-          <div className="flex">
+          <div className="flex flex-col sm:flex-row">
             {/* LIST VIEW IMAGE SECTION */}
             <div 
-              className="w-80 h-60 flex-shrink-0 relative overflow-hidden"
+              className="w-full sm:w-80 h-48 sm:h-60 flex-shrink-0 relative overflow-hidden"
               onTouchStart={handleMobileTouch}
               onClick={handleMobileTouch}
             >
@@ -256,17 +256,17 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
               <Button
                 variant="ghost"
                 size="sm"
-                className={`absolute top-3 right-3 p-2 rounded-full transition-all duration-300 ${
+                className={`absolute top-2 sm:top-3 right-2 sm:right-3 p-1.5 sm:p-2 rounded-full transition-all duration-300 ${
                   isFavorited ? 'text-red-500 bg-white/95' : 'text-white bg-black/30'
                 } hover:text-red-500 hover:bg-white/95 transform hover:scale-110`}
                 onClick={handleToggleFavorite}
               >
-                <Heart className={`h-5 w-5 ${isFavorited ? 'fill-current' : ''}`} />
+                <Heart className={`h-4 w-4 sm:h-5 sm:w-5 ${isFavorited ? 'fill-current' : ''}`} />
               </Button>
 
               {/* PRICE OVERLAY - LIST VIEW */}
-              <div className="absolute bottom-3 left-3">
-                <Badge className="bg-white/95 text-gray-900 font-bold text-base px-3 py-1 shadow-lg 
+              <div className="absolute bottom-2 sm:bottom-3 left-2 sm:left-3">
+                <Badge className="bg-white/95 text-gray-900 font-bold text-sm sm:text-base px-2 sm:px-3 py-1 shadow-lg 
                                   border border-gray-200 transform group-hover:scale-105 transition-transform duration-300">
                   TZS {price.toLocaleString()}/mwezi
                 </Badge>
@@ -274,34 +274,36 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             </div>
 
             {/* LIST VIEW CONTENT SECTION */}
-            <div className="flex-1 p-6">
-              <div className="space-y-3">
+            <div className="flex-1 p-3 sm:p-4 lg:p-6">
+              <div className="space-y-2 sm:space-y-3">
                 <div>
-                  <h3 className="font-semibold text-xl text-primary group-hover:text-gray-900 transition-colors duration-300 line-clamp-1">
+                  <h3 className="font-semibold text-lg sm:text-xl text-primary group-hover:text-gray-900 transition-colors duration-300 line-clamp-1">
                     {title}
                   </h3>
                   <div className="flex items-center text-gray-600 text-sm mt-1 group-hover:text-gray-700 transition-colors duration-300">
-                    <MapPin className="h-4 w-4 mr-1" />
-                    <span>{location}</span>
+                    <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                    <span className="line-clamp-1">{location}</span>
                   </div>
                 </div>
 
                 {/* RATING AND CONTACT SECTION */}
-                <div className="flex items-center space-x-3">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                   {electricity && (
                     <div className="flex items-center text-green-600 group-hover:text-green-700 transition-colors duration-300" title="Umeme">
-                      <Zap className="h-4 w-4" />
+                      <Zap className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                      <span className="text-xs sm:text-sm font-medium">{t('propertyCard.electricity')}</span>
                     </div>
                   )}
                   {water && (
                     <div className="flex items-center text-blue-600 group-hover:text-blue-700 transition-colors duration-300" title="Maji">
-                      <Droplets className="h-4 w-4" />
+                      <Droplets className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                      <span className="text-xs sm:text-sm font-medium">{t('propertyCard.water')}</span>
                     </div>
                   )}
                   {bedrooms && bedrooms > 0 && (
                     <div className="flex items-center text-gray-600 group-hover:text-gray-700 transition-colors duration-300" title="Vyumba vya kulala">
-                      <Bed className="h-4 w-4 mr-1" />
-                      <span className="text-sm">{bedrooms} {t('propertyCard.bedrooms')}</span>
+                      <Bed className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                      <span className="text-xs sm:text-sm">{bedrooms} {t('propertyCard.bedrooms')}</span>
                     </div>
                   )}
                 </div>
@@ -397,17 +399,17 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
           <Button
             variant="ghost"
             size="sm"
-            className={`absolute top-3 right-3 p-2 rounded-full transition-all duration-300 ${
+            className={`absolute top-2 sm:top-3 right-2 sm:right-3 p-1.5 sm:p-2 rounded-full transition-all duration-300 ${
               isFavorited ? 'text-red-500 bg-white/95' : 'text-white bg-black/30'
             } hover:text-red-500 hover:bg-white/95 transform hover:scale-110`}
             onClick={handleToggleFavorite}
           >
-            <Heart className={`h-5 w-5 ${isFavorited ? 'fill-current' : ''}`} />
+            <Heart className={`h-4 w-4 sm:h-5 sm:w-5 ${isFavorited ? 'fill-current' : ''}`} />
           </Button>
           
           {/* Price badge overlay */}
-          <div className="absolute top-3 left-3">
-            <Badge className="bg-white/95 text-gray-900 font-bold text-sm px-2 py-1 shadow-lg 
+          <div className="absolute top-2 sm:top-3 left-2 sm:left-3">
+            <Badge className="bg-white/95 text-gray-900 font-bold text-xs sm:text-sm px-2 py-1 shadow-lg 
                               border border-gray-200 transform group-hover:scale-105 transition-transform duration-300">
               TZS {price.toLocaleString()}
             </Badge>
@@ -415,39 +417,41 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
         </div>
 
         {/* GRID VIEW CONTENT SECTION */}
-        <CardContent className="p-4">
-          <div className="space-y-3">
+        <CardContent className="p-3 sm:p-4">
+          <div className="space-y-2 sm:space-y-3">
             {/* TITLE AND LOCATION */}
             <div>
-              <h3 className="font-semibold text-base line-clamp-1 text-primary group-hover:text-gray-900 transition-colors duration-300">
+              <h3 className="font-semibold text-sm sm:text-base line-clamp-1 text-primary group-hover:text-gray-900 transition-colors duration-300">
                 {title}
               </h3>
-              <div className="flex items-center text-gray-500 text-sm group-hover:text-gray-600 transition-colors duration-300">
+              <div className="flex items-center text-gray-500 text-xs sm:text-sm group-hover:text-gray-600 transition-colors duration-300">
                 <MapPin className="h-3 w-3 mr-1 flex-shrink-0" />
                 <span className="line-clamp-1">{location}</span>
               </div>
             </div>
 
             {/* AMENITIES DISPLAY */}
-            <div className="flex items-center space-x-2">
+            <div className="flex flex-wrap items-center gap-1 sm:gap-2">
               {electricity && (
-                <Badge variant="secondary" className="text-xs px-2 py-1 bg-green-100 text-green-800 
+                <Badge variant="secondary" className="text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 bg-green-100 text-green-800 
                                                      border border-green-200 group-hover:bg-green-200 transition-colors duration-300">
-                  <Zap className="h-3 w-3 mr-1" />
-                  {t('browse.electricity')}
+                  <Zap className="h-2.5 w-2.5 sm:h-3 sm:w-3 mr-0.5 sm:mr-1" />
+                  <span className="hidden sm:inline">{t('browse.electricity')}</span>
+                  <span className="sm:hidden">⚡</span>
                 </Badge>
               )}
               {water && (
-                <Badge variant="secondary" className="text-xs px-2 py-1 bg-blue-100 text-blue-800 
+                <Badge variant="secondary" className="text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 bg-blue-100 text-blue-800 
                                                      border border-blue-200 group-hover:bg-blue-200 transition-colors duration-300">
-                  <Droplets className="h-3 w-3 mr-1" />
-                  {t('browse.water')}
+                  <Droplets className="h-2.5 w-2.5 sm:h-3 sm:w-3 mr-0.5 sm:mr-1" />
+                  <span className="hidden sm:inline">{t('browse.water')}</span>
+                  <span className="sm:hidden">💧</span>
                 </Badge>
               )}
               {bedrooms && bedrooms > 0 && (
-                <Badge variant="secondary" className="text-xs px-2 py-1 bg-gray-100 text-gray-800 
+                <Badge variant="secondary" className="text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 bg-gray-100 text-gray-800 
                                                      border border-gray-200 group-hover:bg-gray-200 transition-colors duration-300">
-                  <Bed className="h-3 w-3 mr-1" />
+                  <Bed className="h-2.5 w-2.5 sm:h-3 sm:w-3 mr-0.5 sm:mr-1" />
                   <span>{bedrooms}</span>
                 </Badge>
               )}

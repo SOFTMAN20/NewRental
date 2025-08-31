@@ -209,33 +209,20 @@ const FeaturedProperties = () => {
   }
 
   return (
-    <section className="py-16 bg-gradient-to-br from-safari-50 via-white to-kilimanjaro-50 relative overflow-hidden">
+    <section className="pt-0 pb-8 bg-gradient-to-br from-safari-50 via-white to-kilimanjaro-50 relative overflow-hidden -mt-8">
       {/* Background Pattern for Visual Interest */}
       <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
       <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-serengeti-100 to-transparent rounded-full blur-3xl opacity-30"></div>
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-primary/10 to-transparent rounded-full blur-3xl opacity-40"></div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="mb-12 text-center">
-          {/* Special "Featured" Badge */}
-          <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-primary to-serengeti-500 text-white rounded-full text-sm font-semibold mb-6 shadow-lg">
-            <Star className="w-4 h-4 mr-2 fill-current" />
-            Nyumba Maarufu
-          </div>
-          
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 via-primary to-serengeti-600 bg-clip-text text-transparent mb-4">
+        <div className="mb-6 text-left mt-8">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-orange-500 via-red-500 to-orange-600 bg-clip-text text-transparent mb-1">
             {t('featuredProperties.title')}
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          <p className="text-sm sm:text-base text-muted-foreground max-w-2xl leading-relaxed">
             {t('featuredProperties.subtitle')}
           </p>
-          
-          {/* Decorative line */}
-          <div className="flex items-center justify-center mt-6">
-            <div className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent w-32"></div>
-            <div className="mx-4 w-2 h-2 rounded-full bg-primary"></div>
-            <div className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent w-32"></div>
-          </div>
         </div>
 
         {properties.length > 0 ? (

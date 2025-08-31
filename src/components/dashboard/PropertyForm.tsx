@@ -949,16 +949,16 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <Card className="w-full max-w-4xl max-h-[95vh] overflow-hidden shadow-2xl border-0">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 z-50">
+      <Card className="w-full max-w-sm sm:max-w-2xl lg:max-w-4xl max-h-[95vh] overflow-hidden shadow-2xl border-0">
         {/* Enhanced Header */}
         <CardHeader className="bg-gradient-to-r from-primary/10 to-serengeti-50 border-b">
           <div className="flex justify-between items-center">
-            <div>
-              <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-serengeti-600 bg-clip-text text-transparent">
+            <div className="min-w-0 flex-1">
+              <CardTitle className="text-lg sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-primary to-serengeti-600 bg-clip-text text-transparent line-clamp-1">
               {editingProperty ? t('dashboard.updateProperty') : t('dashboard.addNewPropertyTitle')}
             </CardTitle>
-              <p className="text-gray-600 mt-1">
+              <p className="text-gray-600 mt-1 text-sm sm:text-base line-clamp-2">
                 {steps[currentStep - 1]?.description}
               </p>
             </div>
@@ -994,7 +994,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
           )}
         </CardHeader>
 
-        <CardContent className="p-6 overflow-y-auto max-h-[calc(95vh-200px)]">
+        <CardContent className="p-3 sm:p-4 lg:p-6 overflow-y-auto max-h-[calc(95vh-200px)]">
           {/* Step Navigation */}
           {renderStepNavigation()}
           
