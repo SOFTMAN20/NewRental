@@ -4,31 +4,62 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
 
-
-<url>
-  <loc>https://www.nyumba-link.com/</loc>
-  <lastmod>2025-08-29T02:41:14+00:00</lastmod>
-</url>
-
+  <!-- Homepage -->
   <url>
-    <loc>https://nyumba-link.com/about</loc>
-    <lastmod>2025-08-29</lastmod>
+    <loc>https://www.nyumba-link.com/</loc>
+    <lastmod>2025-01-27T00:00:00+00:00</lastmod>
+    <priority>1.0</priority>
+    <changefreq>daily</changefreq>
+  </url>
+
+  <!-- About Page -->
+  <url>
+    <loc>https://www.nyumba-link.com/about</loc>
+    <lastmod>2025-01-27T00:00:00+00:00</lastmod>
     <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
   </url>
 
-url>
-    <loc>https://nyumba-link.com/browse</loc>
-    <lastmod>2025-08-29</lastmod>
-    <priority>0.7</priority>
-  </url>
-
-      
+  <!-- Browse Properties Page -->
   <url>
-    <loc>https://nyumba-link.com/signup?type=landlord</loc>
-    <lastmod>2025-08-29</lastmod>
+    <loc>https://www.nyumba-link.com/browse</loc>
+    <lastmod>2025-01-27T00:00:00+00:00</lastmod>
     <priority>0.9</priority>
+    <changefreq>daily</changefreq>
   </url>
+
+  <!-- Sign Up Page -->
+  <url>
+    <loc>https://www.nyumba-link.com/signup</loc>
+    <lastmod>2025-01-27T00:00:00+00:00</lastmod>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <!-- Sign In Page -->
+  <url>
+    <loc>https://www.nyumba-link.com/signin</loc>
+    <lastmod>2025-01-27T00:00:00+00:00</lastmod>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <!-- Dashboard Page -->
+  <url>
+    <loc>https://www.nyumba-link.com/dashboard</loc>
+    <lastmod>2025-01-27T00:00:00+00:00</lastmod>
+    <priority>0.6</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <!-- Property Example Page -->
+  <url>
+    <loc>https://www.nyumba-link.com/property-example</loc>
+    <lastmod>2025-01-27T00:00:00+00:00</lastmod>
+    <priority>0.5</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
 </urlset>
 
