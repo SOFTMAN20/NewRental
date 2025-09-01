@@ -94,7 +94,7 @@ const Navigation = () => {
             
             {/* Host Dashboard Link - Kiungo cha dashibodi ya mwenye nyumba (LEFT SIDE) - Only show for non-logged in users */}
             {!user && (
-              <Link to="/signup?type=landlord" className="hidden sm:block">
+              <Link to="/signup?type=landlord" className="block">
                 <Button
                   variant="ghost"
                   className="px-2 sm:px-4 py-1 sm:py-2 rounded-full transition-all duration-300 text-xs sm:text-sm lg:text-base
