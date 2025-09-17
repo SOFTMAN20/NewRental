@@ -36,6 +36,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import LoadingSpinner from '@/components/ui/loading-spinner';
+import { PropertyGridSkeleton } from '@/components/PropertyCardSkeleton';
 import { Search, MapPin, SlidersHorizontal, X } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { useProperties } from '@/hooks/useProperties';
@@ -451,7 +452,7 @@ const Browse = () => {
                             value={filters.maxPrice}
                             onChange={(e) => updateFilter('maxPrice', e.target.value)}
                             className="w-full"
-                          />
+                          />!
                         </div>
                       </div>
                     </div>
@@ -638,7 +639,13 @@ const Browse = () => {
         )}
 
         {/* Properties Grid/List Display */}
-        {!isLoading && sortedProperties.length > 0 ? (
+        {isLoading ? (
+          /* Skeleton Loading State - Airbnb Style */
+          <PropertyGridSkeleton 
+            count={12} 
+            viewMode={uiState.viewMode}
+          />
+        ) : sortedProperties.length > 0 ? (
           <div className={`grid gap-3 sm:gap-4 lg:gap-6 ${
             uiState.viewMode === 'grid' 
               ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
@@ -664,7 +671,7 @@ const Browse = () => {
               />
             ))}
           </div>
-        ) : !isLoading ? (
+        ) : (
           /* Empty State */
           <div className="text-center py-16">
             <div className="max-w-md mx-auto">
@@ -680,7 +687,7 @@ const Browse = () => {
               </Button>
             </div>
           </div>
-        ) : null}
+        )}
       </div>
       
       <Footer />

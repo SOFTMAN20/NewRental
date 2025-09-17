@@ -13,7 +13,7 @@
  * - Real-time preview and feedback (Muhtasari wa wakati halisi na majibu)
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ImageUpload from '@/components/ImageUpload';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -98,6 +98,77 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
 }) => {
   const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState(1);
+
+  // Form persistence constants
+  const FORM_STORAGE_KEY = 'nyumba_link_property_form_data';
+  const STEP_STORAGE_KEY = 'nyumba_link_property_form_step';
+
+  // Load saved form data and step from localStorage on component mount
+  useEffect(() => {
+    if (isOpen && !editingProperty) {
+      // Only restore data for new properties, not when editing existing ones
+      try {
+        const savedFormData = localStorage.getItem(FORM_STORAGE_KEY);
+        const savedStep = localStorage.getItem(STEP_STORAGE_KEY);
+        
+        if (savedFormData) {
+          const parsedData = JSON.parse(savedFormData);
+          // Restore form data by calling onInputChange for each field
+          Object.keys(parsedData).forEach((key) => {
+            if (parsedData[key] !== undefined && parsedData[key] !== null) {
+              onInputChange(key as keyof PropertyFormData, parsedData[key]);
+            }
+          });
+        }
+        
+        if (savedStep) {
+          const stepNumber = parseInt(savedStep, 10);
+          if (stepNumber >= 1 && stepNumber <= 4) {
+            setCurrentStep(stepNumber);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading saved form data:', error);
+        // Clear corrupted data
+        localStorage.removeItem(FORM_STORAGE_KEY);
+        localStorage.removeItem(STEP_STORAGE_KEY);
+      }
+    }
+  }, [isOpen, editingProperty]);
+
+  // Save form data to localStorage whenever formData changes
+  useEffect(() => {
+    if (isOpen && !editingProperty) {
+      // Only save data for new properties, not when editing existing ones
+      try {
+        localStorage.setItem(FORM_STORAGE_KEY, JSON.stringify(formData));
+      } catch (error) {
+        console.error('Error saving form data:', error);
+      }
+    }
+  }, [formData, isOpen, editingProperty]);
+
+  // Save current step to localStorage whenever step changes
+  useEffect(() => {
+    if (isOpen && !editingProperty) {
+      // Only save step for new properties, not when editing existing ones
+      try {
+        localStorage.setItem(STEP_STORAGE_KEY, currentStep.toString());
+      } catch (error) {
+        console.error('Error saving form step:', error);
+      }
+    }
+  }, [currentStep, isOpen, editingProperty]);
+
+  // Clear saved data when form is successfully submitted or closed
+  const clearSavedData = () => {
+    try {
+      localStorage.removeItem(FORM_STORAGE_KEY);
+      localStorage.removeItem(STEP_STORAGE_KEY);
+    } catch (error) {
+      console.error('Error clearing saved form data:', error);
+    }
+  };
   
   // Debug logging for form data
   console.log('PropertyForm rendered with:', {
@@ -789,6 +860,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
           console.log('Calling onSubmit function...');
           await onSubmit(syntheticEvent);
           console.log('Form submitted successfully');
+          // Clear saved data after successful submission
+          clearSavedData();
         } catch (error) {
           console.error('Form submission error:', error);
           alert('Kuna tatizo la kuongeza nyumba. Tafadhali jaribu tena.');
@@ -819,7 +892,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             <Button 
               type="button" 
               variant="outline"
-              onClick={currentStep === 1 ? onClose : prevStep}
+              onClick={currentStep === 1 ? () => { clearSavedData(); onClose(); } : prevStep}
               disabled={submitting}
               className="flex-1 flex items-center justify-center gap-2 min-h-[44px]"
             >
@@ -880,7 +953,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
           <Button 
             type="button" 
             variant="outline"
-            onClick={currentStep === 1 ? onClose : prevStep}
+            onClick={currentStep === 1 ? () => { clearSavedData(); onClose(); } : prevStep}
             disabled={submitting}
             className="flex items-center gap-2"
           >
@@ -965,7 +1038,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             <Button 
               variant="ghost" 
               size="sm"
-              onClick={onClose}
+              onClick={() => { clearSavedData(); onClose(); }}
               className="hover:bg-red-50 hover:text-red-600"
             >
               <X className="h-5 w-5" />

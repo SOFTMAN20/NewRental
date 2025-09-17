@@ -6,6 +6,7 @@ import { Star, MapPin, Wifi, Car, Utensils, Zap, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useProperties } from '@/hooks/useProperties';
 import LoadingSpinner from '@/components/ui/loading-spinner';
+import { PropertyGridSkeleton } from '@/components/PropertyCardSkeleton';
 import { useTranslation } from 'react-i18next';
 
 /**
@@ -173,8 +174,8 @@ const FeaturedProperties = () => {
 
   if (isLoading) {
     return (
-      <section className="py-16 bg-muted/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="pt-0 pb-8 bg-gradient-to-br from-safari-50 via-white to-kilimanjaro-50 relative overflow-hidden -mt-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               {t('featuredProperties.title')}
@@ -183,9 +184,12 @@ const FeaturedProperties = () => {
               {t('featuredProperties.subtitle')}
             </p>
           </div>
-          <div className="flex justify-center py-8">
-            <LoadingSpinner size="lg" />
-          </div>
+          
+          {/* Skeleton Loading Grid */}
+          <PropertyGridSkeleton 
+            count={8} 
+            viewMode="grid"
+          />
         </div>
       </section>
     );

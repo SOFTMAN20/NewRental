@@ -35,6 +35,7 @@ import PropertyForm from '@/components/dashboard/PropertyForm';
 import ProfileSettings from '@/components/dashboard/ProfileSettings';
 import GetHelpSection from '@/components/dashboard/GetHelpSection';
 import { RefreshCw } from 'lucide-react';
+import { PropertyGridSkeleton } from '@/components/PropertyCardSkeleton';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
@@ -577,15 +578,52 @@ const Dashboard = () => {
    */
   if (uiState.loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50">
         <Navigation />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex items-center justify-center py-16">
-            <div className="text-center">
-              <RefreshCw className="h-12 w-12 text-primary mx-auto mb-4 animate-spin" />
-              <p className="text-lg text-gray-600">{t('dashboard.loading')}</p>
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
+          
+          {/* Header Skeleton */}
+          <div className="mb-6">
+            <div className="h-8 bg-gray-200 rounded w-1/3 mb-2 animate-pulse"></div>
+            <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse"></div>
+          </div>
+          
+          {/* Quick Actions Skeleton */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="bg-white rounded-lg p-4 shadow-sm animate-pulse">
+                <div className="w-8 h-8 bg-gray-200 rounded mb-3"></div>
+                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Stats Skeleton */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="bg-white rounded-lg p-6 shadow-sm animate-pulse">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-8 h-8 bg-gray-200 rounded"></div>
+                  <div className="h-4 bg-gray-200 rounded w-16"></div>
+                </div>
+                <div className="h-8 bg-gray-200 rounded w-20 mb-2"></div>
+                <div className="h-4 bg-gray-200 rounded w-24"></div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Property Management Section Skeleton */}
+          <div className="bg-white rounded-lg shadow-sm">
+            <div className="p-6 border-b">
+              <div className="h-6 bg-gray-200 rounded w-1/4 mb-2 animate-pulse"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/3 animate-pulse"></div>
+            </div>
+            <div className="p-6">
+              <PropertyGridSkeleton count={6} viewMode="grid" />
             </div>
           </div>
+          
         </div>
       </div>
     );
