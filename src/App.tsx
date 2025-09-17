@@ -71,6 +71,7 @@ import ColorPalette from "./components/ColorPalette";
 import Typography from "./components/Typography";
 import LoadingStates from "./components/LoadingStates";
 import ComponentLibrary from "./components/ui/ComponentLibrary";
+import MobileBottomNav from "./components/MobileBottomNav";
 
 /**
  * REACT QUERY CLIENT CONFIGURATION
@@ -144,6 +145,9 @@ const App = () => (
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          
+          {/* Mobile Bottom Navigation - Only visible on mobile screens */}
+          <MobileBottomNav />
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>

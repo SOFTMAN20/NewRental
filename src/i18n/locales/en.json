@@ -10,6 +10,14 @@
     "language": "Language",
     "becomeHost": "Become a Host"
   },
+  "bottomNav": {
+    "explore": "Explore",
+    "wishlists": "Wishlists",
+    "host": "Host",
+    "becomeHost": "Host",
+    "profile": "Profile",
+    "login": "Log in"
+  },
   "homepage": {
     "heroTitle": "Find Your",
     "heroTitleHighlight": "Perfect Home",

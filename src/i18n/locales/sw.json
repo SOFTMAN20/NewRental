@@ -10,6 +10,14 @@
     "language": "Lugha",
     "becomeHost": "Kuwa Mwenye Nyumba"
   },
+  "bottomNav": {
+    "explore": "Chunguza",
+    "wishlists": "Vipendwa",
+    "host": "Mwenyeji",
+    "becomeHost": "Mwenyeji",
+    "profile": "Wasifu",
+    "login": "Ingia"
+  },
   "homepage": {
     "heroTitle": "Pata Nyumba",
     "heroTitleHighlight": "Yako Haraka",
