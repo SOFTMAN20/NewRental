@@ -170,15 +170,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
     }
   };
   
-  // Debug logging for form data
-  console.log('PropertyForm rendered with:', {
-    isOpen,
-    editingProperty: !!editingProperty,
-    formData,
-    profile: !!profile,
-    submitting,
-    currentStep
-  });
+  // PropertyForm component rendered
   const totalSteps = 4;
 
   if (!isOpen) return null;

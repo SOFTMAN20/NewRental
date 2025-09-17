@@ -88,7 +88,7 @@ const Navigation = () => {
                                 bg-clip-text text-transparent">
                   Nyumba
                 </span>
-                <span className="text-base sm:text-lg lg:text-2xl font-bold text-serengeti-600">Link</span>
+                <span className="text-base sm:text-lg lg:text-2xl font-bold text-serengeti-600">Link TZ</span>
               </div>
             </Link>
             

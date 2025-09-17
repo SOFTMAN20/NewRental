@@ -259,7 +259,7 @@ const getDefaultCoordinates = (location: string): Coordinates | null => {
     for (const part of locationParts) {
       // Exact match for specific areas (like "iyunga", "mikocheni", etc.)
       if (part === key) {
-        console.log(`Found exact match for specific area: ${key}`);
+        // Found exact match for specific area
         return coords;
       }
     }
@@ -269,7 +269,7 @@ const getDefaultCoordinates = (location: string): Coordinates | null => {
   for (const part of locationParts) {
     for (const [key, coords] of Object.entries(DEFAULT_COORDINATES)) {
       if (part.includes(key) && key.length > 3) { // Avoid matching very short words
-        console.log(`Found partial match for area: ${key} in part: ${part}`);
+        // Found partial match for area
         return coords;
       }
     }
@@ -278,7 +278,7 @@ const getDefaultCoordinates = (location: string): Coordinates | null => {
   // Third, check for city-level matches (lowest priority)
   for (const [key, coords] of Object.entries(DEFAULT_COORDINATES)) {
     if (normalizedLocation.includes(key) && ['dar es salaam', 'dodoma', 'arusha', 'mwanza', 'mbeya', 'zanzibar'].includes(key)) {
-      console.log(`Found city-level match: ${key}`);
+      // Found city-level match
       return coords;
     }
   }
@@ -329,32 +329,32 @@ const Map: React.FC<MapProps> = ({
       setError(null);
 
       try {
-        console.log(`Resolving coordinates for location: "${location}"`);
+        // Resolving coordinates for location
         
         // First, try to get default coordinates for known locations
         const defaultCoords = getDefaultCoordinates(location);
         if (defaultCoords) {
-          console.log(`Using default coordinates for: ${location}`);
+          // Using default coordinates
           setCoordinates(defaultCoords);
           setIsLoading(false);
           return;
         }
 
-        console.log(`No default coordinates found, trying geocoding for: ${location}`);
+        // No default coordinates found, trying geocoding
         
         // If no default coordinates, try geocoding
         const geocodedCoords = await geocodeAddress(location);
         if (geocodedCoords) {
-          console.log(`Successfully geocoded: ${location}`);
+          // Successfully geocoded
           setCoordinates(geocodedCoords);
         } else {
-          console.log(`Geocoding failed for: ${location}, using Dar es Salaam fallback`);
+          // Geocoding failed, using Dar es Salaam fallback
           // Fallback to Dar es Salaam center if all else fails
           setCoordinates(DEFAULT_COORDINATES['dar es salaam']);
           setError('Mahali halisi halijulikana, tunaonyesha eneo la karibu. Jaribu kutumia jina la eneo au kata.');
         }
       } catch (err) {
-        console.error('Error resolving coordinates:', err);
+        // Error resolving coordinates
         setCoordinates(DEFAULT_COORDINATES['dar es salaam']);
         setError('Imeshindikana kupata mahali halisi. Hakikisha umeme na mtandao upo.');
       } finally {

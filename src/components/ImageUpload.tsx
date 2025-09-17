@@ -90,15 +90,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       throw new Error(result.error || 'Server compression failed');
     }
 
-    // Log server-side compression results
-    if (result.metadata) {
-      console.log('⚙️ Server-Side Compression Results:');
-      console.log(`📏 Final size: ${(result.metadata.compressedSize / 1024 / 1024).toFixed(2)} MB`);
-      console.log(`📐 Final dimensions: ${result.metadata.dimensions.width}x${result.metadata.dimensions.height}`);
-      console.log(`📊 Total compression ratio: ${result.metadata.compressionRatio}%`);
-      console.log(`🌐 Public URL: ${result.url}`);
-      console.log('---');
-    }
+    // Server-side compression completed successfully
 
     return result.url;
   };

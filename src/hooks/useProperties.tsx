@@ -194,7 +194,7 @@ export const useProperties = () => {
        * Console logs help track data flow and identify issues.
        * Can be removed in production for performance.
        */
-      console.log('Properties fetched successfully:', transformedData);
+      // Properties fetched successfully
       return transformedData as Property[];
     },
   });

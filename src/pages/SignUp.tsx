@@ -24,7 +24,6 @@ const SignUp = () => {
     phone: '',
     password: '',
     confirmPassword: '',
-    userType: searchParams.get('type') === 'landlord' ? 'landlord' : '',
     userType: 'landlord' // Always landlord since only landlords register
   });
   const navigate = useNavigate();

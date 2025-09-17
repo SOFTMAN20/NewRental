@@ -53,7 +53,7 @@ const FeaturedPropertyCard = ({ property, index, t }: { property: any, index: nu
                 : 'https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=500&h=400&fit=crop'
               } 
               alt={property.title}
-              className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700"
+              className="w-full h-32 sm:h-48 object-cover group-hover:scale-110 transition-transform duration-700"
             />
           </div>
           
@@ -91,50 +91,49 @@ const FeaturedPropertyCard = ({ property, index, t }: { property: any, index: nu
           </div>
         </div>
         
-        <CardContent className="p-4">
-          <div className="mb-2">
-            <h3 className="font-semibold text-base text-gray-900 mb-1 line-clamp-1">
+        <CardContent className="p-2 sm:p-4">
+          <div className="mb-1 sm:mb-2">
+            <h3 className="font-semibold text-sm sm:text-base text-gray-900 mb-0.5 sm:mb-1 line-clamp-1">
               {property.title}
             </h3>
-            <div className="flex items-center text-muted-foreground text-sm mb-2">
-              <MapPin className="h-3 w-3 mr-1" />
+            <div className="flex items-center text-muted-foreground text-xs sm:text-sm mb-1 sm:mb-2">
+              <MapPin className="h-2.5 w-2.5 sm:h-3 sm:w-3 mr-0.5 sm:mr-1" />
               <span className="line-clamp-1">{property.location}</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-1 mb-3">
+          <div className="flex items-center gap-1 mb-2 sm:mb-3">
             {property.electricity && (
-              <Badge variant="secondary" className="text-xs px-2 py-1 bg-green-100 text-green-800 
+              <Badge variant="secondary" className="text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 bg-green-100 text-green-800 
                                                    border border-green-200 hover:bg-green-200 transition-colors duration-300">
-                <Zap className="h-3 w-3 mr-1" />
-                Umeme
+                <Zap className="h-2.5 w-2.5 sm:h-3 sm:w-3 mr-0.5 sm:mr-1" />
+                <span className="hidden sm:inline">Umeme</span>
+                <span className="sm:hidden">⚡</span>
               </Badge>
             )}
             {property.water && (
-              <Badge variant="secondary" className="text-xs px-2 py-1 bg-blue-100 text-blue-800 
+              <Badge variant="secondary" className="text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 bg-blue-100 text-blue-800 
                                                    border border-blue-200 hover:bg-blue-200 transition-colors duration-300">
-                <span className="mr-1">💧</span>
-                Maji
+                <span className="mr-0.5 sm:mr-1">💧</span>
+                <span className="hidden sm:inline">Maji</span>
               </Badge>
             )}
             {property.parking && (
-              <Badge variant="secondary" className="text-xs px-2 py-1 bg-gray-100 text-gray-800 
+              <Badge variant="secondary" className="text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 bg-gray-100 text-gray-800 
                                                    border border-gray-200 hover:bg-gray-200 transition-colors duration-300">
-                <Car className="h-3 w-3 mr-1" />
-                Parking
+                <Car className="h-2.5 w-2.5 sm:h-3 sm:w-3 mr-0.5 sm:mr-1" />
+                <span className="hidden sm:inline">Parking</span>
+                <span className="sm:hidden">🚗</span>
               </Badge>
             )}
           </div>
 
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-base font-bold text-gray-900">
-                TSh {Number(property.price).toLocaleString()}
+              <span className="text-sm sm:text-base font-bold text-gray-900">
+                TZS {Number(property.price).toLocaleString()}
               </span>
-              <span className="text-gray-500 text-sm">{t('featuredProperties.perMonth')}</span>
-              <div className="text-xs text-gray-500 mt-1">
-                {Math.floor(Math.random() * 50) + 10} {t('featuredProperties.reviews')}
-              </div>
+              <span className="text-gray-500 text-xs sm:text-sm ml-1">/month</span>
             </div>
             
             {property.profiles?.phone && (
@@ -143,10 +142,10 @@ const FeaturedPropertyCard = ({ property, index, t }: { property: any, index: nu
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="flex items-center bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded-full text-xs transition-colors"
+                className="flex items-center bg-green-500 hover:bg-green-600 text-white px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs transition-colors"
               >
-                <span className="mr-1">📱</span>
-                {t('featuredProperties.call')}
+                <span className="mr-0.5 sm:mr-1">📱</span>
+                <span className="hidden sm:inline">{t('featuredProperties.call')}</span>
               </a>
             )}
           </div>
@@ -230,7 +229,7 @@ const FeaturedProperties = () => {
         </div>
 
         {properties.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
             {properties.map((property, index) => (
               <FeaturedPropertyCard 
                 key={property.id}
