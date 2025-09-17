@@ -110,15 +110,21 @@
     <lastmod>2025-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
-  </url>   
+  </url>
 
-    <url>
+   <url>
     <loc>https://nyumba-link.com/browse?type=office</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
 
+   <url>
+    <loc>https://nyumba-link.com/browse?type=room</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
 
   <!-- Location-based Search -->
   <url>
