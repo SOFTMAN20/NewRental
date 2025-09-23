@@ -118,10 +118,10 @@ const PropertyGrid: React.FC<PropertyGridProps> = ({
           {/* Status Badge */}
           <div className="absolute top-3 right-3">
             <Badge 
-              variant={property.is_rented ? "secondary" : "default"}
-              className={property.is_rented ? "bg-gray-500" : "bg-green-500"}
+              variant={property.status === 'rented' ? "secondary" : "default"}
+              className={property.status === 'rented' ? "bg-gray-500" : "bg-green-500"}
             >
-              {property.is_rented ? t('dashboard.rented') : t('dashboard.available')}
+              {property.status === 'rented' ? t('dashboard.rented') : t('dashboard.available')}
             </Badge>
           </div>
         </div>
