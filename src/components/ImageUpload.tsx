@@ -143,15 +143,15 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     const validFiles: File[] = [];
 
     // Validate all files first
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
       const validation = validateImageFile(file);
-      
+        
       if (!validation.isValid) {
         setCompressionStatus(`❌ ${validation.error}`);
-        toast({
-          variant: "destructive",
-          title: t('common.error'),
+          toast({
+            variant: "destructive",
+            title: t('common.error'),
           description: validation.error
         });
         setUploading(false);
@@ -225,36 +225,36 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       
       {/* Upload button */}
       <div className="space-y-3">
-        <div className="flex items-center gap-4">
-          <Input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleFileUpload}
-            disabled={uploading || images.length >= maxImages}
-            className="hidden"
-            id="image-upload"
-          />
-          <Label 
-            htmlFor="image-upload" 
+      <div className="flex items-center gap-4">
+        <Input
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={handleFileUpload}
+          disabled={uploading || images.length >= maxImages}
+          className="hidden"
+          id="image-upload"
+        />
+        <Label 
+          htmlFor="image-upload" 
             className={`cursor-pointer flex items-center gap-2 px-4 py-2 border-2 border-dashed rounded-lg transition-all duration-200 ${
-              uploading || images.length >= maxImages 
+            uploading || images.length >= maxImages 
                 ? 'opacity-50 cursor-not-allowed bg-gray-50' 
                 : 'border-gray-300 hover:border-primary hover:bg-primary/5'
-            }`}
-          >
+          }`}
+        >
             {uploading ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
-              <Upload className="h-4 w-4" />
+          <Upload className="h-4 w-4" />
             )}
             {uploading ? 'Processing...' : t('dashboard.selectImages')}
-          </Label>
+        </Label>
           {images.length < maxImages && !uploading && (
-            <span className="text-sm text-gray-600">
-              {t('dashboard.canAddMore', { remaining: maxImages - images.length })}
-            </span>
-          )}
+          <span className="text-sm text-gray-600">
+            {t('dashboard.canAddMore', { remaining: maxImages - images.length })}
+          </span>
+        )}
         </div>
 
         {/* Compression Status Display */}
