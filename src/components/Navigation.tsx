@@ -84,11 +84,15 @@ const Navigation = () => {
                 <Home className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-white" />
               </div>
               <div className="transform group-hover:scale-105 transition-transform duration-300">
-                <span className="text-base sm:text-lg lg:text-2xl font-bold bg-gradient-to-r from-primary to-serengeti-600 
-                                bg-clip-text text-transparent">
-                  Nyumba
-                </span>
-                <span className="text-base sm:text-lg lg:text-2xl font-bold text-serengeti-600">Link TZ</span>
+                {/* Mobile label: NyLink Tz */}
+                <span className="md:hidden text-base sm:text-lg lg:text-2xl font-bold bg-gradient-to-r from-primary to-serengeti-600 
+                                bg-clip-text text-transparent">NyLink</span>
+                <span className="md:hidden text-base sm:text-lg lg:text-2xl font-bold text-serengeti-600"> Tz</span>
+
+                {/* Desktop/large label: NyumbaLink Tz */}
+                <span className="hidden md:inline text-base sm:text-lg lg:text-2xl font-bold bg-gradient-to-r from-primary to-serengeti-600 
+                                bg-clip-text text-transparent">NyumbaLink</span>
+                <span className="hidden md:inline text-base sm:text-lg lg:text-2xl font-bold text-serengeti-600"> Tz</span>
               </div>
             </Link>
             
