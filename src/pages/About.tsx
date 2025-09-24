@@ -164,7 +164,7 @@ const About = () => {
       name: 'StarLabs AI',
       role: t('about.leadDeveloper'),
       description: t('about.aiTeamDescription'),
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face',
+      image: '/images/starlabs.jpg',
       gradient: 'from-primary to-serengeti-500',
       skills: ['AI Development', 'System Architecture', 'Innovation']
     },
@@ -172,7 +172,7 @@ const About = () => {
       name: t('about.developmentTeam'),
       role: t('about.systemCreators'),
       description: t('about.developersDescription'),
-      image: 'https://images.unsplash.com/photo-1522075469751-3847ae2c3d8c?w=300&h=300&fit=crop&crop=face',
+      image: 'images/starlabs.jpg',
       gradient: 'from-blue-500 to-purple-500',
       skills: ['React Development', 'UI/UX Design', 'Database Management']
     },
@@ -180,7 +180,7 @@ const About = () => {
       name: t('about.serviceTeam'),
       role: t('about.customerSupport'),
       description: t('about.supportDescription'),
-      image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=300&h=300&fit=crop&crop=face',
+      image: 'services.jpg',
       gradient: 'from-green-500 to-teal-500',
       skills: ['Customer Support', 'Problem Solving', '24/7 Service']
     }
