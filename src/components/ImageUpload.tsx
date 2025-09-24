@@ -65,34 +65,81 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
    * ====================
    * 
    * Sends client-compressed image to Edge Function for final server-side compression
+   * Falls back to direct Supabase Storage upload if Edge Function fails
    */
   const uploadToEdgeFunction = async (file: File): Promise<string> => {
-    const formData = new FormData();
-    formData.append('image', file);
-    formData.append('userId', user!.id);
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('userId', user!.id);
 
-    const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/compress-image`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-      },
-      body: formData,
-    });
+      // Get the user's JWT token
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        throw new Error('No valid session found');
+      }
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Server compression failed: ${errorText}`);
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const edgeFunctionUrl = `${supabaseUrl}/functions/v1/compress-image`;
+      
+      const response = await fetch(edgeFunctionUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.warn('Edge Function failed, falling back to direct upload:', errorText);
+        throw new Error(`Server compression failed: ${errorText}`);
+      }
+
+      const result = await response.json();
+      
+      if (!result.success) {
+        console.warn('Edge Function returned error, falling back to direct upload:', result.error);
+        throw new Error(result.error || 'Server compression failed');
+      }
+
+      // Server-side compression completed successfully
+      return result.url;
+    } catch (error) {
+      console.warn('Edge Function failed, using direct upload fallback:', error);
+      // Fallback to direct Supabase Storage upload
+      return await uploadDirectToStorage(file);
+    }
+  };
+
+  /**
+   * DIRECT STORAGE UPLOAD FALLBACK
+   * ==============================
+   * 
+   * Direct upload to Supabase Storage as fallback when Edge Function fails
+   */
+  const uploadDirectToStorage = async (file: File): Promise<string> => {
+    const timestamp = Date.now();
+    const randomId = Math.random().toString(36).substring(2);
+    const fileExtension = file.name.split('.').pop() || 'jpg';
+    const fileName = `${user!.id}/${timestamp}-${randomId}.${fileExtension}`;
+
+    const { data, error } = await supabase.storage
+      .from('property-images')
+      .upload(fileName, file, {
+        cacheControl: '3600',
+        upsert: false
+      });
+
+    if (error) {
+      throw new Error(`Direct upload failed: ${error.message}`);
     }
 
-    const result = await response.json();
-    
-    if (!result.success) {
-      throw new Error(result.error || 'Server compression failed');
-    }
+    const { data: { publicUrl } } = supabase.storage
+      .from('property-images')
+      .getPublicUrl(fileName);
 
-    // Server-side compression completed successfully
-
-    return result.url;
+    return publicUrl;
   };
 
   /**
@@ -138,7 +185,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     }
 
     setUploading(true);
-    setCompressionStatus('🔍 Validating images...');
     const newImageUrls: string[] = [];
     const validFiles: File[] = [];
 
@@ -148,7 +194,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       const validation = validateImageFile(file);
         
       if (!validation.isValid) {
-        setCompressionStatus(`❌ ${validation.error}`);
           toast({
             variant: "destructive",
             title: t('common.error'),
@@ -165,35 +210,32 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     try {
       console.log('🚀 Starting hybrid image upload process...');
       
+      // Verify user authentication
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        throw new Error('No valid authentication session found. Please sign in again.');
+      }
+      
       for (let i = 0; i < validFiles.length; i++) {
         const file = validFiles[i];
         
-        // Update status for client-side compression
-        setCompressionStatus(`🔄 Client-side compressing image ${i + 1} of ${validFiles.length}...`);
-
         // Step 1: Client-side compression
         const clientCompressedFile = await clientSideCompress(file);
 
-        // Update status for server-side processing
-        setCompressionStatus(`⚙️ Server-side processing image ${i + 1} of ${validFiles.length}...`);
-
-        // Step 2: Send to Edge Function for final compression and upload
+        // Step 2: Send to Edge Function for final compression and upload (with fallback)
         const publicUrl = await uploadToEdgeFunction(clientCompressedFile);
 
         newImageUrls.push(publicUrl);
-        
-        // Update status for successful individual upload
-        setCompressionStatus(`✅ Processed ${i + 1} of ${validFiles.length} images...`);
       }
 
       // Update images state
       onImagesChange([...images, ...newImageUrls]);
       
       // Show final success message
-      setCompressionStatus(`🎉 Successfully uploaded ${newImageUrls.length} image(s) with hybrid compression!`);
+      setCompressionStatus(`🎉 Successfully uploaded ${newImageUrls.length} image(s)!`);
       toast({
         title: t('common.success'),
-        description: `${newImageUrls.length} image(s) uploaded with optimal compression`
+        description: `${newImageUrls.length} image(s) uploaded successfully`
       });
 
       // Clear success message after 4 seconds
@@ -201,7 +243,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       
     } catch (error) {
       console.error('❌ Error in hybrid upload process:', error);
-      setCompressionStatus(`❌ Upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
       toast({
         variant: "destructive",
         title: t('common.error'),
@@ -270,20 +311,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           </div>
         )}
 
-        {/* Hybrid compression info */}
-        <div className="text-xs text-gray-500 bg-gradient-to-r from-blue-50 to-green-50 p-3 rounded-lg border border-blue-100">
-          <div className="flex items-start gap-2">
-            <div className="text-blue-600 mt-0.5">🔄</div>
-            <div>
-              <strong className="text-blue-800">Hybrid Compression System:</strong>
-              <div className="mt-1 space-y-1">
-                <div>• <strong>Client-side:</strong> Compress to 2MB, 1200px max</div>
-                <div>• <strong>Server-side:</strong> Final compression to 800px, 70% quality</div>
-                <div>• <strong>Formats:</strong> JPG, PNG, WebP (max 5MB input)</div>
-              </div>
-            </div>
-          </div>
-        </div>
+
       </div>
 
       {/* Image preview grid */}

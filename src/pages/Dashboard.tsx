@@ -34,6 +34,7 @@ import PropertyManagement from '@/components/dashboard/PropertyManagement';
 import PropertyForm from '@/components/dashboard/PropertyForm';
 import ProfileSettings from '@/components/dashboard/ProfileSettings';
 import GetHelpSection from '@/components/dashboard/GetHelpSection';
+
 import { RefreshCw } from 'lucide-react';
 import { PropertyGridSkeleton } from '@/components/PropertyCardSkeleton';
 import { supabase } from '@/integrations/supabase/client';
@@ -675,6 +676,8 @@ const Dashboard = () => {
           onDeleteProperty={handleDeleteProperty}
           onAddProperty={() => updateUIState({ showAddForm: true })}
         />
+
+
 
         {/* Property Form Modal */}
         <PropertyForm
