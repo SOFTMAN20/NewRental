@@ -1,4 +1,3 @@
-import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -46,9 +45,9 @@ const PopularDestinations = () => {
   ];
 
   return (
-    <section className="py-10 bg-background">
+    <section className="py-4 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-6 text-left mt-8">
+        <div className="mb-6 text-left mt-2">
           <h2 className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-orange-500 via-red-500 to-orange-600 bg-clip-text text-transparent mb-1">
             {t('popularDestinations.title')}
           </h2>
@@ -59,15 +58,15 @@ const PopularDestinations = () => {
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
           {destinations.map((destination, index) => (
-            <Link 
+            <Link
               key={index}
               to={`/browse?location=${encodeURIComponent(destination.name)}`}
               className="group"
             >
               <Card className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                 <div className="relative">
-                  <img 
-                    src={destination.image} 
+                  <img
+                    src={destination.image}
                     alt={destination.name}
                     className="w-full h-32 sm:h-40 md:h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                   />

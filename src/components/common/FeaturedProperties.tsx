@@ -30,7 +30,7 @@ const FeaturedPropertyCard = ({ property, index, t }: { property: any, index: nu
   const handleMobileTouch = (e: React.TouchEvent | React.MouseEvent) => {
     // Don't prevent default - allow navigation to work
     setShowMobileActions(true);
-    
+
     // Auto-hide buttons after 3 seconds
     setTimeout(() => {
       setShowMobileActions(false);
@@ -47,16 +47,16 @@ const FeaturedPropertyCard = ({ property, index, t }: { property: any, index: nu
             onTouchStart={handleMobileTouch}
             onClick={handleMobileTouch}
           >
-            <img 
-              src={property.images && property.images.length > 0 
-                ? property.images[0] 
+            <img
+              src={property.images && property.images.length > 0
+                ? property.images[0]
                 : 'https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=500&h=400&fit=crop'
-              } 
+              }
               alt={property.title}
               className="w-full h-32 sm:h-48 object-cover group-hover:scale-110 transition-transform duration-700"
             />
           </div>
-          
+
           {/* Enhanced Featured Badge */}
           <Badge className="absolute top-3 left-3 bg-gradient-to-r from-primary via-serengeti-500 to-kilimanjaro-600 text-white z-20 shadow-lg border border-white/20 backdrop-blur-sm font-bold text-xs px-3 py-1 transform group-hover:scale-105 transition-transform duration-300">
             ⭐ {t('featuredProperties.featured')}
@@ -67,11 +67,10 @@ const FeaturedPropertyCard = ({ property, index, t }: { property: any, index: nu
           </div>
 
           {/* Enhanced hover overlay with quick view icon - shows on hover OR mobile touch */}
-          <div className={`absolute inset-0 transition-all duration-500 z-10 ${
-                            showMobileActions 
-                              ? 'opacity-100' 
-                              : 'opacity-0 group-hover:opacity-100'
-                          }`}>
+          <div className={`absolute inset-0 transition-all duration-500 z-10 ${showMobileActions
+            ? 'opacity-100'
+            : 'opacity-0 group-hover:opacity-100'
+            }`}>
             <div className="absolute bottom-3 right-3">
               <div className="bg-white/95 rounded-full p-1.5 transform hover:scale-110 transition-all duration-300 shadow-lg">
                 <Eye className="w-4 h-4 text-gray-900" />
@@ -79,7 +78,7 @@ const FeaturedPropertyCard = ({ property, index, t }: { property: any, index: nu
             </div>
           </div>
         </div>
-        
+
         <CardContent className="p-2 sm:p-4">
           <div className="mb-1 sm:mb-2">
             <h3 className="font-semibold text-sm sm:text-base text-gray-900 mb-0.5 sm:mb-1 line-clamp-1">
@@ -124,7 +123,7 @@ const FeaturedPropertyCard = ({ property, index, t }: { property: any, index: nu
               </span>
               <span className="text-gray-500 text-xs sm:text-sm ml-1">/month</span>
             </div>
-            
+
             {property.profiles?.phone && (
               <a
                 href={`https://wa.me/${(property.contact_whatsapp_phone || property.contact_phone || property.profiles.phone)!.replace(/[^0-9]/g, '')}`}
@@ -147,9 +146,11 @@ const FeaturedPropertyCard = ({ property, index, t }: { property: any, index: nu
 const FeaturedProperties = () => {
   const { t } = useTranslation();
   const { data: allProperties = [], isLoading, error } = useProperties();
-  
-  // Get featured properties (limit to 16 for homepage display)
-  const properties = allProperties.slice(0, 16);
+
+  // Get featured properties - 8 for mobile, 16 for desktop
+  const isMobile = window.innerWidth < 768; // md breakpoint
+  const propertyLimit = isMobile ? 8 : 16;
+  const properties = allProperties.slice(0, propertyLimit);
 
   const getAmenityIcon = (amenity: string) => {
     switch (amenity) {
@@ -172,10 +173,10 @@ const FeaturedProperties = () => {
               {t('featuredProperties.subtitle')}
             </p>
           </div>
-          
+
           {/* Skeleton Loading Grid */}
-          <PropertyGridSkeleton 
-            count={8} 
+          <PropertyGridSkeleton
+            count={8}
             viewMode="grid"
           />
         </div>
@@ -206,7 +207,7 @@ const FeaturedProperties = () => {
       <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
       <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-serengeti-100 to-transparent rounded-full blur-3xl opacity-30"></div>
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-primary/10 to-transparent rounded-full blur-3xl opacity-40"></div>
-      
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="mb-6 text-left mt-8">
           <h2 className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-orange-500 via-red-500 to-orange-600 bg-clip-text text-transparent mb-1">
@@ -220,11 +221,11 @@ const FeaturedProperties = () => {
         {properties.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
             {properties.map((property, index) => (
-              <FeaturedPropertyCard 
+              <FeaturedPropertyCard
                 key={property.id}
-                property={property} 
-                index={index} 
-                t={t} 
+                property={property}
+                index={index}
+                t={t}
               />
             ))}
           </div>
@@ -236,7 +237,7 @@ const FeaturedProperties = () => {
           </div>
         )}
 
-        <div className="text-center mt-10">
+        <div className="text-center mt-4">
           <Link to="/browse">
             <button className="bg-primary text-primary-foreground px-8 py-3 rounded-full font-semibold hover:bg-primary/90 transition-colors">
               {t('featuredProperties.viewMore')}

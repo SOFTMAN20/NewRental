@@ -38,7 +38,7 @@ import { Button } from '@/components/ui/button';
 import { Home, Search, User, Menu, X, Globe, Building2, LogOut } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from 'react-i18next';
-import NyumbaLinkLogoClean from '@/components/ui/NyumbaLinkLogoClean';
+
 import { supabase } from '@/lib/integrations/supabase/client';
 import type { Tables } from '@/lib/integrations/supabase/types';
 
@@ -121,15 +121,15 @@ const Navigation = () => {
                 <Home className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-white" />
               </div>
               <div className="transform group-hover:scale-105 transition-transform duration-300">
-                {/* Mobile label: NyLink Tz */}
+                {/* Mobile label: NyLink */}
                 <span className="md:hidden text-base sm:text-lg lg:text-2xl font-bold bg-gradient-to-r from-primary to-serengeti-600 
                                 bg-clip-text text-transparent">NyLink</span>
-                <span className="md:hidden text-base sm:text-lg lg:text-2xl font-bold text-serengeti-600"> Tz</span>
+                <span className="md:hidden text-base sm:text-lg lg:text-2xl font-bold text-serengeti-600"></span>
 
                 {/* Desktop/large label: NyumbaLink Tz */}
                 <span className="hidden md:inline text-base sm:text-lg lg:text-2xl font-bold bg-gradient-to-r from-primary to-serengeti-600 
                                 bg-clip-text text-transparent">NyumbaLink</span>
-                <span className="hidden md:inline text-base sm:text-lg lg:text-2xl font-bold text-serengeti-600"> Tz</span>
+                <span className="hidden md:inline text-base sm:text-lg lg:text-2xl font-bold text-serengeti-600"> </span>
               </div>
             </Link>
             
