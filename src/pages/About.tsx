@@ -20,8 +20,8 @@
  */
 
 import React from 'react';
-import Navigation from '@/components/Navigation';
-import Footer from '@/components/Footer';
+import Navigation from '@/components/layout/Navigation';
+import Footer from '@/components/layout/Footer';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -172,7 +172,7 @@ const About = () => {
       name: t('about.developmentTeam'),
       role: t('about.systemCreators'),
       description: t('about.developersDescription'),
-      image: 'images/starlabs.jpg',
+      image: '/images/starlabs.jpg',
       gradient: 'from-blue-500 to-purple-500',
       skills: ['React Development', 'UI/UX Design', 'Database Management']
     },
@@ -180,7 +180,7 @@ const About = () => {
       name: t('about.serviceTeam'),
       role: t('about.customerSupport'),
       description: t('about.supportDescription'),
-      image: 'services.jpg',
+      image: '/images/services.jpg',
       gradient: 'from-green-500 to-teal-500',
       skills: ['Customer Support', 'Problem Solving', '24/7 Service']
     }

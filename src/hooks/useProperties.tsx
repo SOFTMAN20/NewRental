@@ -29,8 +29,8 @@
  */
 
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
-import type { Tables } from '@/integrations/supabase/types';
+import { supabase } from '@/lib/integrations/supabase/client';
+import type { Tables } from '@/lib/integrations/supabase/types';
 
 /**
  * PROPERTY TYPE DEFINITION
@@ -95,6 +95,7 @@ export const useProperties = () => {
   return useQuery({
     queryKey: ['properties'],
     queryFn: async () => {
+      const startTime = performance.now();
       /**
        * DATA FETCHING PROCESS
        * ====================
@@ -195,7 +196,20 @@ export const useProperties = () => {
        * Can be removed in production for performance.
        */
       // Properties fetched successfully
+      const endTime = performance.now();
+      const responseTime = endTime - startTime;
+      
+      // Log API performance
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`🚀 Properties API: ${responseTime.toFixed(0)}ms ${responseTime < 500 ? '✅' : '❌'}`);
+      }
+      
       return transformedData as Property[];
     },
+    // Optimize for performance
+    staleTime: 2 * 60 * 1000, // 2 minutes - data stays fresh
+    cacheTime: 10 * 60 * 1000, // 10 minutes - cache retention
+    refetchOnWindowFocus: false, // Prevent unnecessary refetches
+    retry: 2, // Limit retries for faster failure handling
   });
 };

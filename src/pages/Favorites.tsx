@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import Navigation from '@/components/Navigation';
-import PropertyCard from '@/components/PropertyCard';
+import Navigation from '@/components/layout/Navigation';
+import PropertyCard from '@/components/common/PropertyCard';
 import { Button } from '@/components/ui/button';
 import { Heart, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';

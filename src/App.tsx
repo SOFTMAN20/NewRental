@@ -53,25 +53,30 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { createOptimizedQueryClient } from "@/utils/cache";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import ErrorBoundary from "@/components/ui/error-boundary";
-import Index from "./pages/Index";
-import Browse from "./pages/Browse";
-import PropertyDetail from "./pages/PropertyDetail";
-import Dashboard from "./pages/Dashboard";
-import Favorites from "./pages/Favorites";
-import SignIn from "./pages/SignIn";
-import SignUp from "./pages/SignUp";
-import PropertyExample from "./pages/PropertyExample";
-import About from "./pages/About";
-import NotFound from "./pages/NotFound";
-import ColorPalette from "./components/ColorPalette";
-import Typography from "./components/Typography";
-import LoadingStates from "./components/LoadingStates";
-import ComponentLibrary from "./components/ui/ComponentLibrary";
-import MobileBottomNav from "./components/MobileBottomNav";
+import { lazy, Suspense } from "react";
+import MobileBottomNav from "./components/layout/MobileBottomNav";
+import PerformanceDashboard from "./components/common/PerformanceDashboard";
+
+// Lazy load pages for code splitting
+const Index = lazy(() => import("./pages/Index"));
+const Browse = lazy(() => import("./pages/Browse"));
+const PropertyDetail = lazy(() => import("./pages/PropertyDetail"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Favorites = lazy(() => import("./pages/Favorites"));
+const SignIn = lazy(() => import("./pages/SignIn"));
+const SignUp = lazy(() => import("./pages/SignUp"));
+const PropertyExample = lazy(() => import("./pages/PropertyExample"));
+const About = lazy(() => import("./pages/About"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const ColorPalette = lazy(() => import("./components/common/ColorPalette"));
+const Typography = lazy(() => import("./components/common/Typography"));
+const LoadingStates = lazy(() => import("./components/common/LoadingStates"));
+const ComponentLibrary = lazy(() => import("./components/ui/ComponentLibrary"));
 
 /**
  * REACT QUERY CLIENT CONFIGURATION
@@ -97,7 +102,7 @@ import MobileBottomNav from "./components/MobileBottomNav";
  * - Supports query invalidation for real-time updates
  * - Enables offline-first architecture with proper configuration
  */
-const queryClient = new QueryClient();
+const queryClient = createOptimizedQueryClient();
 
 /**
  * Main App Component
@@ -112,46 +117,58 @@ const queryClient = new QueryClient();
  */
 const App = () => (
   <ErrorBoundary>
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <TooltipProvider>
-        {/* Notification systems - Mifumo ya arifa */}
-        <Toaster />
-        <Sonner />
-        
-        {/* Main routing configuration - Mipangilio ya uongozaji */}
-        <BrowserRouter>
-          <Routes>
-            {/* Public routes - Njia za umma */}
-            <Route path="/" element={<Index />} />
-            <Route path="/browse" element={<Browse />} />
-            <Route path="/property/:id" element={<PropertyDetail />} />
-            <Route path="/about" element={<About />} />
-                         <Route path="/color-palette" element={<ColorPalette />} />
-             <Route path="/typography" element={<Typography />} />
-             <Route path="/loading-states" element={<LoadingStates />} />
-             <Route path="/component-library" element={<ComponentLibrary />} />
-            
-            {/* User-specific routes - Njia za mtumiaji */}
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/favorites" element={<Favorites />} />
-            <Route path="/property-example" element={<PropertyExample />} />
-            
-            {/* Authentication routes - Njia za uthibitisho */}
-            <Route path="/signin" element={<SignIn />} />
-            <Route path="/signup" element={<SignUp />} />
-            
-            {/* Catch-all route for 404 errors */}
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          
-          {/* Mobile Bottom Navigation - Only visible on mobile screens */}
-          <MobileBottomNav />
-        </BrowserRouter>
-      </TooltipProvider>
-    </AuthProvider>
-  </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <TooltipProvider>
+          {/* Notification systems - Mifumo ya arifa */}
+          <Toaster />
+          <Sonner />
+
+          {/* Main routing configuration - Mipangilio ya uongozaji */}
+          <BrowserRouter>
+            <Suspense fallback={
+              <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50">
+                <div className="text-center">
+                  <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                  <p className="text-gray-600 text-sm">Inapakia...</p>
+                </div>
+              </div>
+            }>
+              <Routes>
+                {/* Public routes - Njia za umma */}
+                <Route path="/" element={<Index />} />
+                <Route path="/browse" element={<Browse />} />
+                <Route path="/property/:id" element={<PropertyDetail />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/color-palette" element={<ColorPalette />} />
+                <Route path="/typography" element={<Typography />} />
+                <Route path="/loading-states" element={<LoadingStates />} />
+                <Route path="/component-library" element={<ComponentLibrary />} />
+
+                {/* User-specific routes - Njia za mtumiaji */}
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/favorites" element={<Favorites />} />
+                <Route path="/property-example" element={<PropertyExample />} />
+
+                {/* Authentication routes - Njia za uthibitisho */}
+                <Route path="/signin" element={<SignIn />} />
+                <Route path="/signup" element={<SignUp />} />
+
+                {/* Catch-all route for 404 errors */}
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
+
+            {/* Mobile Bottom Navigation - Only visible on mobile screens */}
+            <MobileBottomNav />
+          </BrowserRouter>
+
+          {/* Performance Dashboard - Development only */}
+          <PerformanceDashboard />
+        </TooltipProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   </ErrorBoundary>
 );
 

@@ -20,8 +20,8 @@
  */
 
 import React from 'react';
-import WelcomeBanner from './WelcomeBanner';
-import type { Tables } from '@/integrations/supabase/types';
+import WelcomeBanner from '@/components/common/WelcomeBanner';
+import type { Tables } from '@/lib/integrations/supabase/types';
 
 type Profile = Tables<'profiles'>;
 

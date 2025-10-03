@@ -19,7 +19,7 @@ import {
   Plus
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import type { Tables } from '@/integrations/supabase/types';
+import type { Tables } from '@/lib/integrations/supabase/types';
 
 type Profile = Tables<'profiles'>;
 

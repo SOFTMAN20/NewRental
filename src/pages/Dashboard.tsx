@@ -26,22 +26,22 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import Navigation from '@/components/Navigation';
-import DashboardHeader from '@/components/dashboard/DashboardHeader';
-import QuickActions from '@/components/dashboard/QuickActions';
-import StatsSection from '@/components/dashboard/StatsSection';
-import PropertyManagement from '@/components/dashboard/PropertyManagement';
-import PropertyForm from '@/components/dashboard/PropertyForm';
-import ProfileSettings from '@/components/dashboard/ProfileSettings';
-import GetHelpSection from '@/components/dashboard/GetHelpSection';
+import Navigation from '@/components/layout/Navigation';
+import DashboardHeader from '@/components/layout/DashboardHeader';
+import QuickActions from '@/components/common/QuickActions';
+import StatsSection from '@/components/common/StatsSection';
+import PropertyManagement from '@/components/common/PropertyManagement';
+import PropertyForm from '@/components/forms/PropertyForm';
+import ProfileSettings from '@/components/forms/ProfileSettings';
+import GetHelpSection from '@/components/common/GetHelpSection';
 
 import { RefreshCw } from 'lucide-react';
-import { PropertyGridSkeleton } from '@/components/PropertyCardSkeleton';
-import { supabase } from '@/integrations/supabase/client';
+import { PropertyGridSkeleton } from '@/components/common/PropertyCardSkeleton';
+import { supabase } from '@/lib/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
-import type { Tables } from '@/integrations/supabase/types';
+import type { Tables } from '@/lib/integrations/supabase/types';
 
 // Type definitions for better type safety
 type Property = Tables<'properties'>;
@@ -369,6 +369,30 @@ const Dashboard = () => {
       console.log('Starting property submission...');
       updateUIState({ submitting: true });
       
+      // Verify user session before proceeding
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !session) {
+        console.error('Session error:', sessionError);
+        showErrorToast('Hujaingia kikamilifu. Tafadhali ingia tena.');
+        return;
+      }
+      
+      console.log('User session verified:', session.user.id);
+      console.log('Session access token exists:', !!session.access_token);
+      console.log('User ID matches form data landlord_id:', session.user.id === user.id);
+      
+      // Validate form data before submission
+      const validationResult = validateFormData();
+      console.log('Form validation result:', validationResult);
+      
+      if (!validationResult.isValid) {
+        console.error('Form validation failed:', validationResult.errors);
+        showErrorToast(validationResult.errors[0] || 'Tafadhali jaza taarifa zote za lazima');
+        return;
+      }
+      
+      console.log('Form validation passed successfully');
+      
       const propertyData = buildPropertyData();
       console.log('Property data built:', propertyData);
       
@@ -381,18 +405,122 @@ const Dashboard = () => {
       }
 
       console.log('Property saved successfully, closing form...');
+      
+      // Clear saved form data on successful submission
+      try {
+        localStorage.removeItem('nyumba_link_property_form_data');
+        localStorage.removeItem('nyumba_link_property_form_step');
+      } catch (error) {
+        console.error('Error clearing saved form data:', error);
+      }
+      
       handleCloseForm();
       await fetchProperties();
     } catch (error) {
       console.error('Error saving property:', error);
-      const errorMessage = editingProperty 
-        ? 'Imeshindikana kusasisha nyumba yako. Jaribu tena.' 
-        : 'Imeshindikana kuongeza nyumba yako. Jaribu tena.';
+      
+      // Log detailed error information for debugging
+      if (error instanceof Error) {
+        console.error('Error message:', error.message);
+        console.error('Error stack:', error.stack);
+      }
+      
+      // Enhanced error handling with specific messages
+      let errorMessage = 'Imeshindikana kuongeza nyumba yako. Jaribu tena.';
+      
+      if (error instanceof Error) {
+        console.log('Analyzing error message:', error.message);
+        
+        if (error.message.includes('JWT') || error.message.includes('session')) {
+          errorMessage = 'Hujaingia kikamilifu. Tafadhali ingia tena.';
+        } else if (error.message.includes('validation') || error.message.includes('violates')) {
+          errorMessage = 'Taarifa ulizojaza hazikidhi mahitaji. Jaribu tena.';
+        } else if (error.message.includes('permission') || error.message.includes('ruhusa')) {
+          errorMessage = 'Huna ruhusa ya kuongeza nyumba. Hakikisha umeingia kama mwenye nyumba.';
+        } else if (error.message.includes('row-level security')) {
+          errorMessage = 'Hitilafu ya usalama. Hakikisha umejaza taarifa zote za lazima.';
+        } else if (error.message.includes('database')) {
+          errorMessage = error.message; // Show the specific database error
+        }
+      }
+      
+      console.log('Final error message to show user:', errorMessage);
       showErrorToast(errorMessage);
     } finally {
       console.log('Property submission process completed');
       updateUIState({ submitting: false });
     }
+  };
+
+  const validateFormData = () => {
+    const errors: string[] = [];
+    
+    console.log('Validating form data:', {
+      title: formData.title,
+      description: formData.description,
+      price: formData.price,
+      location: formData.location,
+      contact_phone: formData.contact_phone,
+      property_type: formData.property_type,
+      images_count: formData.images?.length || 0
+    });
+    
+    // Required field validation
+    if (!formData.title?.trim() || formData.title.trim().length < 5) {
+      errors.push('Jina la nyumba lazima liwe na angalau herufi 5');
+    }
+    if (!formData.description?.trim() || formData.description.trim().length < 10) {
+      errors.push('Maelezo ya nyumba lazima yawe na angalau herufi 10');
+    }
+    if (!formData.price || parseFloat(formData.price) <= 0) {
+      errors.push('Bei ya nyumba lazima iwe zaidi ya 0');
+    }
+    if (!formData.location?.trim() || formData.location.trim().length < 2) {
+      errors.push('Eneo la nyumba lazima liwe na angalau herufi 2');
+    }
+    if (!formData.contact_phone?.trim() || formData.contact_phone.trim().length < 10) {
+      errors.push('Nambari ya simu lazima iwe na angalau nambari 10');
+    }
+    
+    // Property type is optional for database but let's make it required for better UX
+    if (!formData.property_type?.trim()) {
+      errors.push('Chagua aina ya nyumba (apartment, house, room, studio, au office)');
+    }
+    
+    if (!formData.images || formData.images.length === 0) {
+      errors.push('Ongeza angalau picha moja ya nyumba');
+    }
+    
+    // Length validation
+    if (formData.title && formData.title.length > 200) {
+      errors.push('Jina la nyumba lisilozidi herufi 200');
+    }
+    if (formData.description && formData.description.length > 2000) {
+      errors.push('Maelezo ya nyumba yasilozidi herufi 2000');
+    }
+    if (formData.location && formData.location.length > 100) {
+      errors.push('Eneo la nyumba lisilozidi herufi 100');
+    }
+    if (formData.contact_phone && formData.contact_phone.length > 20) {
+      errors.push('Nambari ya simu isilozidi nambari 20');
+    }
+    
+    // Price validation
+    const price = parseFloat(formData.price || '0');
+    if (price >= 999999999) {
+      errors.push('Bei ya nyumba ni kubwa sana');
+    }
+    
+    // Property type validation
+    const allowedTypes = ['apartment', 'house', 'room', 'studio', 'office'];
+    if (formData.property_type && !allowedTypes.includes(formData.property_type)) {
+      errors.push('Aina ya nyumba si sahihi');
+    }
+    
+    return {
+      isValid: errors.length === 0,
+      errors
+    };
   };
 
   const buildPropertyData = () => {
@@ -421,12 +549,44 @@ const Dashboard = () => {
     };
     
     console.log('Built property data:', propertyData);
+    
+    // Validate the built data against RLS policy requirements
+    console.log('Validating built data:');
+    console.log('- Title length:', propertyData.title?.length, '(required: 5-200)');
+    console.log('- Description length:', propertyData.description?.length, '(required: 10-2000)');
+    console.log('- Price:', propertyData.price, '(required: > 0 and < 999999999)');
+    console.log('- Location length:', propertyData.location?.length, '(required: 2-100)');
+    console.log('- Contact phone length:', propertyData.contact_phone?.length, '(required: 10-20)');
+    console.log('- Property type:', propertyData.property_type, '(allowed: apartment, house, room, studio, office)');
+    console.log('- Landlord ID:', propertyData.landlord_id);
+    
     return propertyData;
   };
 
   const updateExistingProperty = async (propertyData: any): Promise<void> => {
     console.log('Updating property with ID:', editingProperty?.id);
-    const { data, error } = await supabase
+    
+    // Ensure we have a fresh session and create authenticated client
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      throw new Error('No active session found');
+    }
+    
+    // Create a new supabase client with the current session
+    const { createClient } = await import('@supabase/supabase-js');
+    const authenticatedClient = createClient(
+      import.meta.env.VITE_SUPABASE_URL,
+      import.meta.env.VITE_SUPABASE_ANON_KEY,
+      {
+        global: {
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
+        },
+      }
+    );
+    
+    const { data, error } = await authenticatedClient
       .from('properties')
       .update(propertyData)
       .eq('id', editingProperty!.id)
@@ -435,7 +595,13 @@ const Dashboard = () => {
     console.log('Update result:', { data, error });
     if (error) {
       console.error('Update error:', error);
-      throw error;
+      
+      // Enhanced error handling
+      if (error.message.includes('new row violates row-level security policy')) {
+        throw new Error('Huna ruhusa ya kusasisha nyumba hii.');
+      } else {
+        throw new Error(`Hitilafu ya database: ${error.message}`);
+      }
     }
     
     showSuccessToast('Nyumba yako imesasishwa kikamilifu');
@@ -443,15 +609,67 @@ const Dashboard = () => {
 
   const createNewProperty = async (propertyData: any): Promise<void> => {
     console.log('Creating new property...');
-    const { data, error } = await supabase
+    
+    // Ensure we have a fresh session and create authenticated client
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      throw new Error('No active session found');
+    }
+    
+    console.log('Using session for user:', session.user.id);
+    console.log('Property data landlord_id:', propertyData.landlord_id);
+    
+    // Detailed validation logging before sending to database
+    console.log('=== DETAILED PROPERTY DATA VALIDATION ===');
+    console.log('Title:', propertyData.title, '(length:', propertyData.title?.length, ')');
+    console.log('Description:', propertyData.description, '(length:', propertyData.description?.length, ')');
+    console.log('Price:', propertyData.price, '(type:', typeof propertyData.price, ')');
+    console.log('Location:', propertyData.location, '(length:', propertyData.location?.length, ')');
+    console.log('Contact Phone:', propertyData.contact_phone, '(length:', propertyData.contact_phone?.length, ')');
+    console.log('Property Type:', propertyData.property_type);
+    console.log('Landlord ID:', propertyData.landlord_id);
+    console.log('Images count:', propertyData.images?.length);
+    console.log('=== END VALIDATION ===');
+    
+    // Create a new supabase client with the current session
+    const { createClient } = await import('@supabase/supabase-js');
+    const authenticatedClient = createClient(
+      import.meta.env.VITE_SUPABASE_URL,
+      import.meta.env.VITE_SUPABASE_ANON_KEY,
+      {
+        global: {
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
+        },
+      }
+    );
+    
+    const { data, error } = await authenticatedClient
       .from('properties')
       .insert([propertyData])
       .select();
 
     console.log('Insert result:', { data, error });
     if (error) {
-      console.error('Insert error:', error);
-      throw error;
+      console.error('=== DATABASE INSERT ERROR ===');
+      console.error('Error message:', error.message);
+      console.error('Error code:', error.code);
+      console.error('Error details:', error.details);
+      console.error('Error hint:', error.hint);
+      console.error('Full error object:', error);
+      console.error('=== END ERROR ===');
+      
+      // Enhanced error handling
+      if (error.message.includes('new row violates row-level security policy')) {
+        throw new Error('Huna ruhusa ya kuongeza nyumba. Hakikisha umeingia kama mwenye nyumba.');
+      } else if (error.message.includes('duplicate key')) {
+        throw new Error('Nyumba hii tayari ipo. Jaribu jina lingine.');
+      } else if (error.code === '23514') {
+        throw new Error('Taarifa ulizojaza hazikidhi mahitaji ya database. Angalia console kwa maelezo zaidi.');
+      } else {
+        throw new Error(`Hitilafu ya database: ${error.message}`);
+      }
     }
     
     showSuccessToast('Nyumba yako imeongezwa kikamilifu');
@@ -549,6 +767,8 @@ const Dashboard = () => {
     setEditingProperty(null);
     resetForm();
   };
+
+
 
   /**
    * UTILITY FUNCTIONS
@@ -659,6 +879,8 @@ const Dashboard = () => {
           isNewUser={uiState.isNewUser}
           propertiesCount={properties.length}
         />
+        
+
 
         {/* Statistics Section */}
         <StatsSection properties={properties} />

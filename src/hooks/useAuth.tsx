@@ -34,8 +34,10 @@
  */
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { validateInput, rateLimiters, validatePassword } from '@/utils/security';
+import { csrfProtection } from '@/utils/csrf';
 
 /**
  * AUTHENTICATION CONTEXT TYPE DEFINITION
@@ -187,14 +189,56 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
    * - Graceful fallback for network issues
    */
   const signUp = async (email: string, password: string, metadata: any) => {
+    // Rate limiting check
+    const clientId = `signup_${email}`;
+    if (!rateLimiters.signup.isAllowed(clientId)) {
+      const error = { message: 'Too many signup attempts. Please try again later.' };
+      toast({
+        variant: "destructive",
+        title: "Hitilafu ya kujisajili",
+        description: "Umejaribu mara nyingi sana. Jaribu tena baadaye."
+      });
+      return { error };
+    }
+
+    // Validate email
+    const emailValidation = validateInput.email(email);
+    if (!emailValidation.isValid) {
+      const error = { message: emailValidation.error };
+      toast({
+        variant: "destructive",
+        title: "Hitilafu ya kujisajili",
+        description: emailValidation.error
+      });
+      return { error };
+    }
+
+    // Validate password strength
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.isValid) {
+      const error = { message: passwordValidation.feedback.join(', ') };
+      toast({
+        variant: "destructive",
+        title: "Nywila si salama",
+        description: passwordValidation.feedback.join(', ')
+      });
+      return { error };
+    }
+
+    // Sanitize metadata
+    const sanitizedMetadata = {
+      full_name: validateInput.text(metadata.full_name || '', 100).sanitized,
+      user_type: ['landlord', 'tenant'].includes(metadata.user_type) ? metadata.user_type : 'tenant'
+    };
+
     const redirectUrl = `${window.location.origin}/`;
     
     const { error } = await supabase.auth.signUp({
-      email,
+      email: emailValidation.sanitized,
       password,
       options: {
         emailRedirectTo: redirectUrl,
-        data: metadata
+        data: sanitizedMetadata
       }
     });
 
@@ -202,12 +246,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       toast({
         variant: "destructive",
         title: "Hitilafu ya kujisajili",
-        description: error.message
+        description: "Imeshindikana kujisajili. Jaribu tena."
       });
     } else {
       toast({
         title: "Umefanikiwa kujisajili!",
-        description: metadata.user_type === 'landlord' 
+        description: sanitizedMetadata.user_type === 'landlord' 
           ? "Karibu kwenye Nyumba Link! Unaweza kuanza kuongeza nyumba zako sasa."
           : "Tafadhali kagua barua pepe yako ili kuthibitisha akaunti yako."
       });
@@ -237,8 +281,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
    * - Clear error messages for failed attempts
    */
   const signIn = async (email: string, password: string) => {
+    // Rate limiting check
+    const clientId = `login_${email}`;
+    if (!rateLimiters.login.isAllowed(clientId)) {
+      const error = { message: 'Too many login attempts. Please try again later.' };
+      toast({
+        variant: "destructive",
+        title: "Hitilafu ya kuingia",
+        description: "Umejaribu mara nyingi sana. Jaribu tena baadaye."
+      });
+      return { error };
+    }
+
+    // Validate email format
+    const emailValidation = validateInput.email(email);
+    if (!emailValidation.isValid) {
+      const error = { message: emailValidation.error };
+      toast({
+        variant: "destructive",
+        title: "Hitilafu ya kuingia",
+        description: "Barua pepe si sahihi"
+      });
+      return { error };
+    }
+
     const { error } = await supabase.auth.signInWithPassword({
-      email,
+      email: emailValidation.sanitized,
       password
     });
 
@@ -246,9 +314,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       toast({
         variant: "destructive",
         title: "Hitilafu ya kuingia",
-        description: error.message
+        description: "Barua pepe au nywila si sahihi"
       });
     } else {
+      // Reset rate limiter on successful login
+      rateLimiters.login.reset(clientId);
+      
       toast({
         title: "Umefanikiwa kuingia!",
         description: "Karibu kwenye Nyumba Link"

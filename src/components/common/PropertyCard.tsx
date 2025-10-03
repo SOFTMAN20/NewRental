@@ -43,6 +43,7 @@ import { Badge } from '@/components/ui/badge';
 import { Heart, MapPin, Zap, Droplets, Bed, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import ReliableImage from '@/components/common/ReliableImage';
 
 /**
  * PROPERTY CARD PROPS INTERFACE
@@ -226,10 +227,12 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
               onTouchStart={handleMobileTouch}
               onClick={handleMobileTouch}
             >
-              <img
+              <ReliableImage
                 src={images[0] || `https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=300&fit=crop`}
                 alt={title}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                width={400}
+                height={300}
               />
               
               {/* Enhanced overlay with quick actions - shows on hover OR mobile touch */}
@@ -349,10 +352,12 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             onTouchStart={handleMobileTouch}
             onClick={handleMobileTouch}
           >
-            <img
+            <ReliableImage
               src={images[currentImageIndex] || `https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=300&fit=crop`}
               alt={title}
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+              width={400}
+              height={300}
             />
             
             {/* Enhanced overlay with quick actions - shows on hover OR mobile touch */}

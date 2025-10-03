@@ -1,4 +1,6 @@
+
 {
+
     "mcpServers": {
       "supabase": {
         "command": "cmd",
@@ -11,7 +13,7 @@
           "--project-ref=jayreyhmnjaymutadues"
         ],
         "env": {
-          "SUPABASE_ACCESS_TOKEN": "sbp_909d45e21b8b4bf4e2f70e36f20764f4768cb874"
+          "SUPABASE_ACCESS_TOKEN": "sbp_4abca01c2ad207bf50946a2cf5a1e383388162ea"
         }
       }
     }

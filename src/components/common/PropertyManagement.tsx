@@ -18,14 +18,14 @@
  */
 
 import React from 'react';
-import PropertyGrid from './PropertyGrid';
+import PropertyGrid from '@/components/common/PropertyGrid';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Home, TrendingUp } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import type { Tables } from '@/integrations/supabase/types';
+import type { Tables } from '@/lib/integrations/supabase/types';
 
 type Property = Tables<'properties'>;
 

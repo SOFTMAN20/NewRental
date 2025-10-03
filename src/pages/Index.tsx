@@ -24,12 +24,15 @@
  * Landing → Search → Browse/Details → Authentication/Favorites
  */
 
-import Navigation from "@/components/Navigation";
-import HeroSection from "@/components/HeroSection";
-import PopularDestinations from "@/components/PopularDestinations";
-import FeaturedProperties from "@/components/FeaturedProperties";
+import { lazy, Suspense } from 'react';
+import Navigation from "@/components/layout/Navigation";
+import HeroSection from "@/components/layout/HeroSection";
 import { Link } from 'react-router-dom';
-import Footer from "@/components/Footer";
+
+// Lazy load below-the-fold components
+const PopularDestinations = lazy(() => import("@/components/common/PopularDestinations"));
+const FeaturedProperties = lazy(() => import("@/components/common/FeaturedProperties"));
+const Footer = lazy(() => import("@/components/layout/Footer"));
 
 /**
  * Homepage Component
@@ -51,10 +54,22 @@ const Index = () => {
       <HeroSection />
       
       {/* Highlighted property listings - Nyumba zilizoangaziwa */}
-      <FeaturedProperties />
+      <Suspense fallback={
+        <div className="py-16 flex justify-center">
+          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      }>
+        <FeaturedProperties />
+      </Suspense>
       
       {/* Popular cities and destinations - Miji na maeneo maarufu */}
-      <PopularDestinations />
+      <Suspense fallback={
+        <div className="py-16 flex justify-center">
+          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      }>
+        <PopularDestinations />
+      </Suspense>
       
       {/* Call to Action Section - Sehemu ya Wito wa Kitendo */}
       <section className="py-16 bg-gradient-to-b from-white to-safari-50">
@@ -91,7 +106,13 @@ const Index = () => {
       </section>
       
       {/* Footer with additional information - Kichapo na maelezo ya ziada */}
-      <Footer />
+      <Suspense fallback={
+        <div className="py-8 flex justify-center bg-gray-50">
+          <div className="w-6 h-6 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      }>
+        <Footer />
+      </Suspense>
     </div>
   );
 };

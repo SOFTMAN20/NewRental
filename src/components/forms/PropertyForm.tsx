@@ -14,7 +14,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import ImageUpload from '@/components/ImageUpload';
+import ImageUpload from '@/components/forms/ImageUpload';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -31,7 +31,8 @@ import {
   Star, Info, Heart, Users, Award, Briefcase
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import type { Tables } from '@/integrations/supabase/types';
+import type { Tables } from '@/lib/integrations/supabase/types';
+import { validateInput, rateLimiters } from '@/utils/security';
 
 type Property = Tables<'properties'>;
 type Profile = Tables<'profiles'>;
@@ -435,8 +436,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
           value={formData.description}
           onChange={(e) => onInputChange('description', e.target.value)}
           placeholder={t('dashboard.describeProperty')}
-          rows={4}
-          className={`transition-all duration-200 ${formData.description ? 'border-green-300 bg-green-50' : ''}`}
+          rows={6}
+          className={`transition-all duration-200 border-2 border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 ${formData.description ? 'border-green-400 bg-green-50' : 'hover:border-gray-400'}`}
           required
         />
         <div className="text-xs text-gray-500 text-right">
@@ -587,27 +588,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         </p>
       </div>
 
-      {/* Contact Preview */}
-      {formData.contact_phone && (
-        <div className="bg-gradient-to-r from-primary/10 to-serengeti-50 rounded-lg p-4 border border-primary/20">
-          <h4 className="font-medium text-gray-900 mb-2 flex items-center gap-2">
-            <Info className="h-4 w-4 text-primary" />
-            Muhtasari wa Mawasiliano
-          </h4>
-          <div className="space-y-2 text-sm">
-            <div className="flex items-center gap-2">
-              <Phone className="h-4 w-4 text-green-600" />
-              <span>Simu: {formData.contact_phone}</span>
-            </div>
-            {formData.contact_whatsapp_phone && (
-              <div className="flex items-center gap-2">
-                <Heart className="h-4 w-4 text-green-500" />
-                <span>WhatsApp: {formData.contact_whatsapp_phone}</span>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+
 
       {/* Full Address (Optional) */}
       <div className="space-y-2">
@@ -805,6 +786,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
           formData.location?.trim() && 
           formData.description?.trim() && 
           formData.contact_phone?.trim() &&
+          formData.property_type?.trim() &&
           formData.images && formData.images.length > 0
         );
         
@@ -814,6 +796,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
           location: !!formData.location?.trim(),
           description: !!formData.description?.trim(),
           contact_phone: !!formData.contact_phone?.trim(),
+          property_type: !!formData.property_type?.trim(),
           images: formData.images && formData.images.length > 0,
           imagesLength: formData.images?.length || 0
         });
@@ -825,6 +808,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             location: !!formData.location?.trim(),
             description: !!formData.description?.trim(),
             contact_phone: !!formData.contact_phone?.trim(),
+            property_type: !!formData.property_type?.trim(),
             images: formData.images && formData.images.length > 0
           });
           
@@ -834,6 +818,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             `• Bei ya kodi: ${formData.price?.trim() ? '✓' : '✗'}\n` +
             `• Eneo: ${formData.location?.trim() ? '✓' : '✗'}\n` +
             `• Maelezo ya nyumba: ${formData.description?.trim() ? '✓' : '✗'}\n` +
+            `• Aina ya nyumba: ${formData.property_type?.trim() ? '✓' : '✗'}\n` +
             `• Nambari ya simu: ${formData.contact_phone?.trim() ? '✓' : '✗'}\n` +
             `• Picha za nyumba: ${formData.images && formData.images.length > 0 ? '✓' : '✗'} (${formData.images?.length || 0} picha)`
           );
@@ -1045,18 +1030,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             </p>
           </div>
           
-          {/* Debug Info - Remove this after fixing the issue */}
-          {process.env.NODE_ENV === 'development' && (
-            <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs">
-              <strong>Debug Info:</strong> Step {currentStep}/{totalSteps} | 
-              Title: {formData.title ? '✓' : '✗'} | 
-              Price: {formData.price ? '✓' : '✗'} | 
-              Location: {formData.location ? '✓' : '✗'} | 
-              Description: {formData.description ? '✓' : '✗'} | 
-              Phone: {formData.contact_phone ? '✓' : '✗'} | 
-              Images: {formData.images?.length || 0}
-            </div>
-          )}
+
         </CardHeader>
 
         <CardContent className="p-3 sm:p-4 lg:p-6 overflow-y-auto max-h-[calc(95vh-200px)]">

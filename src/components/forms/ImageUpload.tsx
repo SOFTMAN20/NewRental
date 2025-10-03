@@ -4,11 +4,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Upload, X, Image, Loader2 } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
 import imageCompression from 'browser-image-compression';
+import { rateLimiters } from '@/utils/security';
 
 interface ImageUploadProps {
   images: string[];
@@ -149,12 +150,23 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
    * Validates file type and size before processing
    */
   const validateImageFile = (file: File): { isValid: boolean; error?: string } => {
-    // Check file type
+    // Check file type with enhanced validation
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
+    
     if (!allowedTypes.includes(file.type.toLowerCase())) {
       return {
         isValid: false,
         error: 'Only JPG, PNG, and WebP images are allowed'
+      };
+    }
+
+    // Validate file extension
+    const fileExtension = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
+    if (!allowedExtensions.includes(fileExtension)) {
+      return {
+        isValid: false,
+        error: 'Invalid file extension'
       };
     }
 
@@ -167,12 +179,59 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       };
     }
 
+    // Check minimum file size (prevent empty files)
+    const minSize = 1024; // 1KB
+    if (file.size < minSize) {
+      return {
+        isValid: false,
+        error: 'File is too small or corrupted'
+      };
+    }
+
+    // Validate filename (prevent path traversal)
+    if (file.name.includes('..') || file.name.includes('/') || file.name.includes('\\')) {
+      return {
+        isValid: false,
+        error: 'Invalid filename'
+      };
+    }
+
+    // Check for suspicious file names
+    const suspiciousPatterns = [
+      /\.php$/i,
+      /\.exe$/i,
+      /\.bat$/i,
+      /\.cmd$/i,
+      /\.scr$/i,
+      /\.js$/i,
+      /\.html$/i,
+      /\.htm$/i
+    ];
+
+    if (suspiciousPatterns.some(pattern => pattern.test(file.name))) {
+      return {
+        isValid: false,
+        error: 'File type not allowed for security reasons'
+      };
+    }
+
     return { isValid: true };
   };
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files || !user) return;
+
+    // Rate limiting check
+    const userId = user.id;
+    if (!rateLimiters.imageUpload.isAllowed(userId)) {
+      toast({
+        variant: "destructive",
+        title: t('common.error'),
+        description: 'Too many image uploads. Please try again later.'
+      });
+      return;
+    }
 
     if (images.length + files.length > maxImages) {
       setCompressionStatus('❌ Too many images selected');

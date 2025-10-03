@@ -23,5 +23,20 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
     storage: localStorage,
     persistSession: true,
     autoRefreshToken: true,
-  }
+    detectSessionInUrl: true,
+    flowType: 'pkce', // Use PKCE flow for better security
+  },
+  global: {
+    headers: {
+      'X-Client-Info': 'nyumbalink-web',
+    },
+  },
+  db: {
+    schema: 'public',
+  },
+  realtime: {
+    params: {
+      eventsPerSecond: 10, // Rate limit realtime events
+    },
+  },
 });

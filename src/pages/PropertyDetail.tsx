@@ -23,8 +23,8 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Navigation from '@/components/Navigation';
-import Footer from '@/components/Footer';
+import Navigation from '@/components/layout/Navigation';
+import Footer from '@/components/layout/Footer';
 import LoadingSpinner from '@/components/ui/loading-spinner';
 import Map from '@/components/ui/map';
 import { Button } from '@/components/ui/button';

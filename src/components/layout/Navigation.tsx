@@ -32,12 +32,17 @@
  * - Tablet: Adaptive layout
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Home, Search, User, Menu, X, Globe, Building2, LogOut } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from 'react-i18next';
+import NyumbaLinkLogoClean from '@/components/ui/NyumbaLinkLogoClean';
+import { supabase } from '@/lib/integrations/supabase/client';
+import type { Tables } from '@/lib/integrations/supabase/types';
+
+type Profile = Tables<'profiles'>;
 
 /**
  * Global Navigation Component
@@ -53,10 +58,42 @@ const Navigation = () => {
   // Component state management
   // Usimamizi wa hali ya kipengee
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Mobile menu visibility
+  const [profile, setProfile] = useState<Profile | null>(null); // User profile
   const location = useLocation(); // Current page location for active states
   const navigate = useNavigate(); // Navigation function
   const { user, signOut } = useAuth(); // Authentication state
   const { t, i18n } = useTranslation();
+
+  // Fetch user profile when user changes
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (!user) {
+        setProfile(null);
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('user_id', user.id)
+          .single();
+
+        if (error && error.code !== 'PGRST116') {
+          console.error('Profile fetch error:', error);
+          return;
+        }
+
+        if (data) {
+          setProfile(data);
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    };
+
+    fetchProfile();
+  }, [user]);
 
   /**
    * Language Toggle Function
@@ -96,8 +133,8 @@ const Navigation = () => {
               </div>
             </Link>
             
-            {/* Host Dashboard Link - Kiungo cha dashibodi ya mwenye nyumba (LEFT SIDE) - Only show for non-logged in users */}
-            {!user && (
+            {/* Host Dashboard Link - Kiungo cha dashibodi ya mwenye nyumba (LEFT SIDE) - Only show for non-landlords */}
+            {!user || (user && profile?.user_type !== 'landlord') ? (
               <Link to="/signup?type=landlord" className="block">
                 <Button
                   variant="ghost"
@@ -107,7 +144,7 @@ const Navigation = () => {
                   {t('navigation.becomeHost')}
                 </Button>
               </Link>
-            )}
+            ) : null}
           </div>
 
           {/* Enhanced Desktop Navigation Menu - Menyu ya uongozaji wa kompyuta */}
@@ -337,19 +374,20 @@ const Navigation = () => {
                 </Link>
               )}
               
-              <Link
-                to={user ? "/dashboard" : "/signup?type=landlord"}
-                className={`block px-3 sm:px-4 py-2 sm:py-3 text-gray-700 hover:bg-primary/10 hover:text-primary 
-                           rounded-lg sm:rounded-xl text-sm transition-all duration-300 ${
-                  location.pathname === '/dashboard' ? 'bg-primary/15 text-primary border border-primary/20' : ''
-                }`}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <div className="flex items-center">
-                  <Building2 className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-gray-400" />
-                  {t('navigation.becomeHost')}
-                </div>
-              </Link>
+              {/* Only show "Become Host" for non-landlords */}
+              {!user || (user && profile?.user_type !== 'landlord') ? (
+                <Link
+                  to="/signup?type=landlord"
+                  className="block px-3 sm:px-4 py-2 sm:py-3 text-gray-700 hover:bg-primary/10 hover:text-primary 
+                             rounded-lg sm:rounded-xl text-sm transition-all duration-300"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <div className="flex items-center">
+                    <Building2 className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-gray-400" />
+                    {t('navigation.becomeHost')}
+                  </div>
+                </Link>
+              ) : null}
 
               {/* Enhanced Mobile User Actions Section - Sehemu ya vitendo vya mtumiaji kwa simu */}
               <div className="border-t border-gray-200 pt-2 sm:pt-4 mt-2 sm:mt-4">

@@ -27,16 +27,16 @@
 
 import React, { useState } from 'react';
 import { useEffect } from 'react';
-import Navigation from '@/components/Navigation';
-import PropertyCard from '@/components/PropertyCard';
-import Footer from '@/components/Footer';
+import Navigation from '@/components/layout/Navigation';
+import PropertyCard from '@/components/common/PropertyCard';
+import Footer from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import LoadingSpinner from '@/components/ui/loading-spinner';
-import { PropertyGridSkeleton } from '@/components/PropertyCardSkeleton';
+import { PropertyGridSkeleton } from '@/components/common/PropertyCardSkeleton';
 import { Search, MapPin, SlidersHorizontal, X } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { useProperties } from '@/hooks/useProperties';
