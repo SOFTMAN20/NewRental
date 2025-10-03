@@ -312,20 +312,32 @@ const Navigation = () => {
             
             {/* Mobile Menu Content - Maudhui ya menyu ya simu */}
             <div className="flex-1 px-2 sm:px-4 py-2 sm:py-4 space-y-1 sm:space-y-2 overflow-y-auto">
-              {/* Enhanced Mobile Home Link - Kiungo cha nyumbani kwa simu */}
-              <Link
-                to="/"
-                className={`block px-3 sm:px-4 py-2 sm:py-3 text-gray-700 hover:bg-primary/10 hover:text-primary 
-                           rounded-lg sm:rounded-xl text-sm transition-all duration-300 ${
-                  location.pathname === '/' ? 'bg-primary/15 text-primary border border-primary/20' : ''
-                }`}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <div className="flex items-center">
-                  <Home className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-gray-400" />
-                  {t('navigation.home')}
-                </div>
-              </Link>
+              {/* Enhanced Mobile Home Link with Close Button - Kiungo cha nyumbani kwa simu na kitufe cha kufunga */}
+              <div className="flex items-center justify-between">
+                <Link
+                  to="/"
+                  className={`flex-1 px-3 sm:px-4 py-2 sm:py-3 text-gray-700 hover:bg-primary/10 hover:text-primary 
+                             rounded-lg sm:rounded-xl text-sm transition-all duration-300 ${
+                    location.pathname === '/' ? 'bg-primary/15 text-primary border border-primary/20' : ''
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <div className="flex items-center">
+                    <Home className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-gray-400" />
+                    {t('navigation.home')}
+                  </div>
+                </Link>
+                
+                {/* Close Menu Button */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-all duration-300 hover:scale-105 ml-2"
+                >
+                  <X className="h-4 w-4 sm:h-5 sm:w-5 text-gray-500" />
+                </Button>
+              </div>
               
               {/* Enhanced Mobile Browse Link - Kiungo cha kutazama kwa simu */}
               <Link
