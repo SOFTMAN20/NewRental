@@ -24,9 +24,8 @@ import { MapPin, Loader2, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-// Mapbox access token - you'll need to get this from https://mapbox.com
-// For development, you can use Mapbox's public token or create a free account
-const MAPBOX_TOKEN = 'pk.eyJ1IjoiaW52ZXN0b3IwMTIiLCJhIjoiY21kanI1eG16MG9vNTJpcXRnbXZpeXQ2aCJ9.YscR4sCydGxr8XSn_EMZdg';
+// Mapbox access token from environment variables
+const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN || 'pk.eyJ1IjoiaW52ZXN0b3IwMTIiLCJhIjoiY21kanI1eG16MG9vNTJpcXRnbXZpeXQ2aCJ9.YscR4sCydGxr8XSn_EMZdg';
 
 /**
  * COORDINATE INTERFACE
