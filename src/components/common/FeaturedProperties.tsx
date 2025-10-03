@@ -66,27 +66,16 @@ const FeaturedPropertyCard = ({ property, index, t }: { property: any, index: nu
             <span className="text-xs font-bold text-gray-800">4.8</span>
           </div>
 
-          {/* Enhanced hover overlay with quick actions - shows on hover OR mobile touch */}
-          <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent 
-                          transition-all duration-500 z-10 ${
+          {/* Enhanced hover overlay with quick view icon - shows on hover OR mobile touch */}
+          <div className={`absolute inset-0 transition-all duration-500 z-10 ${
                             showMobileActions 
                               ? 'opacity-100' 
                               : 'opacity-0 group-hover:opacity-100'
                           }`}>
-            <div className="absolute bottom-4 left-4 right-4 flex justify-center items-center">
-              <Button 
-                size="sm" 
-                variant="secondary" 
-                className="bg-white/95 text-gray-900 hover:bg-white transform hover:scale-105 transition-all duration-300"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  window.location.href = `/property/${property.id}`;
-                }}
-              >
-                <Eye className="w-4 h-4 mr-2" />
-                Quick View
-              </Button>
+            <div className="absolute bottom-3 right-3">
+              <div className="bg-white/95 rounded-full p-1.5 transform hover:scale-110 transition-all duration-300 shadow-lg">
+                <Eye className="w-4 h-4 text-gray-900" />
+              </div>
             </div>
           </div>
         </div>
