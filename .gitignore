@@ -23,6 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 .env
-.curso
+.env.local
+.cursor
+.kiro/mcp.json
 
 docs
