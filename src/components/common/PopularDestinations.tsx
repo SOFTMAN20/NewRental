@@ -48,11 +48,11 @@ const PopularDestinations = () => {
   return (
     <section className="py-10 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+        <div className="mb-6 text-left mt-8">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-orange-500 via-red-500 to-orange-600 bg-clip-text text-transparent mb-1">
             {t('popularDestinations.title')}
           </h2>
-          <p className="text-xl text-muted-foreground">
+          <p className="text-sm sm:text-base text-muted-foreground max-w-2xl leading-relaxed">
             {t('popularDestinations.subtitle')}
           </p>
         </div>
