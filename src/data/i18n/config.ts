@@ -18,8 +18,8 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: localStorage.getItem('language') || 'sw', // Default to Swahili
-    fallbackLng: 'sw', // Fallback to Swahili
+    lng: localStorage.getItem('language') || 'en', // Default to English
+    fallbackLng: 'en', // Fallback to English
     
     interpolation: {
       escapeValue: false // React already does escaping
