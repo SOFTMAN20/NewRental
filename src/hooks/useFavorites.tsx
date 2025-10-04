@@ -63,7 +63,7 @@ export const useFavorites = () => {
       toast({
         title: "Ingia kwanza",
         description: "Unahitaji kuingia ili kuweka nyumba kwenye vipendwa.",
-        variant: "destructive",
+        variant: "warning",
       });
       return false;
     }
@@ -85,7 +85,7 @@ export const useFavorites = () => {
           toast({
             title: "Tayari imehifadhiwa",
             description: "Nyumba hii tayari imo kwenye vipendwa vyako.",
-            variant: "default",
+            variant: "warning",
           });
           return false;
         }

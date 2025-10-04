@@ -298,22 +298,14 @@ const Navigation = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <div className="flex items-center space-x-2 sm:space-x-3">
-                <Link to="/signin">
-                  <Button variant="ghost" size="sm" className="text-sm px-3 py-2 hover:bg-gray-100 
-                                                               hover:scale-105 transition-all duration-300">
-                    {t('navigation.signIn')}
-                  </Button>
-                </Link>
-                <Link to="/signup">
-                  <Button size="sm" className="bg-gradient-to-r from-primary to-serengeti-500 
-                                              hover:from-primary/90 hover:to-serengeti-400 text-sm px-4 py-2
-                                              shadow-lg hover:shadow-xl transform hover:scale-105 
-                                              transition-all duration-300">
-                    {t('navigation.signUp')}
-                  </Button>
-                </Link>
-              </div>
+              <Link to="/signin">
+                <Button size="sm" className="bg-gradient-to-r from-primary to-serengeti-500 
+                                            hover:from-primary/90 hover:to-serengeti-400 text-sm px-4 py-2
+                                            shadow-lg hover:shadow-xl transform hover:scale-105 
+                                            transition-all duration-300">
+                  {t('navigation.signIn')}
+                </Button>
+              </Link>
             )}
 
             {/* Enhanced Language Toggle Button - Kitufe cha kubadilisha lugha (RIGHT SIDE) */}
@@ -490,22 +482,14 @@ const Navigation = () => {
                   </Button>
                 ) : (
                   <>
-                    {/* Enhanced Mobile Sign In Link - Kiungo cha kuingia kwa simu */}
+                    {/* Enhanced Mobile Sign In Button - Kitufe cha kuingia kwa simu */}
                     <Link to="/signin" className="block mt-1 sm:mt-2">
-                      <Button variant="ghost" className="w-full justify-start px-3 sm:px-4 py-2 sm:py-3 hover:bg-gray-100 
-                                                       rounded-lg sm:rounded-xl text-sm transition-all duration-300 hover:scale-105">
-                        <User className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-gray-400" />
-                        {t('navigation.signIn')}
-                      </Button>
-                    </Link>
-                    
-                    {/* Enhanced Mobile Sign Up Button - Kitufe cha kujisajili kwa simu */}
-                    <Link to="/signup" className="block mt-1 sm:mt-2">
                       <Button className="w-full bg-gradient-to-r from-primary to-serengeti-500 
                                        hover:from-primary/90 hover:to-serengeti-400 text-sm 
                                        py-2 sm:py-3 shadow-lg hover:shadow-xl transform hover:scale-105 
                                        transition-all duration-300">
-                        {t('navigation.signUp')}
+                        <User className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-white" />
+                        {t('navigation.signIn')}
                       </Button>
                     </Link>
                   </>
