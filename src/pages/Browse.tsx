@@ -40,6 +40,7 @@ import { PropertyGridSkeleton } from '@/components/common/PropertyCardSkeleton';
 import { Search, MapPin, SlidersHorizontal, X } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { useProperties } from '@/hooks/useProperties';
+import { useFavorites } from '@/hooks/useFavorites';
 import type { Property } from '@/hooks/useProperties';
 import { useTranslation } from 'react-i18next';
 
@@ -258,6 +259,9 @@ const Browse = () => {
   
   // Data fetching from Supabase
   const { data: properties = [], isLoading, error } = useProperties();
+  
+  // Favorites functionality
+  const { isFavorited, toggleFavorite } = useFavorites();
 
   // Scroll to top when component mounts
   useEffect(() => {
@@ -665,8 +669,8 @@ const Browse = () => {
                 electricity={property.electricity || false}
                 water={property.water || false}
                 bedrooms={property.bedrooms || undefined}
-                isFavorited={uiState.favoriteIds.includes(property.id)}
-                onToggleFavorite={handleToggleFavorite}
+                isFavorited={isFavorited(property.id)}
+                onToggleFavorite={toggleFavorite}
                 viewMode={uiState.viewMode}
               />
             ))}

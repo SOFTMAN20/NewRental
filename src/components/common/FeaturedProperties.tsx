@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Star, MapPin, Wifi, Car, Utensils, Zap, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useProperties } from '@/hooks/useProperties';
+import { useProperties, type Property } from '@/hooks/useProperties';
 import LoadingSpinner from '@/components/ui/loading-spinner';
 import { PropertyGridSkeleton } from '@/components/common/PropertyCardSkeleton';
 import { useTranslation } from 'react-i18next';
@@ -150,7 +150,8 @@ const FeaturedProperties = () => {
   // Get featured properties - 8 for mobile, 16 for desktop
   const isMobile = window.innerWidth < 768; // md breakpoint
   const propertyLimit = isMobile ? 8 : 16;
-  const properties = allProperties.slice(0, propertyLimit);
+  const typedProperties = allProperties as Property[];
+  const properties = typedProperties.slice(0, propertyLimit);
 
   const getAmenityIcon = (amenity: string) => {
     switch (amenity) {

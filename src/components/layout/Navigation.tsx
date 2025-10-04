@@ -35,8 +35,18 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Home, Search, User, Menu, X, Globe, Building2, LogOut } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Home, Search, User, Menu, X, Globe, Building2, LogOut, Heart, Bell, Settings } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { useFavorites } from '@/hooks/useFavorites';
 import { useTranslation } from 'react-i18next';
 
 import { supabase } from '@/lib/integrations/supabase/client';
@@ -62,6 +72,7 @@ const Navigation = () => {
   const location = useLocation(); // Current page location for active states
   const navigate = useNavigate(); // Navigation function
   const { user, signOut } = useAuth(); // Authentication state
+  const { getFavoritesCount } = useFavorites(); // Favorites functionality
   const { t, i18n } = useTranslation();
 
   // Fetch user profile when user changes
@@ -212,27 +223,80 @@ const Navigation = () => {
 
             {/* Enhanced User Account Menu - Menyu ya akaunti ya mtumiaji */}
             {user ? (
-              <div className="flex items-center space-x-2 sm:space-x-3">
-                <Link to="/dashboard">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="flex items-center space-x-2 px-3 py-2 rounded-full hover:bg-primary/10 
-                               hover:text-primary hover:scale-105 transition-all duration-300"
+                    className="flex items-center space-x-2 px-3 py-2 rounded-full hover:bg-gray-100 
+                               border border-gray-200 hover:border-gray-300 transition-all duration-300"
                   >
-                    <User className="h-4 w-4" />
-                    <span className="hidden sm:inline text-sm font-medium">{t('navigation.dashboard')}</span>
+                    <Menu className="h-4 w-4" />
+                    <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
+                      <span className="text-white text-sm font-semibold">
+                        {profile?.full_name?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase() || 'U'}
+                      </span>
+                    </div>
                   </Button>
-                </Link>
-                <Button
-                  variant="ghost"
-                  onClick={() => signOut(navigate)}
-                  className="flex items-center space-x-2 px-3 py-2 rounded-full hover:bg-red-50 
-                             hover:text-red-600 hover:scale-105 transition-all duration-300"
-                >
-                  <LogOut className="h-4 w-4" />
-                  <span className="hidden sm:inline text-sm font-medium">{t('navigation.signOut')}</span>
-                </Button>
-              </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">
+                        {profile?.full_name || 'Mtumiaji'}
+                      </p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        {user.email}
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  
+                  <DropdownMenuItem asChild>
+                    <Link to="/favorites" className="flex items-center">
+                      <Heart className="mr-2 h-4 w-4" />
+                      <span>Vipendwa</span>
+                      {getFavoritesCount() > 0 && (
+                        <Badge className="ml-auto bg-primary text-white text-xs px-1.5 py-0.5">
+                          {getFavoritesCount()}
+                        </Badge>
+                      )}
+                    </Link>
+                  </DropdownMenuItem>
+                  
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard" className="flex items-center">
+                      <User className="mr-2 h-4 w-4" />
+                      <span>{t('navigation.dashboard')}</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  
+                  <DropdownMenuItem disabled>
+                    <Bell className="mr-2 h-4 w-4" />
+                    <span>Arifa</span>
+                    <Badge className="ml-auto bg-gray-100 text-gray-600 text-xs px-1.5 py-0.5">
+                      Haribu
+                    </Badge>
+                  </DropdownMenuItem>
+                  
+                  <DropdownMenuItem disabled>
+                    <Settings className="mr-2 h-4 w-4" />
+                    <span>Mipangilio</span>
+                  </DropdownMenuItem>
+                  
+                  <DropdownMenuSeparator />
+                  
+                  <DropdownMenuItem 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      signOut(navigate);
+                    }}
+                    className="text-red-600 focus:text-red-600 cursor-pointer"
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>{t('navigation.signOut')}</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
               <div className="flex items-center space-x-2 sm:space-x-3">
                 <Link to="/signin">

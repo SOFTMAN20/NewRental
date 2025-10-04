@@ -1,119 +1,143 @@
+/**
+ * FAVORITES.TSX - USER FAVORITES/WISHLIST PAGE
+ * ===========================================
+ * 
+ * Ukurasa wa vipendwa vya mtumiaji - User favorites/wishlist page
+ * 
+ * FUNCTIONALITY / KAZI:
+ * - Display user's favorited properties (Kuonyesha nyumba za vipendwa vya mtumiaji)
+ * - Allow removing properties from favorites (Kuruhusu kuondoa nyumba kutoka vipendwa)
+ * - Handle authentication state (Kushughulikia hali ya uthibitisho)
+ * - Show empty state when no favorites (Kuonyesha hali tupu wakati hakuna vipendwa)
+ */
 
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import Navigation from '@/components/layout/Navigation';
 import PropertyCard from '@/components/common/PropertyCard';
+import Footer from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
 import { Heart, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useFavorites } from '@/hooks/useFavorites';
+import { useProperties, type Property } from '@/hooks/useProperties';
+import { useAuth } from '@/hooks/useAuth';
+import LoadingSpinner from '@/components/ui/loading-spinner';
+import { useTranslation } from 'react-i18next';
 
 const Favorites = () => {
-  const [favoriteIds, setFavoriteIds] = useState<string[]>(['1', '3']);
+  const { t } = useTranslation();
+  const { user } = useAuth();
+  const { favorites, loading: favoritesLoading, toggleFavorite, isFavorited } = useFavorites();
+  const { data: allProperties = [], isLoading: propertiesLoading } = useProperties();
 
-  // Sample properties (in real app, these would be fetched based on favoriteIds)
-  const favoriteProperties = [
-    {
-      id: '1',
-      title: 'Nyumba ya Kisasa Mikocheni',
-      description: 'Nyumba nzuri ya vyumba 3 na jiko la kisasa. Ina bustani ndogo na nafasi ya gari.',
-      price: 800000,
-      location: 'Mikocheni, Dar es Salaam',
-      images: ['https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=300&fit=crop'],
-      utilities: { electricity: true, water: true },
-      nearbyServices: ['school', 'hospital', 'market'],
-      landlord: { name: 'Mwalimu John', phone: '+255712345678', email: 'john@example.com' }
-    },
-    {
-      id: '3',
-      title: 'Nyumba ya Familia Arusha',
-      description: 'Nyumba kubwa ya vyumba 4 na bustani. Mazingira mazuri na hewa safi.',
-      price: 1200000,
-      location: 'Njiro, Arusha',
-      images: ['https://images.unsplash.com/photo-1472396961693-142e6e269027?w=400&h=300&fit=crop'],
-      utilities: { electricity: true, water: true },
-      nearbyServices: ['school', 'hospital'],
-      landlord: { name: 'Mzee Hassan', phone: '+255678901234', email: 'hassan@example.com' }
-    }
-  ];
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
-  const handleToggleFavorite = (propertyId: string) => {
-    setFavoriteIds(prev => 
-      prev.includes(propertyId)
-        ? prev.filter(id => id !== propertyId)
-        : [...prev, propertyId]
-    );
-  };
+  // Filter properties to show only favorited ones
+  const typedProperties = allProperties as Property[];
+  const favoriteProperties = typedProperties.filter(property => 
+    favorites.some(fav => fav.property_id === property.id)
+  );
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50">
-      <Navigation />
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2 flex items-center">
-            <Heart className="h-8 w-8 text-red-500 mr-3" />
-            Nyumba Pendwa
-          </h1>
-          <p className="text-gray-600">
-            Nyumba {favoriteProperties.length} ulizoziokoa kwa ajili ya baadaye
-          </p>
-        </div>
+  const isLoading = favoritesLoading || propertiesLoading;
 
-        {/* Content */}
-        {favoriteProperties.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {favoriteProperties.map((property) => (
-              <PropertyCard
-                key={property.id}
-                {...property}
-                isFavorited={favoriteIds.includes(property.id)}
-                onToggleFavorite={handleToggleFavorite}
-              />
-            ))}
-          </div>
-        ) : (
+  // Show login prompt if user is not authenticated
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navigation />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center py-16">
-            <div className="max-w-md mx-auto">
-              <Heart className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                Hakuna nyumba za pendwa
-              </h3>
-              <p className="text-gray-600 mb-6">
-                Tazama nyumba na ubofye ikoni ya moyo kuziokoa kwa ajili ya baadaye
-              </p>
-              <Link to="/browse">
-                <Button className="bg-primary hover:bg-primary/90">
-                  <Search className="h-4 w-4 mr-2" />
-                  Tazama Nyumba
+            <Heart className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              Ingia kwanza
+            </h2>
+            <p className="text-gray-600 mb-8">
+              Unahitaji kuingia ili kuona vipendwa vyako.
+            </p>
+            <div className="space-x-4">
+              <Link to="/signin">
+                <Button>
+                  {t('navigation.signIn')}
+                </Button>
+              </Link>
+              <Link to="/signup">
+                <Button variant="outline">
+                  {t('navigation.signUp')}
                 </Button>
               </Link>
             </div>
           </div>
-        )}
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
-        {/* Tips section */}
-        {favoriteProperties.length > 0 && (
-          <div className="mt-12 bg-white rounded-lg p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Vidokezo vya Kutumia Nyumba Pendwa
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
-              <div>
-                • Linganisha bei na mazingira ya nyumba tofauti
-              </div>
-              <div>
-                • Wasiliana na wenye nyumba moja kwa moja
-              </div>
-              <div>
-                • Angalia mara kwa mara kwa updates za bei
-              </div>
-              <div>
-                • Shiriki nyumba na familia au marafiki
-              </div>
-            </div>
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Navigation />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Vipendwa Vyangu
+          </h1>
+          <p className="text-gray-600">
+            Nyumba ulizoziweka kwenye vipendwa vyako
+          </p>
+        </div>
+
+        {/* Loading State */}
+        {isLoading ? (
+          <div className="flex justify-center py-16">
+            <LoadingSpinner size="lg" />
+          </div>
+        ) : favoriteProperties.length > 0 ? (
+          /* Properties Grid */
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {favoriteProperties.map((property) => (
+              <PropertyCard
+                key={property.id}
+                id={property.id}
+                title={property.title}
+                price={Number(property.price)}
+                location={property.location}
+                images={property.images || []}
+                phone={property.profiles?.phone || undefined}
+                contactPhone={property.contact_phone || undefined}
+                contactWhatsappPhone={property.contact_whatsapp_phone || undefined}
+                electricity={property.electricity || false}
+                water={property.water || false}
+                bedrooms={property.bedrooms || undefined}
+                isFavorited={isFavorited(property.id)}
+                onToggleFavorite={toggleFavorite}
+                viewMode="grid"
+              />
+            ))}
+          </div>
+        ) : (
+          /* Empty State */
+          <div className="text-center py-16">
+            <Heart className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              Hakuna Vipendwa
+            </h2>
+            <p className="text-gray-600 mb-8">
+              Hujaweka nyumba yoyote kwenye vipendwa vyako bado. Anza kutazama nyumba na uweke zile unazozipenda.
+            </p>
+            <Link to="/browse">
+              <Button>
+                <Search className="h-4 w-4 mr-2" />
+                Tazama Nyumba
+              </Button>
+            </Link>
           </div>
         )}
       </div>
+      <Footer />
     </div>
   );
 };
