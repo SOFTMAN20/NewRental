@@ -141,37 +141,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
    */
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  /**
-   * MOBILE TOUCH STATE
-   * ==================
-   * 
-   * Manages the visibility of action buttons on mobile devices.
-   * Shows buttons when user taps on the card.
-   * 
-   * MOBILE UX / TAJRIBA YA SIMU:
-   * - Touch to show action buttons
-   * - Auto-hide after a few seconds
-   * - Better mobile interaction
-   */
-  const [showMobileActions, setShowMobileActions] = useState(false);
 
-  /**
-   * MOBILE TOUCH HANDLERS
-   * ====================
-   * 
-   * Handles touch interactions for mobile devices.
-   * Shows action buttons when user taps on the card.
-   * Does NOT prevent navigation - allows clicking anywhere to go to details.
-   */
-  const handleMobileTouch = (e: React.TouchEvent | React.MouseEvent) => {
-    // Don't prevent default - allow navigation to work
-    setShowMobileActions(true);
-    
-    // Auto-hide buttons after 3 seconds
-    setTimeout(() => {
-      setShowMobileActions(false);
-    }, 3000);
-  };
 
   /**
    * FAVORITE TOGGLE HANDLER
@@ -224,8 +194,6 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             {/* LIST VIEW IMAGE SECTION */}
             <div 
               className="w-full sm:w-80 h-48 sm:h-60 flex-shrink-0 relative overflow-hidden"
-              onTouchStart={handleMobileTouch}
-              onClick={handleMobileTouch}
             >
               <ReliableImage
                 src={images[0] || `https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=300&fit=crop`}
@@ -235,12 +203,8 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
                 height={300}
               />
               
-              {/* Enhanced overlay with quick view icon - shows on hover OR mobile touch */}
-              <div className={`absolute inset-0 transition-all duration-500 ${
-                                showMobileActions 
-                                  ? 'opacity-100' 
-                                  : 'opacity-0 group-hover:opacity-100'
-                              }`}>
+              {/* Enhanced overlay with quick view icon - shows on hover */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
                 <div className="absolute bottom-3 right-3">
                   <div className="bg-white/95 rounded-full p-1.5 transform hover:scale-110 transition-all duration-300 shadow-lg">
                     <Eye className="w-4 h-4 text-gray-900" />
@@ -342,8 +306,6 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
           {/* GRID VIEW IMAGE SECTION */}
           <div 
             className="aspect-[4/3] overflow-hidden relative"
-            onTouchStart={handleMobileTouch}
-            onClick={handleMobileTouch}
           >
             <ReliableImage
               src={images[currentImageIndex] || `https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=300&fit=crop`}
@@ -353,12 +315,8 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
               height={300}
             />
             
-            {/* Enhanced overlay with quick view icon - shows on hover OR mobile touch */}
-            <div className={`absolute inset-0 transition-all duration-500 ${
-                              showMobileActions 
-                                ? 'opacity-100' 
-                                : 'opacity-0 group-hover:opacity-100'
-                            }`}>
+            {/* Enhanced overlay with quick view icon - shows on hover */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
               <div className="absolute bottom-3 right-3">
                 <div className="bg-white/95 rounded-full p-1.5 transform hover:scale-110 transition-all duration-300 shadow-lg">
                   <Eye className="w-4 h-4 text-gray-900" />
