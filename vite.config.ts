@@ -24,17 +24,49 @@ export default defineConfig(({ mode }) => ({
     sourcemap: false,
     rollupOptions: {
       output: {
-        // Simpler chunking strategy to avoid React issues
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom'],
-          'ui-vendor': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-toast'],
-          'supabase-vendor': ['@supabase/supabase-js'],
-          'query-vendor': ['@tanstack/react-query'],
+        // Optimized chunking strategy for better code splitting
+        manualChunks: (id) => {
+          // React core
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
+            return 'react-vendor';
+          }
+          // React Router
+          if (id.includes('node_modules/react-router')) {
+            return 'router-vendor';
+          }
+          // Radix UI components - split into smaller chunks
+          if (id.includes('@radix-ui')) {
+            return 'radix-vendor';
+          }
+          // Supabase
+          if (id.includes('@supabase')) {
+            return 'supabase-vendor';
+          }
+          // React Query
+          if (id.includes('@tanstack/react-query')) {
+            return 'query-vendor';
+          }
+          // Lucide icons
+          if (id.includes('lucide-react')) {
+            return 'icons-vendor';
+          }
+          // i18next
+          if (id.includes('i18next') || id.includes('react-i18next')) {
+            return 'i18n-vendor';
+          }
+          // Framer Motion
+          if (id.includes('framer-motion')) {
+            return 'motion-vendor';
+          }
+          // Other large dependencies
+          if (id.includes('node_modules')) {
+            return 'vendor';
+          }
         },
       },
     },
-    // Optimize chunk size
-    chunkSizeWarningLimit: 500,
+    // Increase chunk size warning limit to 1000KB (1MB)
+    chunkSizeWarningLimit: 1000,
   },
   // Enable compression
   esbuild: {
