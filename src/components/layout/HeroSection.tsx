@@ -93,81 +93,71 @@ const HeroSection = () => {
         </div>
 
         {/* Enhanced Search Interface Card - Kadi ya kiolesura cha utafutaji */}
-        <div className="max-w-4xl mx-auto mb-6 sm:mb-8 lg:mb-10 px-2 sm:px-4 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-          <Card className="shadow-2xl border-0 overflow-hidden bg-white/95 backdrop-blur-md 
-                           transform hover:scale-105 transition-all duration-500 hover:shadow-3xl">
-            <CardContent className="p-3 sm:p-4 lg:p-5 xl:p-6">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
+        <div className="max-w-5xl mx-auto mb-6 sm:mb-8 lg:mb-10 px-2 sm:px-4 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+          <Card className="shadow-2xl border-0 overflow-hidden bg-white/95 backdrop-blur-md rounded-3xl">
+            <CardContent className="p-4 sm:p-5 lg:p-6">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4">
                 
                 {/* Location Search Input - Ingizo la utafutaji wa eneo */}
-                <div className="lg:col-span-1 group">
-                  <label className="block text-xs font-semibold text-foreground mb-1 sm:mb-2 
-                                   group-hover:text-primary transition-colors duration-300">
-                    {t('homepage.searchLocation')}
+                <div className="lg:col-span-5 group">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Tafuta eneo
                   </label>
                   <div className="relative">
-                    <MapPin className="absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground 
-                                       group-hover:text-primary transition-colors duration-300" />
+                    <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                     <Input
-                      placeholder={t('homepage.locationPlaceholder')}
+                      placeholder="Ingiza eneo (mfano: Kinondoni, Temeke)"
                       value={searchLocation}
                       onChange={(e) => setSearchLocation(e.target.value)}
-                      className="pl-8 sm:pl-10 h-10 sm:h-12 lg:h-14 text-sm border-2 border-border focus:border-primary 
-                                 hover:border-primary/50 transition-all duration-300 focus:ring-4 focus:ring-primary/20 
-                                 focus:ring-offset-2"
+                      className="pl-12 h-12 sm:h-14 text-base border-2 border-gray-200 rounded-2xl focus:border-primary 
+                                 hover:border-gray-300 transition-all duration-300 focus-visible:ring-0 focus-visible:ring-offset-0"
                     />
                   </div>
                 </div>
 
                 {/* Price Range Inputs - Maingizo ya kiwango cha bei */}
-                <div className="grid grid-cols-2 gap-1 sm:gap-2 lg:col-span-1">
+                <div className="grid grid-cols-2 gap-3 lg:col-span-4">
                   {/* Minimum Price - Bei ya chini */}
                   <div className="group">
-                    <label className="block text-xs font-semibold text-foreground mb-1 sm:mb-2 
-                                     group-hover:text-primary transition-colors duration-300">
-                      {t('homepage.minPrice')}
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Bei ya chini
                     </label>
                     <Input
                       type="number"
                       placeholder="30,000"
                       value={minPrice}
                       onChange={(e) => setMinPrice(e.target.value)}
-                      className="h-10 sm:h-12 lg:h-14 text-sm border-2 border-border focus:border-primary 
-                                 hover:border-primary/50 transition-all duration-300 focus:ring-4 focus:ring-primary/20 
-                                 focus:ring-offset-2"
+                      className="h-12 sm:h-14 text-base border-2 border-gray-200 rounded-2xl focus:border-primary 
+                                 hover:border-gray-300 transition-all duration-300 focus-visible:ring-0 focus-visible:ring-offset-0"
                     />
                   </div>
                   {/* Maximum Price - Bei ya juu */}
                   <div className="group">
-                    <label className="block text-xs font-semibold text-foreground mb-1 sm:mb-2 
-                                     group-hover:text-primary transition-colors duration-300">
-                      {t('homepage.maxPrice')}
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Bei ya juu
                     </label>
                     <Input
                       type="number"
                       placeholder="1,000,000"
                       value={maxPrice}
                       onChange={(e) => setMaxPrice(e.target.value)}
-                      className="h-10 sm:h-12 lg:h-14 text-sm border-2 border-border focus:border-primary 
-                                 hover:border-primary/50 transition-all duration-300 focus:ring-4 focus:ring-primary/20 
-                                 focus:ring-offset-2"
+                      className="h-12 sm:h-14 text-base border-2 border-gray-200 rounded-2xl focus:border-primary 
+                                 hover:border-gray-300 transition-all duration-300 focus-visible:ring-0 focus-visible:ring-offset-0"
                     />
                   </div>
                 </div>
 
                 {/* Enhanced Search Button with Navigation - Kitufe cha utafutaji na uongozaji */}
-                <div className="flex items-end lg:col-span-1">
+                <div className="flex items-end lg:col-span-3">
                   <Link 
                     to={`/browse${searchLocation || minPrice || maxPrice ? '?' : ''}${searchLocation ? `location=${encodeURIComponent(searchLocation)}` : ''}${searchLocation && (minPrice || maxPrice) ? '&' : ''}${minPrice ? `minPrice=${minPrice}` : ''}${minPrice && maxPrice ? '&' : ''}${maxPrice ? `maxPrice=${maxPrice}` : ''}`}
                     className="w-full"
                   >
-                    <Button size="lg" 
-                            className="w-full h-10 sm:h-12 lg:h-14 text-sm bg-gradient-to-r from-primary to-serengeti-500 
-                                       hover:from-primary/90 hover:to-serengeti-400 shadow-lg hover:shadow-xl 
-                                       transform hover:-translate-y-1 transition-all duration-300 
-                                       focus:ring-4 focus:ring-primary/20 focus:ring-offset-2">
-                      <Search className="h-4 w-4 mr-1 sm:mr-2" />
-                      {t('homepage.searchButton')}
+                    <Button 
+                      className="w-full h-12 sm:h-14 text-base font-bold bg-primary hover:bg-primary/90 
+                                 text-white shadow-lg hover:shadow-xl rounded-2xl transition-all duration-300">
+                      <Search className="h-5 w-5 mr-2" />
+                      Tafuta Nyumba
                     </Button>
                   </Link>
                 </div>

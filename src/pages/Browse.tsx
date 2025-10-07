@@ -329,7 +329,7 @@ const Browse = () => {
   };
 
   // Apply filtering and sorting to properties
-  const filteredProperties = filterProperties(properties, filters);
+  const filteredProperties = filterProperties(properties as Property[], filters);
   const sortedProperties = sortProperties(filteredProperties, filters.sortBy);
 
   /**
@@ -379,30 +379,32 @@ const Browse = () => {
               <div className="flex flex-col lg:flex-row gap-2 sm:gap-3 lg:gap-4">
                 {/* Location Search Input */}
                 <div className="flex-1">
-                  <div className="relative border-2 border-gray-300 rounded-lg lg:rounded-xl hover:border-primary/50 transition-colors duration-200 focus-within:border-primary shadow-sm">
-                    <MapPin className="absolute left-2 sm:left-3 lg:left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+                  <div className="relative border-2 border-gray-300 rounded-full hover:border-primary/50 transition-colors duration-200 focus-within:border-primary shadow-sm">
                     <Input
-                      placeholder={t('browse.cityPlaceholder')}
+                      placeholder="Search city or area..."
                       value={filters.searchQuery}
                       onChange={(e) => updateFilter('searchQuery', e.target.value)}
-                      className="pl-8 sm:pl-10 lg:pl-12 h-10 sm:h-12 lg:h-14 text-sm sm:text-base lg:text-lg border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 rounded-lg lg:rounded-xl"
+                      className="pl-4 sm:pl-5 pr-12 sm:pr-14 h-10 sm:h-12 lg:h-14 text-sm sm:text-base lg:text-lg border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 rounded-full"
                     />
+                    <div className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 bg-primary rounded-full p-2 sm:p-2.5 hover:bg-primary/90 transition-colors cursor-pointer">
+                      <Search className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+                    </div>
                   </div>
                 </div>
 
                 {/* Price Range Selector */}
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+                <div className="flex flex-row gap-2 sm:gap-3">
                   <Select value={filters.priceRange} onValueChange={(value) => updateFilter('priceRange', value)}>
-                    <SelectTrigger className="flex-1 h-10 sm:h-12 lg:h-14 border-2 border-gray-300 rounded-lg lg:rounded-xl hover:border-primary/50 min-w-0 focus:ring-2 focus:ring-primary/20 transition-all duration-200">
-                      <SelectValue placeholder={t('browse.priceLabel')} />
+                    <SelectTrigger className="h-10 sm:h-12 lg:h-14 border-2 border-gray-300 rounded-full hover:border-primary/50 min-w-[100px] sm:min-w-[120px] focus:ring-2 focus:ring-primary/20 transition-all duration-200 px-4">
+                      <SelectValue placeholder="Any..." />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">{t('browse.anyPrice')}</SelectItem>
-                      <SelectItem value="0-100000">{t('browse.under100k')}</SelectItem>
-                      <SelectItem value="100000-500000">{t('browse.100kTo500k')}</SelectItem>
-                      <SelectItem value="500000-1000000">{t('browse.500kTo1m')}</SelectItem>
-                      <SelectItem value="1000000-2000000">{t('browse.1mTo2m')}</SelectItem>
-                      <SelectItem value="2000000+">{t('browse.over2m')}</SelectItem>
+                      <SelectItem value="all">Any Price</SelectItem>
+                      <SelectItem value="0-100000">Under 100k</SelectItem>
+                      <SelectItem value="100000-500000">100k - 500k</SelectItem>
+                      <SelectItem value="500000-1000000">500k - 1M</SelectItem>
+                      <SelectItem value="1000000-2000000">1M - 2M</SelectItem>
+                      <SelectItem value="2000000+">Over 2M</SelectItem>
                     </SelectContent>
                   </Select>
 
@@ -410,18 +412,10 @@ const Browse = () => {
                   <Button
                     variant="outline"
                     onClick={() => updateUIState('showFilters', !uiState.showFilters)}
-                    className="flex-1 h-10 sm:h-12 lg:h-14 min-w-0 border-2 border-gray-300 rounded-lg lg:rounded-xl hover:border-primary hover:bg-primary/5 flex items-center justify-center px-1 sm:px-2 transition-all duration-200"
+                    className="h-10 sm:h-12 lg:h-14 border-2 border-gray-300 rounded-full hover:border-primary hover:bg-primary/5 flex items-center justify-center px-3 sm:px-4 transition-all duration-200"
                   >
-                    <SlidersHorizontal className="h-3 w-3 sm:h-4 sm:w-4 mr-0.5 sm:mr-1" />
-                    <span className="text-xs sm:text-sm whitespace-nowrap">{t('browse.filters')}</span>
-                  </Button>
-
-                  {/* Search Button - icon only, responsive width */}
-                  <Button
-                    className="flex-1 h-10 sm:h-12 lg:h-14 min-w-0 bg-primary hover:bg-primary/90 rounded-lg lg:rounded-xl shadow-md hover:shadow-lg flex items-center justify-center px-0 transition-all duration-200"
-                    aria-label={t('browse.search')}
-                  >
-                    <Search className="h-4 w-4 sm:h-5 sm:w-5" />
+                    <SlidersHorizontal className="h-4 w-4 sm:h-5 sm:w-5 mr-1.5 sm:mr-2" />
+                    <span className="text-sm sm:text-base font-medium whitespace-nowrap">Filters</span>
                   </Button>
                 </div>
               </div>
