@@ -189,7 +189,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   if (viewMode === 'list') {
     return (
       <Card className="group overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-0 shadow-lg bg-white">
-        <Link to={`/property/${id}`} className="block">
+        <Link to={`/property/${id}`} className="block touch-manipulation">
           <div className="flex flex-col sm:flex-row">
             {/* LIST VIEW IMAGE SECTION */}
             <div 
@@ -301,7 +301,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   return (
     <Card className="group overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 
                      border-0 shadow-lg bg-white hover:border-primary/20">
-      <Link to={`/property/${id}`} className="block">
+      <Link to={`/property/${id}`} className="block touch-manipulation">
         <div className="relative">
           {/* GRID VIEW IMAGE SECTION */}
           <div 

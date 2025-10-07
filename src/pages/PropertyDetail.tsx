@@ -206,6 +206,28 @@ const PropertyDetail = () => {
   }
 
   /**
+   * LOADING STATE RENDERING
+   * =======================
+   * 
+   * Display loading spinner while fetching property data.
+   * Kuonyesha spinner wakati wa kupakia data ya nyumba.
+   */
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50 flex flex-col">
+        <Navigation />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <LoadingSpinner size="lg" className="mb-4" />
+            <p className="text-gray-600">Inapakia maelezo ya nyumba...</p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  /**
    * ERROR STATE RENDERING
    * ====================
    * 
