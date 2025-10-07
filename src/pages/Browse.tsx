@@ -540,10 +540,12 @@ const Browse = () => {
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 gap-2 sm:gap-4">
           <div>
             <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-900">
-              {t('browse.propertiesFound', { count: sortedProperties.length })}
+              {sortedProperties.length > 0 ? 'Available Properties' : 'No Properties Available'}
             </h2>
-            {filters.searchQuery && (
-              <p className="text-gray-600 mt-1 text-sm sm:text-base">{t('browse.inLocation', { location: filters.searchQuery })}</p>
+            {filters.searchQuery && sortedProperties.length > 0 && (
+              <p className="text-gray-600 mt-1 text-sm sm:text-base">
+                Showing results for "{filters.searchQuery}"
+              </p>
             )}
           </div>
         </div>
