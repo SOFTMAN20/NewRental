@@ -26,40 +26,34 @@ export default defineConfig(({ mode }) => ({
       output: {
         // Optimized chunking strategy for better code splitting
         manualChunks: (id) => {
-          // React core
-          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
-            return 'react-vendor';
-          }
-          // React Router
-          if (id.includes('node_modules/react-router')) {
-            return 'router-vendor';
-          }
-          // Radix UI components - split into smaller chunks
-          if (id.includes('@radix-ui')) {
-            return 'radix-vendor';
-          }
-          // Supabase
-          if (id.includes('@supabase')) {
-            return 'supabase-vendor';
-          }
-          // React Query
-          if (id.includes('@tanstack/react-query')) {
-            return 'query-vendor';
-          }
-          // Lucide icons
-          if (id.includes('lucide-react')) {
-            return 'icons-vendor';
-          }
-          // i18next
-          if (id.includes('i18next') || id.includes('react-i18next')) {
-            return 'i18n-vendor';
-          }
-          // Framer Motion
-          if (id.includes('framer-motion')) {
-            return 'motion-vendor';
-          }
-          // Other large dependencies
+          // Keep React and React-DOM together in the main vendor chunk
+          // to avoid loading order issues
           if (id.includes('node_modules')) {
+            // Group React ecosystem together
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router') || id.includes('@radix-ui')) {
+              return 'vendor';
+            }
+            // Supabase
+            if (id.includes('@supabase')) {
+              return 'supabase-vendor';
+            }
+            // React Query
+            if (id.includes('@tanstack/react-query')) {
+              return 'query-vendor';
+            }
+            // Lucide icons
+            if (id.includes('lucide-react')) {
+              return 'icons-vendor';
+            }
+            // i18next
+            if (id.includes('i18next')) {
+              return 'i18n-vendor';
+            }
+            // Framer Motion
+            if (id.includes('framer-motion')) {
+              return 'motion-vendor';
+            }
+            // Other dependencies
             return 'vendor';
           }
         },
