@@ -381,10 +381,9 @@ const Browse = () => {
                 <div className="flex-1">
                   <div className="relative border-2 border-gray-300 rounded-full hover:border-primary/50 transition-colors duration-200 focus-within:border-primary shadow-sm">
                     <Input
-                      placeholder="Search city or area..."
+                      placeholder={t('browse.cityPlaceholder')}
                       value={filters.searchQuery}
                       onChange={(e) => updateFilter('searchQuery', e.target.value)}
-<<<<<<< HEAD
                       className="pl-4 sm:pl-5 lg:pl-6 pr-14 sm:pr-16 lg:pr-20 h-10 sm:h-12 lg:h-14 text-sm sm:text-base lg:text-lg border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 rounded-full"
                     />
                     <button
@@ -393,36 +392,22 @@ const Browse = () => {
                     >
                       <Search className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />
                     </button>
-=======
-                      className="pl-4 sm:pl-5 pr-12 sm:pr-14 h-10 sm:h-12 lg:h-14 text-sm sm:text-base lg:text-lg border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 rounded-full"
-                    />
-                    <div className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 bg-primary rounded-full p-2 sm:p-2.5 hover:bg-primary/90 transition-colors cursor-pointer">
-                      <Search className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
-                    </div>
->>>>>>> 014c4c3e28e21ef0bd68b32b3b2eb6f098581f3d
                   </div>
                 </div>
 
                 {/* Price Range Selector */}
-<<<<<<< HEAD
                 <div className="flex flex-row gap-2 sm:gap-4">
                   <Select value={filters.priceRange} onValueChange={(value) => updateFilter('priceRange', value)}>
                     <SelectTrigger className="flex-1 h-10 sm:h-12 lg:h-14 border-2 border-gray-300 rounded-full hover:border-primary/50 min-w-0 focus:ring-2 focus:ring-primary/20 transition-all duration-200 bg-white">
                       <SelectValue placeholder={t('browse.priceLabel')} />
-=======
-                <div className="flex flex-row gap-2 sm:gap-3">
-                  <Select value={filters.priceRange} onValueChange={(value) => updateFilter('priceRange', value)}>
-                    <SelectTrigger className="h-10 sm:h-12 lg:h-14 border-2 border-gray-300 rounded-full hover:border-primary/50 min-w-[100px] sm:min-w-[120px] focus:ring-2 focus:ring-primary/20 transition-all duration-200 px-4">
-                      <SelectValue placeholder="Any..." />
->>>>>>> 014c4c3e28e21ef0bd68b32b3b2eb6f098581f3d
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">Any Price</SelectItem>
-                      <SelectItem value="0-100000">Under 100k</SelectItem>
-                      <SelectItem value="100000-500000">100k - 500k</SelectItem>
-                      <SelectItem value="500000-1000000">500k - 1M</SelectItem>
-                      <SelectItem value="1000000-2000000">1M - 2M</SelectItem>
-                      <SelectItem value="2000000+">Over 2M</SelectItem>
+                      <SelectItem value="all">{t('browse.anyPrice')}</SelectItem>
+                      <SelectItem value="0-100000">{t('browse.under100k')}</SelectItem>
+                      <SelectItem value="100000-500000">{t('browse.100kTo500k')}</SelectItem>
+                      <SelectItem value="500000-1000000">{t('browse.500kTo1m')}</SelectItem>
+                      <SelectItem value="1000000-2000000">{t('browse.1mTo2m')}</SelectItem>
+                      <SelectItem value="2000000+">{t('browse.over2m')}</SelectItem>
                     </SelectContent>
                   </Select>
 
@@ -430,17 +415,10 @@ const Browse = () => {
                   <Button
                     variant="outline"
                     onClick={() => updateUIState('showFilters', !uiState.showFilters)}
-<<<<<<< HEAD
                     className="flex-1 h-10 sm:h-12 lg:h-14 min-w-0 border-2 border-gray-300 rounded-full hover:border-primary/50 hover:bg-primary/5 flex items-center justify-center px-3 sm:px-4 transition-all duration-200 bg-white"
                   >
                     <SlidersHorizontal className="h-4 w-4 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                     <span className="text-sm sm:text-sm whitespace-nowrap">{t('browse.filters')}</span>
-=======
-                    className="h-10 sm:h-12 lg:h-14 border-2 border-gray-300 rounded-full hover:border-primary hover:bg-primary/5 flex items-center justify-center px-3 sm:px-4 transition-all duration-200"
-                  >
-                    <SlidersHorizontal className="h-4 w-4 sm:h-5 sm:w-5 mr-1.5 sm:mr-2" />
-                    <span className="text-sm sm:text-base font-medium whitespace-nowrap">Filters</span>
->>>>>>> 014c4c3e28e21ef0bd68b32b3b2eb6f098581f3d
                   </Button>
                 </div>
               </div>
@@ -559,167 +537,171 @@ const Browse = () => {
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 gap-2 sm:gap-4">
           <div>
             <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-900">
-<<<<<<< HEAD
               Available Properties
-=======
-              {sortedProperties.length > 0 ? 'Available Properties' : 'No Properties Available'}
->>>>>>> 014c4c3e28e21ef0bd68b32b3b2eb6f098581f3d
             </h2>
-            {filters.searchQuery && sortedProperties.length > 0 && (
-              <p className="text-gray-600 mt-1 text-sm sm:text-base">
-                Showing results for "{filters.searchQuery}"
-              </p>
-            )}
-          </div>
-        </div>
+            {
+              filters.searchQuery && sortedProperties.length > 0 && (
+                <p className="text-gray-600 mt-1 text-sm sm:text-base">
+                  Showing results for "{filters.searchQuery}"
+                </p>
+              )
+            }
+          </div >
+        </div >
 
         {/* Active Filters Display */}
-        {FilterUtils.hasActiveFilters(filters) && (
-          <div className="mb-6">
-            <div className="flex flex-wrap gap-2">
-              {/* Search Query Badge */}
-              {filters.searchQuery && (
-                <Badge variant="secondary" className="px-3 py-1">
-                  {filters.searchQuery}
-                  <button
-                    onClick={() => updateFilter('searchQuery', '')}
-                    className="ml-2 hover:text-red-500"
-                  >
-                    ×
-                  </button>
-                </Badge>
-              )}
+        {
+          FilterUtils.hasActiveFilters(filters) && (
+            <div className="mb-6">
+              <div className="flex flex-wrap gap-2">
+                {/* Search Query Badge */}
+                {filters.searchQuery && (
+                  <Badge variant="secondary" className="px-3 py-1">
+                    {filters.searchQuery}
+                    <button
+                      onClick={() => updateFilter('searchQuery', '')}
+                      className="ml-2 hover:text-red-500"
+                    >
+                      ×
+                    </button>
+                  </Badge>
+                )}
 
-              {/* Price Range Badge */}
-              {filters.priceRange && filters.priceRange !== 'all' && (
-                <Badge variant="secondary" className="px-3 py-1">
-                  TZS {filters.priceRange}
-                  <button
-                    onClick={() => updateFilter('priceRange', 'all')}
-                    className="ml-2 hover:text-red-500"
-                  >
-                    ×
-                  </button>
-                </Badge>
-              )}
+                {/* Price Range Badge */}
+                {filters.priceRange && filters.priceRange !== 'all' && (
+                  <Badge variant="secondary" className="px-3 py-1">
+                    TZS {filters.priceRange}
+                    <button
+                      onClick={() => updateFilter('priceRange', 'all')}
+                      className="ml-2 hover:text-red-500"
+                    >
+                      ×
+                    </button>
+                  </Badge>
+                )}
 
-              {/* Min Price Badge */}
-              {filters.minPrice && (
-                <Badge variant="secondary" className="px-3 py-1">
-                  Min: TZS {parseInt(filters.minPrice).toLocaleString()}
-                  <button
-                    onClick={() => updateFilter('minPrice', '')}
-                    className="ml-2 hover:text-red-500"
-                  >
-                    ×
-                  </button>
-                </Badge>
-              )}
+                {/* Min Price Badge */}
+                {filters.minPrice && (
+                  <Badge variant="secondary" className="px-3 py-1">
+                    Min: TZS {parseInt(filters.minPrice).toLocaleString()}
+                    <button
+                      onClick={() => updateFilter('minPrice', '')}
+                      className="ml-2 hover:text-red-500"
+                    >
+                      ×
+                    </button>
+                  </Badge>
+                )}
 
-              {/* Max Price Badge */}
-              {filters.maxPrice && (
-                <Badge variant="secondary" className="px-3 py-1">
-                  Max: TZS {parseInt(filters.maxPrice).toLocaleString()}
-                  <button
-                    onClick={() => updateFilter('maxPrice', '')}
-                    className="ml-2 hover:text-red-500"
-                  >
-                    ×
-                  </button>
-                </Badge>
-              )}
+                {/* Max Price Badge */}
+                {filters.maxPrice && (
+                  <Badge variant="secondary" className="px-3 py-1">
+                    Max: TZS {parseInt(filters.maxPrice).toLocaleString()}
+                    <button
+                      onClick={() => updateFilter('maxPrice', '')}
+                      className="ml-2 hover:text-red-500"
+                    >
+                      ×
+                    </button>
+                  </Badge>
+                )}
 
-              {/* Utility Badges */}
-              {filters.utilities.map(utility => (
-                <Badge key={utility} variant="secondary" className="px-3 py-1">
-                  {utility === 'electricity' ? 'Umeme' : 'Maji'}
-                  {utility === 'electricity' ? t('browse.electricity') : t('browse.water')}
-                  <button
-                    onClick={() => handleUtilityToggle(utility)}
-                    className="ml-2 hover:text-red-500"
-                  >
-                    ×
-                  </button>
-                </Badge>
-              ))}
+                {/* Utility Badges */}
+                {filters.utilities.map(utility => (
+                  <Badge key={utility} variant="secondary" className="px-3 py-1">
+                    {utility === 'electricity' ? 'Umeme' : 'Maji'}
+                    {utility === 'electricity' ? t('browse.electricity') : t('browse.water')}
+                    <button
+                      onClick={() => handleUtilityToggle(utility)}
+                      className="ml-2 hover:text-red-500"
+                    >
+                      ×
+                    </button>
+                  </Badge>
+                ))}
 
-              {/* Nearby Service Badges */}
-              {filters.nearbyServices.map(service => (
-                <Badge key={service} variant="secondary" className="px-3 py-1">
-                  {service === 'school' ? t('browse.school') : service === 'hospital' ? t('browse.hospital') : t('browse.market')}
-                  <button
-                    onClick={() => handleNearbyServiceToggle(service)}
-                    className="ml-2 hover:text-red-500"
-                  >
-                    ×
-                  </button>
-                </Badge>
-              ))}
+                {/* Nearby Service Badges */}
+                {filters.nearbyServices.map(service => (
+                  <Badge key={service} variant="secondary" className="px-3 py-1">
+                    {service === 'school' ? t('browse.school') : service === 'hospital' ? t('browse.hospital') : t('browse.market')}
+                    <button
+                      onClick={() => handleNearbyServiceToggle(service)}
+                      className="ml-2 hover:text-red-500"
+                    >
+                      ×
+                    </button>
+                  </Badge>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )
+        }
 
         {/* Loading State */}
-        {isLoading && (
-          <div className="py-16">
-            <LoadingSpinner size="lg" className="mb-4" />
-            <p className="text-center text-gray-600">{t('browse.loadingProperties')}</p>
-          </div>
-        )}
+        {
+          isLoading && (
+            <div className="py-16">
+              <LoadingSpinner size="lg" className="mb-4" />
+              <p className="text-center text-gray-600">{t('browse.loadingProperties')}</p>
+            </div>
+          )
+        }
 
         {/* Properties Grid/List Display */}
-        {isLoading ? (
-          /* Skeleton Loading State - Airbnb Style */
-          <PropertyGridSkeleton
-            count={12}
-            viewMode={uiState.viewMode}
-          />
-        ) : sortedProperties.length > 0 ? (
-          <div className={`grid gap-3 sm:gap-4 lg:gap-6 ${uiState.viewMode === 'grid'
-            ? 'grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-            : 'grid-cols-1'
-            }`}>
-            {sortedProperties.map((property) => (
-              <PropertyCard
-                key={property.id}
-                id={property.id}
-                title={property.title}
-                price={Number(property.price)}
-                location={property.location}
-                images={property.images || []}
-                phone={property.profiles?.phone || undefined}
-                contactPhone={property.contact_phone || undefined}
-                contactWhatsappPhone={property.contact_whatsapp_phone || undefined}
-                electricity={property.electricity || false}
-                water={property.water || false}
-                bedrooms={property.bedrooms || undefined}
-                isFavorited={isFavorited(property.id)}
-                onToggleFavorite={toggleFavorite}
-                viewMode={uiState.viewMode}
-              />
-            ))}
-          </div>
-        ) : (
-          /* Empty State */
-          <div className="text-center py-16">
-            <div className="max-w-md mx-auto">
-              <Search className="h-16 w-16 text-gray-300 mx-auto mb-6" />
-              <h3 className="text-2xl font-semibold text-gray-900 mb-4">
-                {t('browse.noPropertiesFound')}
-              </h3>
-              <p className="text-gray-600 mb-8">
-                {t('browse.tryChangingFilters')}
-              </p>
-              <Button onClick={handleClearAllFilters} size="lg">
-                {t('browse.clearFilters')}
-              </Button>
+        {
+          isLoading ? (
+            /* Skeleton Loading State - Airbnb Style */
+            <PropertyGridSkeleton
+              count={12}
+              viewMode={uiState.viewMode}
+            />
+          ) : sortedProperties.length > 0 ? (
+            <div className={`grid gap-3 sm:gap-4 lg:gap-6 ${uiState.viewMode === 'grid'
+              ? 'grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+              : 'grid-cols-1'
+              }`}>
+              {sortedProperties.map((property) => (
+                <PropertyCard
+                  key={property.id}
+                  id={property.id}
+                  title={property.title}
+                  price={Number(property.price)}
+                  location={property.location}
+                  images={property.images || []}
+                  phone={property.profiles?.phone || undefined}
+                  contactPhone={property.contact_phone || undefined}
+                  contactWhatsappPhone={property.contact_whatsapp_phone || undefined}
+                  electricity={property.electricity || false}
+                  water={property.water || false}
+                  bedrooms={property.bedrooms || undefined}
+                  isFavorited={isFavorited(property.id)}
+                  onToggleFavorite={toggleFavorite}
+                  viewMode={uiState.viewMode}
+                />
+              ))}
             </div>
-          </div>
-        )}
-      </div>
+          ) : (
+            /* Empty State */
+            <div className="text-center py-16">
+              <div className="max-w-md mx-auto">
+                <Search className="h-16 w-16 text-gray-300 mx-auto mb-6" />
+                <h3 className="text-2xl font-semibold text-gray-900 mb-4">
+                  {t('browse.noPropertiesFound')}
+                </h3>
+                <p className="text-gray-600 mb-8">
+                  {t('browse.tryChangingFilters')}
+                </p>
+                <Button onClick={handleClearAllFilters} size="lg">
+                  {t('browse.clearFilters')}
+                </Button>
+              </div>
+            </div>
+          )
+        }
+      </div >
 
       <Footer />
-    </div>
+    </div >
   );
 };
 
