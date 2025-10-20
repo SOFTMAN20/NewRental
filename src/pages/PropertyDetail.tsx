@@ -311,12 +311,12 @@ const PropertyDetail = () => {
     <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50 flex flex-col">
       <Navigation />
 
-      <div className="flex-1 max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-3 sm:py-4 lg:py-6 xl:py-8">
-        {/* Back Navigation Button - Kitufe cha kurudi nyuma */}
+      <div className="flex-1 max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 pt-1 pb-3 sm:pb-4 lg:pb-6 xl:pb-8">
+        {/* Back Navigation Button */}
         <Button
           variant="ghost"
           onClick={() => navigate(-1)}
-          className="mb-3 sm:mb-4 lg:mb-6"
+          className="mb-3 sm:mb-4 lg:mb-2 hover:bg-transparent"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           {t('propertyDetail.goBack')}
@@ -325,6 +325,12 @@ const PropertyDetail = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {/* Main Content Section - Sehemu ya maudhui makuu */}
           <div className="lg:col-span-2 space-y-3 sm:space-y-4 lg:space-y-6">
+            {/* Property Title - Above Gallery */}
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                {property.title}
+              </h1>
+            </div>
             {/* Image Gallery Section - Sehemu ya galeri ya picha */}
             <Card>
               <CardContent className="p-0">

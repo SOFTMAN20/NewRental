@@ -223,21 +223,29 @@ const Navigation = () => {
 
             {/* Enhanced User Account Menu - Menyu ya akaunti ya mtumiaji */}
             {user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="flex items-center space-x-2 px-3 py-2 rounded-full hover:bg-gray-100 
-                               border border-gray-200 hover:border-gray-300 transition-all duration-300"
-                  >
-                    <Menu className="h-4 w-4" />
-                    <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
-                      <span className="text-white text-sm font-semibold">
-                        {profile?.full_name?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase() || 'U'}
-                      </span>
-                    </div>
-                  </Button>
-                </DropdownMenuTrigger>
+              <>
+                {/* Hamburger Menu Button */}
+                <Button
+                  variant="ghost"
+                  className="p-2 rounded-full hover:bg-gray-100 border border-gray-200 hover:border-gray-300 transition-all duration-300"
+                >
+                  <Menu className="h-5 w-5 text-gray-600" />
+                </Button>
+                
+                {/* User Avatar Dropdown */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="p-0 rounded-full hover:bg-transparent transition-all duration-300"
+                    >
+                      <div className="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center hover:ring-2 hover:ring-primary/30 transition-all duration-300">
+                        <span className="text-white text-base font-semibold">
+                          {profile?.full_name?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase() || 'U'}
+                        </span>
+                      </div>
+                    </Button>
+                  </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
@@ -297,6 +305,7 @@ const Navigation = () => {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+              </>
             ) : (
               <Link to="/signin">
                 <Button size="sm" className="bg-gradient-to-r from-primary to-serengeti-500 

@@ -187,7 +187,7 @@ const About = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white overflow-hidden">
+    <div className="min-h-screen bg-white">
       <Navigation />
       
       {/* Enhanced Hero Section with Floating Elements - Mobile First */}

@@ -94,7 +94,7 @@ const HeroSection = () => {
 
         {/* Enhanced Search Interface Card - Kadi ya kiolesura cha utafutaji */}
         <div className="max-w-4xl mx-auto mb-6 sm:mb-8 lg:mb-10 px-2 sm:px-4 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-          <Card className="shadow-2xl border-0 overflow-hidden bg-white/95 backdrop-blur-md 
+          <Card className="shadow-2xl border-0 overflow-hidden bg-white/95 backdrop-blur-md rounded-3xl
                            transform hover:scale-105 transition-all duration-500 hover:shadow-3xl">
             <CardContent className="p-3 sm:p-4 lg:p-5 xl:p-6">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
@@ -113,8 +113,7 @@ const HeroSection = () => {
                       value={searchLocation}
                       onChange={(e) => setSearchLocation(e.target.value)}
                       className="pl-8 sm:pl-10 h-10 sm:h-12 lg:h-14 text-sm border-2 border-border focus:border-primary 
-                                 hover:border-primary/50 transition-all duration-300 focus:ring-4 focus:ring-primary/20 
-                                 focus:ring-offset-2"
+                                 hover:border-primary/50 transition-all duration-300 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-2xl"
                     />
                   </div>
                 </div>
@@ -133,8 +132,7 @@ const HeroSection = () => {
                       value={minPrice}
                       onChange={(e) => setMinPrice(e.target.value)}
                       className="h-10 sm:h-12 lg:h-14 text-sm border-2 border-border focus:border-primary 
-                                 hover:border-primary/50 transition-all duration-300 focus:ring-4 focus:ring-primary/20 
-                                 focus:ring-offset-2"
+                                 hover:border-primary/50 transition-all duration-300 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-2xl"
                     />
                   </div>
                   {/* Maximum Price - Bei ya juu */}
@@ -149,8 +147,7 @@ const HeroSection = () => {
                       value={maxPrice}
                       onChange={(e) => setMaxPrice(e.target.value)}
                       className="h-10 sm:h-12 lg:h-14 text-sm border-2 border-border focus:border-primary 
-                                 hover:border-primary/50 transition-all duration-300 focus:ring-4 focus:ring-primary/20 
-                                 focus:ring-offset-2"
+                                 hover:border-primary/50 transition-all duration-300 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-2xl"
                     />
                   </div>
                 </div>
