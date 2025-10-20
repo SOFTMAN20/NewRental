@@ -27,6 +27,7 @@ import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
 import LoadingSpinner from '@/components/ui/loading-spinner';
 import Map from '@/components/ui/map';
+import ShareDropdown from '@/components/common/ShareDropdown';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -35,7 +36,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import {
   ArrowLeft,
   Heart,
-  Share2,
   MapPin,
   Zap,
   Droplets,
@@ -162,56 +162,7 @@ const PropertyDetail = () => {
     return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
   };
 
-  /**
-   * SHARE FUNCTIONALITY
-   * ==================
-   * 
-   * Handles sharing the property using Web Share API or fallback methods
-   * Kushughulikia kushiriki nyumba kwa kutumia Web Share API au njia za mbadala
-   */
-  const handleShare = async () => {
-    if (!property) return;
 
-    const shareData = {
-      title: property.title,
-      text: `Angalia nyumba hii nzuri: ${property.title} - TZS ${Number(property.price).toLocaleString()}/mwezi`,
-      url: window.location.href
-    };
-
-    try {
-      // Check if Web Share API is supported (mainly mobile devices)
-      if (navigator.share) {
-        await navigator.share(shareData);
-      } else {
-        // Fallback: Copy to clipboard
-        await navigator.clipboard.writeText(
-          `${shareData.text}\n\n${shareData.url}`
-        );
-
-        // Show success message (you can replace this with a toast notification)
-        alert('Kiungo kimehifadhiwa! Unaweza kukibandika popote.');
-      }
-    } catch (error) {
-      // If both methods fail, fallback to manual copy
-      const textToCopy = `${shareData.text}\n\n${shareData.url}`;
-
-      // Create a temporary textarea element
-      const textArea = document.createElement('textarea');
-      textArea.value = textToCopy;
-      document.body.appendChild(textArea);
-      textArea.select();
-
-      try {
-        document.execCommand('copy');
-        alert('Kiungo kimehifadhiwa! Unaweza kukibandika popote.');
-      } catch (err) {
-        console.error('Failed to copy:', err);
-        alert('Imeshindikana kushiriki. Jaribu tena.');
-      }
-
-      document.body.removeChild(textArea);
-    }
-  };
 
   /**
    * FAVORITE TOGGLE HANDLER
@@ -247,6 +198,28 @@ const PropertyDetail = () => {
           <div className="flex flex-col items-center justify-center py-16">
             <LoadingSpinner size="lg" className="mb-4" />
             <p className="text-lg text-gray-600">Inapakia maelezo ya nyumba...</p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  /**
+   * LOADING STATE RENDERING
+   * =======================
+   * 
+   * Display loading spinner while fetching property data.
+   * Kuonyesha spinner wakati wa kupakia data ya nyumba.
+   */
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50 flex flex-col">
+        <Navigation />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <LoadingSpinner size="lg" className="mb-4" />
+            <p className="text-gray-600">Inapakia maelezo ya nyumba...</p>
           </div>
         </div>
         <Footer />
@@ -388,19 +361,14 @@ const PropertyDetail = () => {
                     >
                       <Heart className={`h-4 w-4 sm:h-5 sm:w-5 ${isFavorited(property?.id || '') ? 'fill-current' : ''}`} />
                     </Button>
-                    <Button
+                    <ShareDropdown
+                      title={property.title}
+                      description={`Angalia nyumba hii nzuri: ${property.title} - TZS ${Number(property.price).toLocaleString()}/mwezi`}
+                      url={window.location.href}
+                      className="bg-black/30 hover:bg-white/95 text-white hover:text-gray-600 h-8 w-8 sm:h-10 sm:w-10 p-1.5 sm:p-2 rounded-full transition-all duration-300"
                       variant="ghost"
                       size="sm"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleShare();
-                      }}
-                      className="bg-black/30 hover:bg-white/95 text-white hover:text-gray-600 h-8 w-8 sm:h-10 sm:w-10 p-1.5 sm:p-2 rounded-full transition-all duration-300"
-                      title="Shiriki nyumba hii"
-                    >
-                      <Share2 className="h-4 w-4 sm:h-5 sm:w-5" />
-                    </Button>
+                    />
                   </div>
                 </div>
 
@@ -463,19 +431,14 @@ const PropertyDetail = () => {
                       >
                         <Heart className={`h-4 w-4 ${isFavorited(property?.id || '') ? 'fill-current' : ''}`} />
                       </Button>
-                      <Button
+                      <ShareDropdown
+                        title={property.title}
+                        description={`Angalia nyumba hii nzuri: ${property.title} - TZS ${Number(property.price).toLocaleString()}/mwezi`}
+                        url={window.location.href}
+                        className="bg-white/80 hover:bg-white text-gray-600 h-10 w-10"
                         variant="ghost"
                         size="sm"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handleShare();
-                        }}
-                        className="bg-white/80 hover:bg-white text-gray-600 h-10 w-10"
-                        title="Shiriki nyumba hii"
-                      >
-                        <Share2 className="h-4 w-4" />
-                      </Button>
+                      />
                     </div>
                   </div>
                 </div>
