@@ -98,10 +98,10 @@ const HeroSection = () => {
                            transform hover:scale-[1.02] transition-all duration-500 hover:shadow-3xl">
             <CardContent className="p-4 sm:p-5 lg:p-6">
               {/* Mobile Layout - Vertical Stack */}
-              <div className="lg:hidden space-y-4">
+              <div className="lg:hidden space-y-5">
                 {/* Location Search Input */}
                 <div className="group">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2.5">
                     Tafuta eneo
                   </label>
                   <div className="relative">
@@ -119,7 +119,7 @@ const HeroSection = () => {
                 {/* Price Range Inputs */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="group">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2.5">
                       Bei ya chini
                     </label>
                     <Input
@@ -132,7 +132,7 @@ const HeroSection = () => {
                     />
                   </div>
                   <div className="group">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2.5">
                       Bei ya juu
                     </label>
                     <Input
@@ -147,17 +147,19 @@ const HeroSection = () => {
                 </div>
 
                 {/* Search Button */}
-                <Link 
-                  to={`/browse${searchLocation || minPrice || maxPrice ? '?' : ''}${searchLocation ? `location=${encodeURIComponent(searchLocation)}` : ''}${searchLocation && (minPrice || maxPrice) ? '&' : ''}${minPrice ? `minPrice=${minPrice}` : ''}${minPrice && maxPrice ? '&' : ''}${maxPrice ? `maxPrice=${maxPrice}` : ''}`}
-                  className="w-full"
-                >
-                  <Button 
-                    className="w-full h-12 text-base font-bold bg-primary hover:bg-primary/90 
-                               text-white shadow-lg hover:shadow-xl rounded-2xl transition-all duration-300">
-                    <Search className="h-5 w-5 mr-2" />
-                    Tafuta Nyumba
-                  </Button>
-                </Link>
+                <div className="pt-2">
+                  <Link 
+                    to={`/browse${searchLocation || minPrice || maxPrice ? '?' : ''}${searchLocation ? `location=${encodeURIComponent(searchLocation)}` : ''}${searchLocation && (minPrice || maxPrice) ? '&' : ''}${minPrice ? `minPrice=${minPrice}` : ''}${minPrice && maxPrice ? '&' : ''}${maxPrice ? `maxPrice=${maxPrice}` : ''}`}
+                    className="w-full block"
+                  >
+                    <Button 
+                      className="w-full h-12 text-base font-bold bg-primary hover:bg-primary/90 
+                                 text-white shadow-lg hover:shadow-xl rounded-2xl transition-all duration-300">
+                      <Search className="h-5 w-5 mr-2" />
+                      Tafuta Nyumba
+                    </Button>
+                  </Link>
+                </div>
               </div>
 
               {/* Desktop Layout - Horizontal Row */}
