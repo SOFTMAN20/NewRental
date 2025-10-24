@@ -54,6 +54,7 @@ import {
 import { useProperties, type Property } from '@/hooks/useProperties';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useTranslation } from 'react-i18next';
+import ServiceFeeCalculator from '@/components/common/ServiceFeeCalculator';
 
 /**
  * PROPERTY DETAIL COMPONENT
@@ -601,6 +602,9 @@ const PropertyDetail = () => {
 
           {/* Sidebar Section - Sehemu ya upande */}
           <div className="space-y-3 sm:space-y-4 lg:space-y-6">
+            {/* Service Fee Calculator */}
+            <ServiceFeeCalculator monthlyRent={Number(property.price)} />
+
             {/* Landlord Contact Card - Kadi ya mawasiliano ya mwenye nyumba */}
             <Card>
               <CardContent className="p-3 sm:p-4 lg:p-6">
