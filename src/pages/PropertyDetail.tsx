@@ -54,7 +54,7 @@ import {
 import { useProperties, type Property } from '@/hooks/useProperties';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useTranslation } from 'react-i18next';
-import ServiceFeeCalculator from '@/components/common/ServiceFeeCalculator';
+// import ServiceFeeCalculator from '@/components/common/ServiceFeeCalculator';
 
 /**
  * PROPERTY DETAIL COMPONENT
