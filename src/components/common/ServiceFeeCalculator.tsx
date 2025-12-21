@@ -19,7 +19,7 @@ interface ServiceFeeCalculatorProps {
 
 const ServiceFeeCalculator: React.FC<ServiceFeeCalculatorProps> = ({
   monthlyRent,
-  serviceFeePercentage = 10,
+  serviceFeePercentage = 0,
 }) => {
   // Calculate service fee
   const serviceFee = (monthlyRent * serviceFeePercentage) / 100;
