@@ -603,7 +603,7 @@ const PropertyDetail = () => {
           {/* Sidebar Section - Sehemu ya upande */}
           <div className="space-y-3 sm:space-y-4 lg:space-y-6">
             {/* Service Fee Calculator */}
-             /* { <ServiceFeeCalculator monthlyRent={Number(property.price)} /> }  */
+              {/* /* { <ServiceFeeCalculator monthlyRent={Number(property.price)} /> }   */ */}
 
             {/* Landlord Contact Card - Kadi ya mawasiliano ya mwenye nyumba */}
             <Card>
