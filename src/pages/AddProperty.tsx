@@ -42,6 +42,7 @@ interface PropertyFormData {
   furnished: boolean;
   parking: boolean;
   security: boolean;
+  contract_months: string;
 }
 
 const AddProperty = () => {
@@ -73,7 +74,8 @@ const AddProperty = () => {
     water: false,
     furnished: false,
     parking: false,
-    security: false
+    security: false,
+    contract_months: '3'
   });
 
   useEffect(() => {
@@ -224,6 +226,7 @@ const AddProperty = () => {
         contact_phone: formData.contact_phone?.trim() || null,
         contact_whatsapp_phone: formData.contact_whatsapp_phone?.trim() || null,
         full_address: formData.full_address?.trim() || null,
+        contract_months: formData.contract_months ? parseInt(formData.contract_months) : 3,
         status: 'active'
       };
       

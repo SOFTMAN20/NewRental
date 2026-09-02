@@ -82,7 +82,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50 relative overflow-hidden pt-16 sm:pt-20 lg:pt-24">
+    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50 relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
       <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-primary/20 to-transparent rounded-full blur-3xl"></div>
@@ -90,7 +90,7 @@ const SignUp = () => {
       
       <Navigation />
       
-      <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="flex items-center justify-center pt-20 sm:pt-24 lg:pt-28 py-12 px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-md w-full space-y-8">
           {/* Header */}
           <motion.div

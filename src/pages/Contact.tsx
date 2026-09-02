@@ -60,7 +60,7 @@ const Contact = () => {
       <Navigation />
 
       {/* Hero Section with padding for absolute navbar */}
-      <div className="pt-16 sm:pt-20 lg:pt-24 bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 text-white py-16 sm:py-20 lg:py-24">
+      <div className="pt-20 sm:pt-24 lg:pt-28 bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 text-white py-16 sm:py-20 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
             Get in Touch

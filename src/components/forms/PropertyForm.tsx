@@ -62,6 +62,7 @@ interface PropertyFormData {
   security: boolean;
   nearby_services: string[];
   images: string[];
+  contract_months: string;
 }
 
 interface PropertyFormProps {
@@ -291,7 +292,38 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         {formData.price && (
           <div className="flex items-center gap-1 text-green-600 text-xs">
             <CheckCircle className="h-3 w-3" />
-            Bei: TZS {parseInt(formData.price || '0').toLocaleString()}
+            Bei: TZS {parseInt(formData.price || '0').toLocaleString()}/mwezi
+          </div>
+        )}
+      </div>
+
+      {/* Contract Months */}
+      <div className="space-y-2">
+        <Label htmlFor="contract_months" className="flex items-center gap-2 text-sm font-medium">
+          <Briefcase className="h-4 w-4 text-primary" />
+          Mkataba wa Miezi (Contract Period)
+        </Label>
+        <Select 
+          value={formData.contract_months || '3'} 
+          onValueChange={(value) => onInputChange('contract_months', value)}
+        >
+          <SelectTrigger className={`transition-all duration-200 ${formData.contract_months ? 'border-green-300 bg-green-50' : ''}`}>
+            <SelectValue placeholder="Chagua idadi ya miezi" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="1">Mwezi 1 (1 Month)</SelectItem>
+            <SelectItem value="2">Miezi 2 (2 Months)</SelectItem>
+            <SelectItem value="3">Miezi 3 (3 Months) - Kawaida</SelectItem>
+            <SelectItem value="4">Miezi 4 (4 Months)</SelectItem>
+            <SelectItem value="5">Miezi 5 (5 Months)</SelectItem>
+            <SelectItem value="6">Miezi 6 (6 Months)</SelectItem>
+            <SelectItem value="12">Mwaka 1 (12 Months)</SelectItem>
+          </SelectContent>
+        </Select>
+        {formData.contract_months && (
+          <div className="flex items-center gap-1 text-green-600 text-xs">
+            <CheckCircle className="h-3 w-3" />
+            Mkataba: Miezi {formData.contract_months}
           </div>
         )}
       </div>

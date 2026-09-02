@@ -187,11 +187,11 @@ const About = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white pt-16 sm:pt-20 lg:pt-24">
+    <div className="min-h-screen bg-white">
       <Navigation />
       
       {/* Enhanced Hero Section with Floating Elements - Mobile First */}
-      <section className="relative bg-gradient-to-br from-primary/5 via-serengeti-50 to-blue-50 py-16 sm:py-24 lg:py-32 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-primary/5 via-serengeti-50 to-blue-50 pt-20 sm:pt-24 lg:pt-28 py-16 sm:py-24 lg:py-32 overflow-hidden">
         {/* Animated Background Elements */}
         <div className="absolute inset-0">
           <div className="absolute top-10 sm:top-20 left-5 sm:left-10 w-32 h-32 sm:w-72 sm:h-72 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>

@@ -374,11 +374,11 @@ const Browse = () => {
    * Renders the complete browse page with all sections.
    */
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50 pt-16 sm:pt-20 lg:pt-24">
+    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50">
       <Navigation />
 
       {/* Hero Search Section */}
-      <div className="bg-gradient-to-r from-primary/5 to-serengeti-50 border-b">
+      <div className="bg-gradient-to-r from-primary/5 to-serengeti-50 border-b pt-16 sm:pt-20 lg:pt-24">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
           {/* Main Search Interface */}
           <Card className="shadow-xl border-0 rounded-xl lg:rounded-2xl bg-white/95 backdrop-blur-sm">

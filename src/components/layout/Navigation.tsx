@@ -121,7 +121,7 @@ const Navigation = () => {
   };
 
   return (
-    <nav className={`${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property') || location.pathname.includes('/messages') || location.pathname.includes('/settings') ? 'bg-white shadow-lg sticky lg:ml-64' : 'bg-transparent absolute'} backdrop-blur-sm top-0 left-0 right-0 z-50 border-b ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property') || location.pathname.includes('/messages') || location.pathname.includes('/settings') ? 'border-gray-100' : 'border-white/10'}`}>
+    <nav className={`${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property') || location.pathname.includes('/messages') || location.pathname.includes('/settings') ? 'bg-white shadow-lg sticky lg:ml-64 border-b border-gray-100' : location.pathname === '/' ? 'bg-transparent absolute border-b border-white/10' : 'bg-gradient-to-r from-blue-100/95 via-purple-100/95 to-blue-50/95 backdrop-blur-md sticky shadow-lg border-b border-blue-200/50 rounded-b-3xl overflow-hidden'} top-0 left-0 right-0 z-50`}>
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
         <div className="flex justify-between items-center h-12 sm:h-14 lg:h-16">
           
@@ -152,7 +152,9 @@ const Navigation = () => {
                   className={`px-2 sm:px-4 py-1 sm:py-2 rounded-full transition-all duration-300 text-xs sm:text-sm lg:text-base
                              ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property') 
                                ? 'hover:bg-gray-100 text-gray-700 hover:text-gray-900' 
-                               : 'hover:bg-white/20 text-white hover:text-white'} hover:scale-105`}
+                               : location.pathname === '/'
+                               ? 'hover:bg-white/20 text-white hover:text-white'
+                               : 'hover:bg-white/60 text-gray-700 hover:text-gray-900'} hover:scale-105`}
                 >
                   {t('navigation.becomeHost')}
                 </Button>
@@ -161,7 +163,7 @@ const Navigation = () => {
           </div>
 
           {/* Enhanced Desktop Navigation Menu - Menyu ya uongozaji wa kompyuta */}
-          <div className={`hidden md:flex items-center space-x-2 backdrop-blur-md rounded-full px-2 py-2 ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property') ? 'bg-gray-100 border border-gray-200' : 'bg-white/10 border border-white/20'}`}>
+          <div className={`hidden md:flex items-center space-x-2 backdrop-blur-md rounded-full px-3 py-2.5 ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property') ? 'bg-gray-100 border border-gray-200' : location.pathname === '/' ? 'bg-white/10 border border-white/20' : 'bg-white/60 border border-white/80 shadow-sm'}`}>
             
             {/* Colleges Link - Kiungo cha vyuo */}
             <Button
@@ -170,7 +172,9 @@ const Navigation = () => {
               className={`px-5 py-2 rounded-full transition-all duration-300 text-sm sm:text-base font-medium
                          ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
                            ? 'text-gray-700 hover:bg-gray-200 hover:text-gray-900'
-                           : 'text-white hover:bg-white/30 hover:text-white'}`}
+                           : location.pathname === '/'
+                           ? 'text-white hover:bg-white/30 hover:text-white'
+                           : 'text-gray-700 hover:bg-white/70 hover:text-gray-900'}`}
             >
               Colleges
             </Button>
@@ -183,11 +187,15 @@ const Navigation = () => {
                   location.pathname === '/about' 
                     ? location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
                       ? 'bg-gray-200'
-                      : 'bg-white/30'
+                      : location.pathname === '/'
+                      ? 'bg-white/30'
+                      : 'bg-white/60'
                     : ''
                 } ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
                      ? 'text-gray-700 hover:bg-gray-200 hover:text-gray-900'
-                     : 'text-white hover:bg-white/30 hover:text-white'}`}
+                     : location.pathname === '/'
+                     ? 'text-white hover:bg-white/30 hover:text-white'
+                     : 'text-gray-700 hover:bg-white/70 hover:text-gray-900'}`}
               >
                 About
               </Button>
@@ -201,11 +209,15 @@ const Navigation = () => {
                   location.pathname === '/contact' 
                     ? location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
                       ? 'bg-gray-200'
-                      : 'bg-white/30'
+                      : location.pathname === '/'
+                      ? 'bg-white/30'
+                      : 'bg-white/60'
                     : ''
                 } ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
                      ? 'text-gray-700 hover:bg-gray-200 hover:text-gray-900'
-                     : 'text-white hover:bg-white/30 hover:text-white'}`}
+                     : location.pathname === '/'
+                     ? 'text-white hover:bg-white/30 hover:text-white'
+                     : 'text-gray-700 hover:bg-white/70 hover:text-gray-900'}`}
               >
                 Contact
               </Button>
@@ -219,8 +231,11 @@ const Navigation = () => {
               <Link to="/browse">
                 <Button
                   variant="ghost"
-                  className="flex items-center space-x-2 px-3 py-2 rounded-full text-white hover:bg-white/20
-                             hover:text-white hover:scale-105 transition-all duration-300"
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-full hover:scale-105 transition-all duration-300 ${
+                    location.pathname === '/'
+                      ? 'text-white hover:bg-white/20 hover:text-white'
+                      : 'text-gray-700 hover:bg-white/60 hover:text-gray-900'
+                  }`}
                   title={t('navigation.browse')}
                 >
                   <Search className="h-4 w-4" />
@@ -247,16 +262,26 @@ const Navigation = () => {
                       variant="ghost"
                       className="p-0 rounded-full hover:bg-transparent transition-all duration-300 group flex items-center gap-2"
                     >
-                      <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center group-hover:ring-2 group-hover:ring-white/50 transition-all duration-300">
-                        <span className="text-white text-base font-semibold">
+                      <div className={`w-10 h-10 backdrop-blur-md rounded-full flex items-center justify-center group-hover:ring-2 transition-all duration-300 ${
+                        location.pathname === '/'
+                          ? 'bg-white/20 group-hover:ring-white/50'
+                          : 'bg-white/60 group-hover:ring-primary/50'
+                      }`}>
+                        <span className={`text-base font-semibold ${
+                          location.pathname === '/' ? 'text-white' : 'text-gray-700'
+                        }`}>
                           {profile?.full_name?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase() || 'U'}
                         </span>
                       </div>
                       <div className="hidden lg:flex items-center gap-2">
-                        <span className="text-white font-medium">
+                        <span className={`font-medium ${
+                          location.pathname === '/' ? 'text-white' : 'text-gray-700'
+                        }`}>
                           Hi, {profile?.full_name?.split(' ')[0] || user.email?.split('@')[0] || 'User'}
                         </span>
-                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className={`w-4 h-4 ${
+                          location.pathname === '/' ? 'text-white' : 'text-gray-700'
+                        }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                         </svg>
                       </div>
