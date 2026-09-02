@@ -26,6 +26,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navigation from '@/components/layout/Navigation';
 import DashboardHeader from '@/components/layout/DashboardHeader';
 import QuickActions from '@/components/common/QuickActions';
@@ -56,10 +57,18 @@ type Profile = Tables<'profiles'>;
 interface PropertyFormData {
   title: string;
   description: string;
-  price: string;
-  location: string;
+  price: string; // Will be converted to monthly_rent
+  location: string; // Will be converted to address + city
+  property_type: string; // Will be converted to room_type
+  available_beds: string;
+  gender_restrictions: string;
+  university_id: string;
+  distance_from_campus: string;
+  amenities: any; // JSONB object
+  images: string[];
+  nearby_services: string[];
+  // Deprecated fields (not in DB but kept for backwards compatibility)
   full_address: string;
-  property_type: string;
   bedrooms: string;
   bathrooms: string;
   area_sqm: string;
@@ -70,8 +79,6 @@ interface PropertyFormData {
   furnished: boolean;
   parking: boolean;
   security: boolean;
-  nearby_services: string[];
-  images: string[];
 }
 
 interface ProfileFormData {
@@ -111,6 +118,7 @@ interface UIState {
  */
 const Dashboard = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const { t } = useTranslation();
   
@@ -145,8 +153,16 @@ const Dashboard = () => {
     description: '',
     price: '',
     location: '',
-    full_address: '',
     property_type: '',
+    available_beds: '1',
+    gender_restrictions: 'mixed',
+    university_id: '',
+    distance_from_campus: '',
+    amenities: {},
+    images: [],
+    nearby_services: [],
+    // Deprecated fields
+    full_address: '',
     bedrooms: '',
     bathrooms: '',
     area_sqm: '',
@@ -156,9 +172,7 @@ const Dashboard = () => {
     water: false,
     furnished: false,
     parking: false,
-    security: false,
-    nearby_services: [],
-    images: []
+    security: false
   });
 
   /**
@@ -223,7 +237,7 @@ const Dashboard = () => {
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('id', user.id)
         .single();
 
       console.log('Profile fetch result:', { data, error });
@@ -460,7 +474,6 @@ const Dashboard = () => {
       description: formData.description,
       price: formData.price,
       location: formData.location,
-      contact_phone: formData.contact_phone,
       property_type: formData.property_type,
       images_count: formData.images?.length || 0
     });
@@ -478,15 +491,13 @@ const Dashboard = () => {
     if (!formData.location?.trim() || formData.location.trim().length < 2) {
       errors.push('Eneo la nyumba lazima liwe na angalau herufi 2');
     }
-    if (!formData.contact_phone?.trim() || formData.contact_phone.trim().length < 10) {
-      errors.push('Nambari ya simu lazima iwe na angalau nambari 10');
-    }
     
-    // Property type is optional for database but let's make it required for better UX
+    // Property type (room_type) is required
     if (!formData.property_type?.trim()) {
-      errors.push('Chagua aina ya nyumba (apartment, house, room, studio, au office)');
+      errors.push('Chagua aina ya chumba');
     }
     
+    // Images are required
     if (!formData.images || formData.images.length === 0) {
       errors.push('Ongeza angalau picha moja ya nyumba');
     }
@@ -501,9 +512,6 @@ const Dashboard = () => {
     if (formData.location && formData.location.length > 100) {
       errors.push('Eneo la nyumba lisilozidi herufi 100');
     }
-    if (formData.contact_phone && formData.contact_phone.length > 20) {
-      errors.push('Nambari ya simu isilozidi nambari 20');
-    }
     
     // Price validation
     const price = parseFloat(formData.price || '0');
@@ -511,10 +519,18 @@ const Dashboard = () => {
       errors.push('Bei ya nyumba ni kubwa sana');
     }
     
-    // Property type validation
-    const allowedTypes = ['apartment', 'house', 'room', 'studio', 'office'];
+    // Property type validation - Student Housing Room Types
+    const allowedTypes = [
+      'single_room',       // Chumba Kimoja (Single Room)
+      'shared_room',       // Chumba cha Pamoja (Shared)
+      'master_room',       // Master Room
+      'self_contained',    // Self Contained
+      'apartment',         // Apartment/Flat
+      'studio',            // Studio/Bedsitter
+      'dormitory'          // Bweni (Dormitory)
+    ];
     if (formData.property_type && !allowedTypes.includes(formData.property_type)) {
-      errors.push('Aina ya nyumba si sahihi');
+      errors.push('Aina ya chumba si sahihi. Chagua aina sahihi');
     }
     
     return {
@@ -526,39 +542,58 @@ const Dashboard = () => {
   const buildPropertyData = () => {
     console.log('Building property data with formData:', formData);
     
+    // Helper function to check if a string is a valid UUID
+    const isValidUUID = (str: string | null | undefined): boolean => {
+      if (!str) return false;
+      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      return uuidRegex.test(str);
+    };
+    
+    // Validate and clean university_id - must be a valid UUID or null
+    const cleanUniversityId = formData.university_id && isValidUUID(formData.university_id) 
+      ? formData.university_id 
+      : null;
+    
+    if (formData.university_id && !isValidUUID(formData.university_id)) {
+      console.warn('Invalid university_id format (not a UUID):', formData.university_id, 'Setting to null');
+    }
+    
+    // Map form data to actual database schema (student housing schema)
     const propertyData = {
       landlord_id: user!.id,
       title: formData.title?.trim(),
-      description: formData.description?.trim(),
-      price: parseFloat(formData.price) || 0,
-      location: formData.location?.trim(),
-      full_address: formData.full_address?.trim() || null,
-      property_type: formData.property_type?.trim() || null,
-      bedrooms: formData.bedrooms ? parseInt(formData.bedrooms) : null,
-      bathrooms: formData.bathrooms ? parseInt(formData.bathrooms) : null,
-      area_sqm: formData.area_sqm ? parseFloat(formData.area_sqm) : null,
+      description: formData.description?.trim() || '',
+      monthly_rent: parseFloat(formData.price) || 0, // price -> monthly_rent
+      address: formData.location?.trim(), // location -> address
+      city: formData.location?.trim()?.split(',')[1]?.trim() || formData.location?.trim(), // Extract city
+      region: 'Dar es Salaam', // Default region
+      room_type: formData.property_type || 'single_room', // property_type -> room_type
+      bed_count: formData.available_beds ? parseInt(formData.available_beds) : 1,
+      available_beds: formData.available_beds ? parseInt(formData.available_beds) : 1,
+      gender_restrictions: formData.gender_restrictions || 'mixed',
+      university_id: cleanUniversityId, // Use validated UUID or null
+      distance_from_campus: formData.distance_from_campus ? parseFloat(formData.distance_from_campus) : null,
+      amenities: formData.amenities || {},
+      images: formData.images || [],
+      // Contact information
       contact_phone: formData.contact_phone?.trim() || null,
       contact_whatsapp_phone: formData.contact_whatsapp_phone?.trim() || null,
-      electricity: !!formData.electricity,
-      water: !!formData.water,
-      furnished: !!formData.furnished,
-      parking: !!formData.parking,
-      security: !!formData.security,
-      nearby_services: formData.nearby_services || [],
-      images: formData.images || []
+      full_address: formData.full_address?.trim() || null,
+      status: 'active' // Set to active immediately for testing
     };
     
-    console.log('Built property data:', propertyData);
+    console.log('Built property data (student housing schema):', propertyData);
     
-    // Validate the built data against RLS policy requirements
+    // Validate the built data
     console.log('Validating built data:');
-    console.log('- Title length:', propertyData.title?.length, '(required: 5-200)');
-    console.log('- Description length:', propertyData.description?.length, '(required: 10-2000)');
-    console.log('- Price:', propertyData.price, '(required: > 0 and < 999999999)');
-    console.log('- Location length:', propertyData.location?.length, '(required: 2-100)');
-    console.log('- Contact phone length:', propertyData.contact_phone?.length, '(required: 10-20)');
-    console.log('- Property type:', propertyData.property_type, '(allowed: apartment, house, room, studio, office)');
+    console.log('- Title:', propertyData.title);
+    console.log('- Description:', propertyData.description);
+    console.log('- Monthly rent:', propertyData.monthly_rent);
+    console.log('- Address:', propertyData.address);
+    console.log('- City:', propertyData.city);
+    console.log('- Room type:', propertyData.room_type);
     console.log('- Landlord ID:', propertyData.landlord_id);
+    console.log('- Images count:', propertyData.images.length);
     
     return propertyData;
   };
@@ -623,12 +658,19 @@ const Dashboard = () => {
     console.log('=== DETAILED PROPERTY DATA VALIDATION ===');
     console.log('Title:', propertyData.title, '(length:', propertyData.title?.length, ')');
     console.log('Description:', propertyData.description, '(length:', propertyData.description?.length, ')');
-    console.log('Price:', propertyData.price, '(type:', typeof propertyData.price, ')');
-    console.log('Location:', propertyData.location, '(length:', propertyData.location?.length, ')');
-    console.log('Contact Phone:', propertyData.contact_phone, '(length:', propertyData.contact_phone?.length, ')');
-    console.log('Property Type:', propertyData.property_type);
+    console.log('Monthly Rent:', propertyData.monthly_rent, '(type:', typeof propertyData.monthly_rent, ')');
+    console.log('Address:', propertyData.address, '(length:', propertyData.address?.length, ')');
+    console.log('City:', propertyData.city);
+    console.log('Region:', propertyData.region);
+    console.log('Room Type:', propertyData.room_type);
+    console.log('Available Beds:', propertyData.available_beds);
+    console.log('Gender Restrictions:', propertyData.gender_restrictions);
+    console.log('University ID:', propertyData.university_id);
+    console.log('Distance from Campus:', propertyData.distance_from_campus);
+    console.log('Amenities:', propertyData.amenities);
     console.log('Landlord ID:', propertyData.landlord_id);
     console.log('Images count:', propertyData.images?.length);
+    console.log('Status:', propertyData.status);
     console.log('=== END VALIDATION ===');
     
     // Create a new supabase client with the current session
@@ -680,22 +722,29 @@ const Dashboard = () => {
     setFormData({
       title: property.title || '',
       description: property.description || '',
-      price: property.price?.toString() || '',
-      location: property.location || '',
-      full_address: property.full_address || '',
-      property_type: property.property_type || '',
-      bedrooms: property.bedrooms?.toString() || '',
-      bathrooms: property.bathrooms?.toString() || '',
-      area_sqm: property.area_sqm?.toString() || '',
+      price: property.monthly_rent?.toString() || '', // monthly_rent -> price
+      location: property.address || '', // address -> location
+      property_type: property.room_type || '', // room_type -> property_type
+      available_beds: property.available_beds?.toString() || '1',
+      gender_restrictions: property.gender_restrictions || 'mixed',
+      university_id: property.university_id || '',
+      distance_from_campus: property.distance_from_campus?.toString() || '',
+      amenities: property.amenities || {},
+      images: property.images || [],
+      // Contact fields
       contact_phone: property.contact_phone || profile?.phone || '',
       contact_whatsapp_phone: property.contact_whatsapp_phone || profile?.phone || '',
-      electricity: property.electricity || false,
-      water: property.water || false,
-      furnished: property.furnished || false,
-      parking: property.parking || false,
-      security: property.security || false,
-      nearby_services: property.nearby_services || [],
-      images: property.images || []
+      full_address: property.full_address || '',
+      // Deprecated fields (kept for backwards compatibility)
+      nearby_services: [],
+      bedrooms: '',
+      bathrooms: '',
+      area_sqm: '',
+      electricity: false,
+      water: false,
+      furnished: false,
+      parking: false,
+      security: false
     });
     updateUIState({ showAddForm: true });
   };
@@ -715,6 +764,27 @@ const Dashboard = () => {
     } catch (error) {
       console.error('Error deleting property:', error);
       showErrorToast('Imeshindikana kufuta nyumba');
+    }
+  };
+
+  const handleToggleAvailability = async (id: string, currentStatus: boolean): Promise<void> => {
+    try {
+      const { error } = await supabase
+        .from('properties')
+        .update({ is_available: !currentStatus })
+        .eq('id', id);
+
+      if (error) throw error;
+      
+      showSuccessToast(
+        !currentStatus 
+          ? 'Nyumba sasa inapatikana' 
+          : 'Nyumba imewekwa haipatikani'
+      );
+      await fetchProperties();
+    } catch (error) {
+      console.error('Error toggling availability:', error);
+      showErrorToast('Imeshindikana kubadilisha hali ya upatikanaji');
     }
   };
 
@@ -873,7 +943,7 @@ const Dashboard = () => {
 
         {/* Quick Actions */}
         <QuickActions
-          onAddProperty={() => updateUIState({ showAddForm: true })}
+          onAddProperty={() => navigate('/add-property')}
           onEditProfile={() => updateUIState({ showProfileDialog: true })}
           onShowHelp={() => updateUIState({ showHelpDialog: true })}
           isNewUser={uiState.isNewUser}
@@ -896,7 +966,8 @@ const Dashboard = () => {
           onViewModeChange={(mode) => updateUIState({ viewMode: mode })}
           onEditProperty={handleEditProperty}
           onDeleteProperty={handleDeleteProperty}
-          onAddProperty={() => updateUIState({ showAddForm: true })}
+          onAddProperty={() => navigate('/add-property')}
+          onToggleAvailability={handleToggleAvailability}
         />
 
 

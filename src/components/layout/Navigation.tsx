@@ -44,10 +44,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Home, Search, User, Menu, X, Globe, Building2, LogOut, Heart, Bell, Settings } from 'lucide-react';
+import { Home, Search, User, Menu, X, Globe, Building2, LogOut, Heart, Bell, Settings, GraduationCap } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useTranslation } from 'react-i18next';
+import CollegesModal from '@/components/common/CollegesModal';
 
 import { supabase } from '@/lib/integrations/supabase/client';
 import type { Tables } from '@/lib/integrations/supabase/types';
@@ -68,6 +69,7 @@ const Navigation = () => {
   // Component state management
   // Usimamizi wa hali ya kipengee
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Mobile menu visibility
+  const [isCollegesModalOpen, setIsCollegesModalOpen] = useState(false); // Colleges modal visibility
   const [profile, setProfile] = useState<Profile | null>(null); // User profile
   const location = useLocation(); // Current page location for active states
   const navigate = useNavigate(); // Navigation function
@@ -87,7 +89,7 @@ const Navigation = () => {
         const { data, error } = await supabase
           .from('profiles')
           .select('*')
-          .eq('user_id', user.id)
+          .eq('id', user.id)
           .single();
 
         if (error && error.code !== 'PGRST116') {
@@ -119,27 +121,25 @@ const Navigation = () => {
   };
 
   return (
-    <nav className="bg-white/95 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b border-gray-100">
+    <nav className={`${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property') ? 'bg-white shadow-lg sticky' : 'bg-transparent absolute'} backdrop-blur-sm top-0 left-0 right-0 z-50 border-b ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property') ? 'border-gray-100' : 'border-white/10'}`}>
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
-        <div className="flex justify-between items-center h-14 sm:h-16 lg:h-20">
+        <div className="flex justify-between items-center h-12 sm:h-14 lg:h-16">
           
           {/* Enhanced Brand Logo Section - Sehemu ya nembo ya chapa */}
           <div className="flex items-center space-x-2 sm:space-x-4">
             <Link to="/" className="flex items-center space-x-2 sm:space-x-3 group">
-              <div className="p-1 sm:p-1.5 lg:p-2 bg-gradient-to-br from-primary to-serengeti-500 
+              <div className="p-1 sm:p-1.5 lg:p-2 bg-gradient-to-br from-primary to-serengeti-500
                               rounded-md sm:rounded-lg lg:rounded-xl transform group-hover:scale-110 transition-all duration-300 
                               shadow-lg group-hover:shadow-xl">
                 <Home className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-white" />
               </div>
               <div className="transform group-hover:scale-105 transition-transform duration-300">
                 {/* Mobile label: NyLink */}
-                <span className="md:hidden text-base sm:text-lg lg:text-2xl font-bold bg-gradient-to-r from-primary to-serengeti-600 
-                                bg-clip-text text-transparent">NyLink</span>
+                <span className={`md:hidden text-base sm:text-lg lg:text-2xl font-bold bg-gradient-to-r from-primary to-serengeti-600 bg-clip-text text-transparent`}>NyLink</span>
                 <span className="md:hidden text-base sm:text-lg lg:text-2xl font-bold text-serengeti-600"></span>
 
                 {/* Desktop/large label: NyumbaLink Tz */}
-                <span className="hidden md:inline text-base sm:text-lg lg:text-2xl font-bold bg-gradient-to-r from-primary to-serengeti-600 
-                                bg-clip-text text-transparent">NyumbaLink</span>
+                <span className={`hidden md:inline text-base sm:text-lg lg:text-2xl font-bold bg-gradient-to-r from-primary to-serengeti-600 bg-clip-text text-transparent`}>NyumbaLink</span>
                 <span className="hidden md:inline text-base sm:text-lg lg:text-2xl font-bold text-serengeti-600"> </span>
               </div>
             </Link>
@@ -149,8 +149,10 @@ const Navigation = () => {
               <Link to="/signup?type=landlord" className="block">
                 <Button
                   variant="ghost"
-                  className="px-2 sm:px-4 py-1 sm:py-2 rounded-full transition-all duration-300 text-xs sm:text-sm lg:text-base
-                             hover:bg-primary/10 hover:text-primary hover:scale-105"
+                  className={`px-2 sm:px-4 py-1 sm:py-2 rounded-full transition-all duration-300 text-xs sm:text-sm lg:text-base
+                             ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property') 
+                               ? 'hover:bg-gray-100 text-gray-700 hover:text-gray-900' 
+                               : 'hover:bg-white/20 text-white hover:text-white'} hover:scale-105`}
                 >
                   {t('navigation.becomeHost')}
                 </Button>
@@ -159,67 +161,73 @@ const Navigation = () => {
           </div>
 
           {/* Enhanced Desktop Navigation Menu - Menyu ya uongozaji wa kompyuta */}
-          <div className="hidden md:flex items-center space-x-2">
-            {/* Home Link - Kiungo cha nyumbani */}
-            <Link to="/">
-              <Button
-                variant="ghost"
-                className={`px-4 py-2 rounded-full transition-all duration-300 text-sm sm:text-base
-                           hover:bg-primary/10 hover:text-primary hover:scale-105 ${
-                  location.pathname === '/' 
-                    ? 'bg-primary/15 text-primary font-semibold shadow-md border border-primary/20' 
-                    : 'hover:bg-gray-100'
-                }`}
-              >
-                {t('navigation.home')}
-              </Button>
-            </Link>
+          <div className={`hidden md:flex items-center space-x-2 backdrop-blur-md rounded-full px-2 py-2 ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property') ? 'bg-gray-100 border border-gray-200' : 'bg-white/10 border border-white/20'}`}>
             
-            {/* Browse Properties Link - Kiungo cha kutazama nyumba */}
-            <Link to="/browse">
-              <Button
-                variant="ghost"
-                className={`px-4 py-2 rounded-full transition-all duration-300 text-sm sm:text-base
-                           hover:bg-primary/10 hover:text-primary hover:scale-105 ${
-                  location.pathname === '/browse' 
-                    ? 'bg-primary/15 text-primary font-semibold shadow-md border border-primary/20' 
-                    : 'hover:bg-gray-100'
-                }`}
-              >
-                {t('navigation.browse')}
-              </Button>
-            </Link>
+            {/* Colleges Link - Kiungo cha vyuo */}
+            <Button
+              variant="ghost"
+              onClick={() => setIsCollegesModalOpen(true)}
+              className={`px-5 py-2 rounded-full transition-all duration-300 text-sm sm:text-base font-medium
+                         ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
+                           ? 'text-gray-700 hover:bg-gray-200 hover:text-gray-900'
+                           : 'text-white hover:bg-white/30 hover:text-white'}`}
+            >
+              Colleges
+            </Button>
             
-            {/* About Us Link - Kiungo cha kuhusu */}
+            {/* About Link - Kiungo cha kuhusu */}
             <Link to="/about">
               <Button
                 variant="ghost"
-                className={`px-4 py-2 rounded-full transition-all duration-300 text-sm sm:text-base
-                           hover:bg-primary/10 hover:text-primary hover:scale-105 ${
+                className={`px-5 py-2 rounded-full transition-all duration-300 text-sm sm:text-base font-medium ${
                   location.pathname === '/about' 
-                    ? 'bg-primary/15 text-primary font-semibold shadow-md border border-primary/20' 
-                    : 'hover:bg-gray-100'
-                }`}
+                    ? location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
+                      ? 'bg-gray-200'
+                      : 'bg-white/30'
+                    : ''
+                } ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
+                     ? 'text-gray-700 hover:bg-gray-200 hover:text-gray-900'
+                     : 'text-white hover:bg-white/30 hover:text-white'}`}
               >
-                {t('navigation.about')}
+                About
+              </Button>
+            </Link>
+            
+            {/* Contact Link - Kiungo cha mawasiliano */}
+            <Link to="/contact">
+              <Button
+                variant="ghost"
+                className={`px-5 py-2 rounded-full transition-all duration-300 text-sm sm:text-base font-medium ${
+                  location.pathname === '/contact' 
+                    ? location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
+                      ? 'bg-gray-200'
+                      : 'bg-white/30'
+                    : ''
+                } ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
+                     ? 'text-gray-700 hover:bg-gray-200 hover:text-gray-900'
+                     : 'text-white hover:bg-white/30 hover:text-white'}`}
+              >
+                Contact
               </Button>
             </Link>
           </div>
 
           {/* Enhanced Desktop Right Side Controls - Vidhibiti vya upande wa kulia vya kompyuta */}
           <div className="hidden md:flex items-center space-x-3 sm:space-x-4">
-            {/* Search Icon - Aikoni ya kutafuta */}
-            <Link to="/browse">
-              <Button
-                variant="ghost"
-                className="flex items-center space-x-2 px-3 py-2 rounded-full hover:bg-primary/10 
-                           hover:text-primary hover:scale-105 transition-all duration-300"
-                title={t('navigation.browse')}
-              >
-                <Search className="h-4 w-4" />
-                <span className="hidden lg:inline text-sm font-medium">{t('common.search')}</span>
-              </Button>
-            </Link>
+            {/* Search Icon - Aikoni ya kutafuta - Hidden on homepage */}
+            {location.pathname !== '/' && (
+              <Link to="/browse">
+                <Button
+                  variant="ghost"
+                  className="flex items-center space-x-2 px-3 py-2 rounded-full text-white hover:bg-white/20
+                             hover:text-white hover:scale-105 transition-all duration-300"
+                  title={t('navigation.browse')}
+                >
+                  <Search className="h-4 w-4" />
+                  <span className="hidden lg:inline text-sm font-medium">{t('common.search')}</span>
+                </Button>
+              </Link>
+            )}
 
             {/* Enhanced User Account Menu - Menyu ya akaunti ya mtumiaji */}
             {user ? (
@@ -227,9 +235,9 @@ const Navigation = () => {
                 {/* Hamburger Menu Button */}
                 <Button
                   variant="ghost"
-                  className="p-2 rounded-full hover:bg-gray-100 border border-gray-200 hover:border-gray-300 transition-all duration-300"
+                  className="md:hidden p-2 rounded-full hover:bg-white/20 border border-white/20 hover:border-white/30 transition-all duration-300"
                 >
-                  <Menu className="h-5 w-5 text-gray-600" />
+                  <Menu className="h-5 w-5 text-white" />
                 </Button>
                 
                 {/* User Avatar Dropdown */}
@@ -237,12 +245,20 @@ const Navigation = () => {
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="ghost"
-                      className="p-0 rounded-full hover:bg-transparent transition-all duration-300"
+                      className="p-0 rounded-full hover:bg-transparent transition-all duration-300 group flex items-center gap-2"
                     >
-                      <div className="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center hover:ring-2 hover:ring-primary/30 transition-all duration-300">
+                      <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center group-hover:ring-2 group-hover:ring-white/50 transition-all duration-300">
                         <span className="text-white text-base font-semibold">
                           {profile?.full_name?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase() || 'U'}
                         </span>
+                      </div>
+                      <div className="hidden lg:flex items-center gap-2">
+                        <span className="text-white font-medium">
+                          Hi, {profile?.full_name?.split(' ')[0] || user.email?.split('@')[0] || 'User'}
+                        </span>
+                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
                       </div>
                     </Button>
                   </DropdownMenuTrigger>
@@ -308,10 +324,9 @@ const Navigation = () => {
               </>
             ) : (
               <Link to="/signin">
-                <Button size="sm" className="bg-gradient-to-r from-primary to-serengeti-500 
-                                            hover:from-primary/90 hover:to-serengeti-400 text-sm px-4 py-2
+                <Button size="sm" className="bg-white/20 backdrop-blur-md hover:bg-white/30 text-white text-sm px-4 py-2
                                             shadow-lg hover:shadow-xl transform hover:scale-105 
-                                            transition-all duration-300">
+                                            transition-all duration-300 border border-white/20">
                   {t('navigation.signIn')}
                 </Button>
               </Link>
@@ -322,11 +337,11 @@ const Navigation = () => {
               variant="ghost"
               size="sm"
               onClick={toggleLanguage}
-              className="flex items-center space-x-2 px-3 py-2 rounded-full hover:bg-gray-100 
-                         hover:scale-105 transition-all duration-300 border border-gray-200 hover:border-primary/30"
+              className="flex items-center space-x-2 px-3 py-2 rounded-full text-white hover:bg-white/20
+                         hover:scale-105 transition-all duration-300 border border-white/20 hover:border-white/30"
             >
-              <Globe className="h-4 w-4 text-gray-600" />
-              <span className="text-sm font-medium text-gray-700">{i18n.language.toUpperCase()}</span>
+              <Globe className="h-4 w-4" />
+              <span className="text-sm font-medium">{i18n.language.toUpperCase()}</span>
             </Button>
           </div>
 
@@ -337,9 +352,9 @@ const Navigation = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                className="p-1.5 hover:bg-primary/10 hover:text-primary rounded-full transition-all duration-300 hover:scale-105"
+                className="p-1.5 hover:bg-white/20 text-white hover:text-white rounded-full transition-all duration-300 hover:scale-105"
               >
-                <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600" />
+                <Search className="h-4 w-4 sm:h-5 sm:w-5" />
               </Button>
             </Link>
             
@@ -348,12 +363,12 @@ const Navigation = () => {
               variant="ghost"
               size="sm"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-1.5 hover:bg-gray-100 rounded-full transition-all duration-300 hover:scale-105"
+              className="p-1.5 hover:bg-white/20 text-white rounded-full transition-all duration-300 hover:scale-105"
             >
               {isMenuOpen ? (
-                <X className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600" />
+                <X className="h-4 w-4 sm:h-5 sm:w-5" />
               ) : (
-                <Menu className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600" />
+                <Menu className="h-4 w-4 sm:h-5 sm:w-5" />
               )}
             </Button>
           </div>
@@ -418,6 +433,21 @@ const Navigation = () => {
                   {t('navigation.browse')}
                 </div>
               </Link>
+              
+              {/* Mobile Colleges Link - Kiungo cha vyuo kwa simu */}
+              <button
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  setIsCollegesModalOpen(true);
+                }}
+                className="w-full block px-3 sm:px-4 py-2 sm:py-3 text-gray-700 hover:bg-primary/10 hover:text-primary 
+                           rounded-lg sm:rounded-xl text-sm transition-all duration-300 text-left"
+              >
+                <div className="flex items-center">
+                  <GraduationCap className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-gray-400" />
+                  Colleges
+                </div>
+              </button>
               
               {/* Enhanced Mobile About Link - Kiungo cha kuhusu kwa simu */}
               <Link
@@ -509,6 +539,12 @@ const Navigation = () => {
           </div>
         </div>
       </div>
+      
+      {/* Colleges Modal - Kidirisha cha vyuo */}
+      <CollegesModal 
+        open={isCollegesModalOpen} 
+        onClose={() => setIsCollegesModalOpen(false)} 
+      />
     </nav>
   );
 };

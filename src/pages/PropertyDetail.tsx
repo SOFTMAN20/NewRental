@@ -193,7 +193,7 @@ const PropertyDetail = () => {
    */
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 pt-16 sm:pt-20 lg:pt-24">
         <Navigation />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="flex flex-col items-center justify-center py-16">
@@ -215,7 +215,7 @@ const PropertyDetail = () => {
    */
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50 flex flex-col">
+      <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50 flex flex-col pt-16 sm:pt-20 lg:pt-24">
         <Navigation />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
@@ -240,7 +240,7 @@ const PropertyDetail = () => {
    */
   if (error || !property) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 pt-16 sm:pt-20 lg:pt-24">
         <Navigation />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center py-16">
@@ -282,7 +282,7 @@ const PropertyDetail = () => {
    * Inajumuisha galeri ya picha, maelezo ya nyumba, na maelezo ya mawasiliano ya mwenye nyumba.
    */
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50 flex flex-col pt-16 sm:pt-20 lg:pt-24">
       <Navigation />
 
       <div className="flex-1 max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 pt-1 pb-3 sm:pb-4 lg:pb-6 xl:pb-8">

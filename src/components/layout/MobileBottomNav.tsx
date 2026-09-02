@@ -17,7 +17,7 @@
 
 import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Search, Heart, User, Building2 } from 'lucide-react';
+import { Home, Search, Heart, User, Plus } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from 'react-i18next';
 import { useScrollDirection } from '@/hooks/useScrollDirection';
@@ -36,11 +36,17 @@ const MobileBottomNav = () => {
   const { user } = useAuth();
   const { t } = useTranslation();
   
-  // Use custom hook for scroll-based visibility
+  // Check if we're on homepage
+  const isHomePage = location.pathname === '/';
+  
+  // Use custom hook for scroll-based visibility (disabled on homepage)
   const { isVisible } = useScrollDirection({
     threshold: 10,   // Only hide/show after scrolling 10px
     minScrollY: 100  // Only hide after scrolling past 100px from top
   });
+
+  // Always show on homepage, otherwise use scroll-based visibility
+  const shouldShowNav = isHomePage || isVisible;
 
   // Define navigation items similar to Airbnb
   const navItems: NavItem[] = [
@@ -57,10 +63,11 @@ const MobileBottomNav = () => {
       path: '/favorites'
     },
     {
-      id: 'host',
-      icon: <Building2 className="h-5 w-5" />,
-      label: user ? t('bottomNav.host') : t('bottomNav.becomeHost'),
-      path: user ? '/dashboard' : '/signup?type=landlord'
+      id: 'post',
+      icon: <Plus className="h-5 w-5" />,
+      label: user ? 'Post' : 'Post',
+      path: user ? '/add-property' : '/signin?redirect=add-property',
+      requiresAuth: true
     },
     {
       id: 'profile',
@@ -78,11 +85,17 @@ const MobileBottomNav = () => {
     if (path === '/favorites') {
       return location.pathname === '/favorites';
     }
+    if (path === '/add-property') {
+      return location.pathname === '/add-property';
+    }
     if (path === '/dashboard') {
       return location.pathname === '/dashboard';
     }
     if (path === '/signin') {
       return location.pathname === '/signin' || location.pathname === '/signup';
+    }
+    if (path === '/signin?redirect=add-property') {
+      return location.pathname === '/signin';
     }
     if (path === '/signup?type=landlord') {
       return location.pathname === '/signup';
@@ -92,9 +105,9 @@ const MobileBottomNav = () => {
 
   return (
     <>
-      {/* Bottom Navigation Bar - Only visible on mobile with scroll-based hiding */}
+      {/* Bottom Navigation Bar - Only visible on mobile with conditional scroll-based hiding */}
       <div className={`md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-gray-200 shadow-lg transition-all duration-300 ease-in-out ${
-        isVisible 
+        shouldShowNav 
           ? 'translate-y-0 opacity-100' 
           : 'translate-y-full opacity-0'
       }`}>

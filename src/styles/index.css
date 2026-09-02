@@ -44,21 +44,21 @@ All colors MUST be HSL for better color manipulation and accessibility.
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    /* Primary Color System - Enhanced Orange/Amber */
-    --primary: 15 75% 52%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary Color System - Light Blue/Lavender */
+    --primary: 225 73% 70%;
+    --primary-foreground: 0 0% 100%;
 
-    /* Secondary Color System - Enhanced Warm Gray */
-    --secondary: 24 33% 85%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary Color System - Very Light Lavender */
+    --secondary: 225 73% 95%;
+    --secondary-foreground: 225 30% 25%;
 
     /* Muted Color System - Enhanced Neutral Gray */
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    /* Accent Color System - Enhanced Warm Accent */
-    --accent: 24 33% 85%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Accent Color System - Deeper Lavender Blue */
+    --accent: 235 80% 65%;
+    --accent-foreground: 0 0% 100%;
 
     /* Destructive Color System - Enhanced Red */
     --destructive: 0 84.2% 60.2%;
@@ -67,7 +67,7 @@ All colors MUST be HSL for better color manipulation and accessibility.
     /* Border & Input System Colors */
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 15 75% 52%;
+    --ring: 225 73% 70%;
 
     /* Enhanced Success Color System */
     --success: 142 76% 36%;
@@ -566,6 +566,16 @@ All colors MUST be HSL for better color manipulation and accessibility.
 }
 
 @layer utilities {
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+  }
+
   /* Enhanced Custom Scrollbar */
 ::-webkit-scrollbar {
     width: 8px;

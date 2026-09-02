@@ -3,7 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { PropertyGridSkeleton } from '@/components/common/PropertyCardSkeleton';
-import { Home, Plus, Eye, Edit, Trash2, MapPin, DollarSign } from 'lucide-react';
+import { Home, Plus, Eye, Edit, Trash2, MapPin, DollarSign, CheckCircle, XCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Property } from '@/hooks/useProperties';
 
@@ -19,6 +19,8 @@ interface PropertyGridProps {
   onDelete: (id: string) => Promise<void>;
   /** Function called when user wants to add a new property */
   onAddProperty: () => void;
+  /** Function called when user wants to toggle availability */
+  onToggleAvailability?: (id: string, currentStatus: boolean) => Promise<void>;
 }
 
 /**
@@ -32,7 +34,8 @@ const PropertyGrid: React.FC<PropertyGridProps> = ({
   properties, 
   onEdit, 
   onDelete,
-  onAddProperty
+  onAddProperty,
+  onToggleAvailability
 }) => {
   const { t } = useTranslation();
 
@@ -151,25 +154,53 @@ const PropertyGrid: React.FC<PropertyGridProps> = ({
           </p>
 
           {/* Action Buttons */}
-          <div className="flex gap-2 pt-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onEdit(property)}
-              className="flex-1 flex items-center gap-2"
-            >
-              <Edit className="w-4 h-4" />
-              {t('dashboard.edit')}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onDelete(property.id)}
-              className="flex-1 flex items-center gap-2 text-red-600 border-red-200 hover:bg-red-50"
-            >
-              <Trash2 className="w-4 h-4" />
-              {t('dashboard.delete')}
-            </Button>
+          <div className="flex flex-col gap-2 pt-2">
+            {/* Availability Toggle Button */}
+            {onToggleAvailability && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onToggleAvailability(property.id, property.is_available ?? true)}
+                className={`w-full flex items-center justify-center gap-2 ${
+                  property.is_available 
+                    ? 'text-green-600 border-green-200 hover:bg-green-50' 
+                    : 'text-red-600 border-red-200 hover:bg-red-50'
+                }`}
+              >
+                {property.is_available ? (
+                  <>
+                    <CheckCircle className="w-4 h-4" />
+                    Inapatikana
+                  </>
+                ) : (
+                  <>
+                    <XCircle className="w-4 h-4" />
+                    Haipatikani
+                  </>
+                )}
+              </Button>
+            )}
+            
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onEdit(property)}
+                className="flex-1 flex items-center gap-2"
+              >
+                <Edit className="w-4 h-4" />
+                {t('dashboard.edit')}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onDelete(property.id)}
+                className="flex-1 flex items-center gap-2 text-red-600 border-red-200 hover:bg-red-50"
+              >
+                <Trash2 className="w-4 h-4" />
+                {t('dashboard.delete')}
+              </Button>
+            </div>
           </div>
         </div>
       </CardContent>

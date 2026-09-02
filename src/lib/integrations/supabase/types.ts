@@ -7,183 +7,471 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "12.2.3 (519615d)"
+    PostgrestVersion: "14.5"
   }
   public: {
     Tables: {
-      profiles: {
+      analytics_events: {
         Row: {
-          created_at: string
-          full_name: string | null
+          event_type: string
           id: string
-          phone: string | null
-          updated_at: string
-          user_id: string
-          user_type: string | null
+          metadata: Json | null
+          property_id: string | null
+          timestamp: string | null
+          user_id: string | null
         }
         Insert: {
-          created_at?: string
-          full_name?: string | null
+          event_type: string
           id?: string
-          phone?: string | null
-          updated_at?: string
-          user_id: string
-          user_type?: string | null
+          metadata?: Json | null
+          property_id?: string | null
+          timestamp?: string | null
+          user_id?: string | null
         }
         Update: {
-          created_at?: string
-          full_name?: string | null
+          event_type?: string
           id?: string
-          phone?: string | null
-          updated_at?: string
-          user_id?: string
-          user_type?: string | null
-        }
-        Relationships: []
-      }
-      properties: {
-        Row: {
-          area_sqm: number | null
-          bathrooms: number | null
-          bedrooms: number | null
-          contact_phone: string | null
-          contact_whatsapp_phone: string | null
-          created_at: string
-          description: string | null
-          electricity: boolean | null
-          full_address: string | null
-          furnished: boolean | null
-          id: string
-          images: string[] | null
-          landlord_id: string
-          location: string
-          nearby_services: string[] | null
-          parking: boolean | null
-          price: number
-          property_type: string | null
-          security: boolean | null
-          status: string | null
-          title: string
-          updated_at: string
-          views_count: number | null
-          water: boolean | null
-        }
-        Insert: {
-          area_sqm?: number | null
-          bathrooms?: number | null
-          bedrooms?: number | null
-          contact_phone?: string | null
-          contact_whatsapp_phone?: string | null
-          created_at?: string
-          description?: string | null
-          electricity?: boolean | null
-          full_address?: string | null
-          furnished?: boolean | null
-          id?: string
-          images?: string[] | null
-          landlord_id: string
-          location: string
-          nearby_services?: string[] | null
-          parking?: boolean | null
-          price: number
-          property_type?: string | null
-          security?: boolean | null
-          status?: string | null
-          title: string
-          updated_at?: string
-          views_count?: number | null
-          water?: boolean | null
-        }
-        Update: {
-          area_sqm?: number | null
-          bathrooms?: number | null
-          bedrooms?: number | null
-          contact_phone?: string | null
-          contact_whatsapp_phone?: string | null
-          created_at?: string
-          description?: string | null
-          electricity?: boolean | null
-          full_address?: string | null
-          furnished?: boolean | null
-          id?: string
-          images?: string[] | null
-          landlord_id?: string
-          location?: string
-          nearby_services?: string[] | null
-          parking?: boolean | null
-          price?: number
-          property_type?: string | null
-          security?: boolean | null
-          status?: string | null
-          title?: string
-          updated_at?: string
-          views_count?: number | null
-          water?: boolean | null
+          metadata?: Json | null
+          property_id?: string | null
+          timestamp?: string | null
+          user_id?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "fk_landlord_profile"
+            foreignKeyName: "analytics_events_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "analytics_events_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "property_stats"
+            referencedColumns: ["property_id"]
+          },
+          {
+            foreignKeyName: "analytics_events_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "analytics_events_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "student_dashboard_stats"
+            referencedColumns: ["student_id"]
+          },
+        ]
+      }
+      bookings: {
+        Row: {
+          booking_date: string | null
+          cancellation_reason: string | null
+          cancelled_at: string | null
+          confirmation_code: string | null
+          confirmed_at: string | null
+          created_at: string | null
+          id: string
+          landlord_user_id: string
+          lease_duration: string | null
+          move_in_date: string
+          property_id: string
+          room_type: string
+          status: string | null
+          student_user_id: string
+          total_amount: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          booking_date?: string | null
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          confirmation_code?: string | null
+          confirmed_at?: string | null
+          created_at?: string | null
+          id?: string
+          landlord_user_id: string
+          lease_duration?: string | null
+          move_in_date: string
+          property_id: string
+          room_type: string
+          status?: string | null
+          student_user_id: string
+          total_amount?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          booking_date?: string | null
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          confirmation_code?: string | null
+          confirmed_at?: string | null
+          created_at?: string | null
+          id?: string
+          landlord_user_id?: string
+          lease_duration?: string | null
+          move_in_date?: string
+          property_id?: string
+          room_type?: string
+          status?: string | null
+          student_user_id?: string
+          total_amount?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_landlord_user_id_fkey"
+            columns: ["landlord_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_landlord_user_id_fkey"
+            columns: ["landlord_user_id"]
+            isOneToOne: false
+            referencedRelation: "student_dashboard_stats"
+            referencedColumns: ["student_id"]
+          },
+          {
+            foreignKeyName: "bookings_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "property_stats"
+            referencedColumns: ["property_id"]
+          },
+          {
+            foreignKeyName: "bookings_student_user_id_fkey"
+            columns: ["student_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_student_user_id_fkey"
+            columns: ["student_user_id"]
+            isOneToOne: false
+            referencedRelation: "student_dashboard_stats"
+            referencedColumns: ["student_id"]
+          },
+        ]
+      }
+      favorites: {
+        Row: {
+          created_at: string | null
+          id: string
+          property_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          property_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          property_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorites_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "favorites_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "property_stats"
+            referencedColumns: ["property_id"]
+          },
+          {
+            foreignKeyName: "favorites_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "favorites_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "student_dashboard_stats"
+            referencedColumns: ["student_id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          budget_max: number | null
+          budget_min: number | null
+          business_registration_number: string | null
+          course_of_study: string | null
+          created_at: string | null
+          email: string
+          full_name: string | null
+          government_id_number: string | null
+          id: string
+          phone: string | null
+          physical_address: string | null
+          preferred_roommate_gender: string | null
+          university_id: string | null
+          updated_at: string | null
+          user_type: string
+          verification_status: string | null
+          year_of_study: number | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          budget_max?: number | null
+          budget_min?: number | null
+          business_registration_number?: string | null
+          course_of_study?: string | null
+          created_at?: string | null
+          email: string
+          full_name?: string | null
+          government_id_number?: string | null
+          id: string
+          phone?: string | null
+          physical_address?: string | null
+          preferred_roommate_gender?: string | null
+          university_id?: string | null
+          updated_at?: string | null
+          user_type: string
+          verification_status?: string | null
+          year_of_study?: number | null
+        }
+        Update: {
+          avatar_url?: string | null
+          budget_max?: number | null
+          budget_min?: number | null
+          business_registration_number?: string | null
+          course_of_study?: string | null
+          created_at?: string | null
+          email?: string
+          full_name?: string | null
+          government_id_number?: string | null
+          id?: string
+          phone?: string | null
+          physical_address?: string | null
+          preferred_roommate_gender?: string | null
+          university_id?: string | null
+          updated_at?: string | null
+          user_type?: string
+          verification_status?: string | null
+          year_of_study?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_university_id_fkey"
+            columns: ["university_id"]
+            isOneToOne: false
+            referencedRelation: "universities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      properties: {
+        Row: {
+          accepted_payment_methods: string[] | null
+          additional_fees: Json | null
+          address: string
+          amenities: Json | null
+          available_beds: number | null
+          available_move_in_dates: string[] | null
+          bed_count: number | null
+          city: string
+          contact_phone: string | null
+          contact_whatsapp_phone: string | null
+          created_at: string | null
+          deposit_amount: number | null
+          description: string | null
+          distance_from_campus: number | null
+          full_address: string | null
+          gender_restrictions: string | null
+          id: string
+          images: string[] | null
+          is_featured: boolean | null
+          landlord_id: string
+          latitude: number | null
+          lease_periods: string[] | null
+          longitude: number | null
+          monthly_rent: number
+          payment_schedule: string | null
+          property_type: string | null
+          region: string
+          room_type: string
+          status: string | null
+          title: string
+          university_id: string | null
+          updated_at: string | null
+          utilities_included: boolean | null
+        }
+        Insert: {
+          accepted_payment_methods?: string[] | null
+          additional_fees?: Json | null
+          address: string
+          amenities?: Json | null
+          available_beds?: number | null
+          available_move_in_dates?: string[] | null
+          bed_count?: number | null
+          city: string
+          contact_phone?: string | null
+          contact_whatsapp_phone?: string | null
+          created_at?: string | null
+          deposit_amount?: number | null
+          description?: string | null
+          distance_from_campus?: number | null
+          full_address?: string | null
+          gender_restrictions?: string | null
+          id?: string
+          images?: string[] | null
+          is_featured?: boolean | null
+          landlord_id: string
+          latitude?: number | null
+          lease_periods?: string[] | null
+          longitude?: number | null
+          monthly_rent: number
+          payment_schedule?: string | null
+          property_type?: string | null
+          region: string
+          room_type: string
+          status?: string | null
+          title: string
+          university_id?: string | null
+          updated_at?: string | null
+          utilities_included?: boolean | null
+        }
+        Update: {
+          accepted_payment_methods?: string[] | null
+          additional_fees?: Json | null
+          address?: string
+          amenities?: Json | null
+          available_beds?: number | null
+          available_move_in_dates?: string[] | null
+          bed_count?: number | null
+          city?: string
+          contact_phone?: string | null
+          contact_whatsapp_phone?: string | null
+          created_at?: string | null
+          deposit_amount?: number | null
+          description?: string | null
+          distance_from_campus?: number | null
+          full_address?: string | null
+          gender_restrictions?: string | null
+          id?: string
+          images?: string[] | null
+          is_featured?: boolean | null
+          landlord_id?: string
+          latitude?: number | null
+          lease_periods?: string[] | null
+          longitude?: number | null
+          monthly_rent?: number
+          payment_schedule?: string | null
+          property_type?: string | null
+          region?: string
+          room_type?: string
+          status?: string | null
+          title?: string
+          university_id?: string | null
+          updated_at?: string | null
+          utilities_included?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "properties_landlord_id_fkey"
             columns: ["landlord_id"]
             isOneToOne: false
             referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "properties_landlord_id_fkey"
+            columns: ["landlord_id"]
+            isOneToOne: false
+            referencedRelation: "student_dashboard_stats"
+            referencedColumns: ["student_id"]
+          },
+          {
+            foreignKeyName: "properties_university_id_fkey"
+            columns: ["university_id"]
+            isOneToOne: false
+            referencedRelation: "universities"
+            referencedColumns: ["id"]
           },
         ]
       }
       property_inquiries: {
         Row: {
-          created_at: string
+          created_at: string | null
           id: string
-          landlord_id: string
+          inquiry_date: string | null
+          landlord_user_id: string
           message: string
           property_id: string
+          response_date: string | null
           status: string | null
-          tenant_email: string | null
-          tenant_id: string
-          tenant_name: string | null
-          tenant_phone: string | null
+          student_user_id: string
+          updated_at: string | null
         }
         Insert: {
-          created_at?: string
+          created_at?: string | null
           id?: string
-          landlord_id: string
+          inquiry_date?: string | null
+          landlord_user_id: string
           message: string
           property_id: string
+          response_date?: string | null
           status?: string | null
-          tenant_email?: string | null
-          tenant_id: string
-          tenant_name?: string | null
-          tenant_phone?: string | null
+          student_user_id: string
+          updated_at?: string | null
         }
         Update: {
-          created_at?: string
+          created_at?: string | null
           id?: string
-          landlord_id?: string
+          inquiry_date?: string | null
+          landlord_user_id?: string
           message?: string
           property_id?: string
+          response_date?: string | null
           status?: string | null
-          tenant_email?: string | null
-          tenant_id?: string
-          tenant_name?: string | null
-          tenant_phone?: string | null
+          student_user_id?: string
+          updated_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "fk_inquiry_landlord"
-            columns: ["landlord_id"]
+            foreignKeyName: "property_inquiries_landlord_user_id_fkey"
+            columns: ["landlord_user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
+            referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "fk_inquiry_tenant"
-            columns: ["tenant_id"]
+            foreignKeyName: "property_inquiries_landlord_user_id_fkey"
+            columns: ["landlord_user_id"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: "student_dashboard_stats"
+            referencedColumns: ["student_id"]
           },
           {
             foreignKeyName: "property_inquiries_property_id_fkey"
@@ -192,14 +480,140 @@ export type Database = {
             referencedRelation: "properties"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "property_inquiries_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "property_stats"
+            referencedColumns: ["property_id"]
+          },
+          {
+            foreignKeyName: "property_inquiries_student_user_id_fkey"
+            columns: ["student_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "property_inquiries_student_user_id_fkey"
+            columns: ["student_user_id"]
+            isOneToOne: false
+            referencedRelation: "student_dashboard_stats"
+            referencedColumns: ["student_id"]
+          },
         ]
+      }
+      universities: {
+        Row: {
+          abbreviation: string
+          campus_locations: string[] | null
+          city: string
+          created_at: string | null
+          email_domains: string[]
+          id: string
+          latitude: number | null
+          longitude: number | null
+          name: string
+          region: string
+          updated_at: string | null
+        }
+        Insert: {
+          abbreviation: string
+          campus_locations?: string[] | null
+          city: string
+          created_at?: string | null
+          email_domains: string[]
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          name: string
+          region: string
+          updated_at?: string | null
+        }
+        Update: {
+          abbreviation?: string
+          campus_locations?: string[] | null
+          city?: string
+          created_at?: string | null
+          email_domains?: string[]
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          name?: string
+          region?: string
+          updated_at?: string | null
+        }
+        Relationships: []
       }
     }
     Views: {
-      [_ in never]: never
+      landlord_dashboard_stats: {
+        Row: {
+          confirmed_bookings: number | null
+          landlord_id: string | null
+          pending_bookings: number | null
+          pending_inquiries: number | null
+          total_available_beds: number | null
+          total_properties: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "properties_landlord_id_fkey"
+            columns: ["landlord_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "properties_landlord_id_fkey"
+            columns: ["landlord_id"]
+            isOneToOne: false
+            referencedRelation: "student_dashboard_stats"
+            referencedColumns: ["student_id"]
+          },
+        ]
+      }
+      property_stats: {
+        Row: {
+          confirmed_bookings_count: number | null
+          favorites_count: number | null
+          inquiries_count: number | null
+          property_id: string | null
+          title: string | null
+          university_id: string | null
+          views_count: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "properties_university_id_fkey"
+            columns: ["university_id"]
+            isOneToOne: false
+            referencedRelation: "universities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_dashboard_stats: {
+        Row: {
+          active_bookings_count: number | null
+          pending_inquiries_count: number | null
+          saved_properties_count: number | null
+          student_id: string | null
+          university_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_university_id_fkey"
+            columns: ["university_id"]
+            isOneToOne: false
+            referencedRelation: "universities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
-      [_ in never]: never
+      generate_confirmation_code: { Args: never; Returns: string }
     }
     Enums: {
       [_ in never]: never

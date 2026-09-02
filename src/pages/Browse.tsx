@@ -119,18 +119,20 @@ const filterProperties = (properties: Property[], filters: FilterState): Propert
     // Location filtering - case insensitive partial match
     if (filters.searchQuery) {
       const query = filters.searchQuery.toLowerCase().trim();
-      const location = property.location.toLowerCase();
+      const location = `${property.address} ${property.city}`.toLowerCase();
+      const universityName = property.university?.name?.toLowerCase() || '';
+      const universityAbbr = property.university?.abbreviation?.toLowerCase() || '';
 
-      if (!location.includes(query)) {
+      if (!location.includes(query) && !universityName.includes(query) && !universityAbbr.includes(query)) {
         return false;
       }
     }
 
     // Custom price range filtering
-    if (filters.minPrice && parseInt(filters.minPrice) > Number(property.price)) {
+    if (filters.minPrice && parseInt(filters.minPrice) > Number(property.monthly_rent)) {
       return false;
     }
-    if (filters.maxPrice && parseInt(filters.maxPrice) < Number(property.price)) {
+    if (filters.maxPrice && parseInt(filters.maxPrice) < Number(property.monthly_rent)) {
       return false;
     }
 
@@ -140,24 +142,20 @@ const filterProperties = (properties: Property[], filters: FilterState): Propert
       const minPriceRange = parseInt(min);
       const maxPriceRange = max ? parseInt(max) : Infinity;
 
-      if (Number(property.price) < minPriceRange || Number(property.price) > maxPriceRange) {
+      if (Number(property.monthly_rent) < minPriceRange || Number(property.monthly_rent) > maxPriceRange) {
         return false;
       }
     }
 
-    // Utilities filtering
+    // Amenities filtering (replaces utilities)
     if (filters.utilities.length > 0) {
-      if (filters.utilities.includes('electricity') && !property.electricity) return false;
-      if (filters.utilities.includes('water') && !property.water) return false;
+      const amenities = typeof property.amenities === 'string' ? JSON.parse(property.amenities) : property.amenities || {};
+      if (filters.utilities.includes('electricity') && !amenities.WiFi) return false;
+      if (filters.utilities.includes('water') && !amenities['24_Hour_Security']) return false;
     }
 
-    // Nearby services filtering
-    if (filters.nearbyServices.length > 0) {
-      const hasAllServices = filters.nearbyServices.every(service =>
-        property.nearby_services?.includes(service)
-      );
-      if (!hasAllServices) return false;
-    }
+    // Skip nearby services filtering for now (not in new schema)
+    // Can be re-implemented later if needed
 
     return true;
   });
@@ -178,12 +176,12 @@ const sortProperties = (properties: Property[], sortBy: string): Property[] => {
   return [...properties].sort((a, b) => {
     switch (sortBy) {
       case 'price-low':
-        return Number(a.price) - Number(b.price);
+        return Number(a.monthly_rent) - Number(b.monthly_rent);
       case 'price-high':
-        return Number(b.price) - Number(a.price);
+        return Number(b.monthly_rent) - Number(a.monthly_rent);
       case 'newest':
       default:
-        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
     }
   });
 };
@@ -332,6 +330,15 @@ const Browse = () => {
   const filteredProperties = filterProperties(properties as Property[], filters);
   const sortedProperties = sortProperties(filteredProperties, filters.sortBy);
 
+  // Debug logging
+  console.log('🔍 Browse Debug:', {
+    totalProperties: properties.length,
+    filteredProperties: filteredProperties.length,
+    sortedProperties: sortedProperties.length,
+    filters,
+    sampleProperty: properties[0]
+  });
+
   /**
    * ERROR STATE RENDERING
    * ====================
@@ -367,7 +374,7 @@ const Browse = () => {
    * Renders the complete browse page with all sections.
    */
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50">
+    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50 pt-16 sm:pt-20 lg:pt-24">
       <Navigation />
 
       {/* Hero Search Section */}
@@ -657,7 +664,7 @@ const Browse = () => {
             />
           ) : sortedProperties.length > 0 ? (
             <div className={`grid gap-3 sm:gap-4 lg:gap-6 ${uiState.viewMode === 'grid'
-              ? 'grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+              ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
               : 'grid-cols-1'
               }`}>
               {sortedProperties.map((property) => (
@@ -665,18 +672,21 @@ const Browse = () => {
                   key={property.id}
                   id={property.id}
                   title={property.title}
-                  price={Number(property.price)}
-                  location={property.location}
+                  monthly_rent={Number(property.monthly_rent)}
+                  address={property.address}
+                  city={property.city}
                   images={property.images || []}
-                  phone={property.profiles?.phone || undefined}
-                  contactPhone={property.contact_phone || undefined}
-                  contactWhatsappPhone={property.contact_whatsapp_phone || undefined}
-                  electricity={property.electricity || false}
-                  water={property.water || false}
-                  bedrooms={property.bedrooms || undefined}
+                  room_type={property.room_type}
+                  gender_restrictions={property.gender_restrictions || undefined}
+                  distance_from_campus={property.distance_from_campus || undefined}
+                  amenities={property.amenities}
+                  university={property.university}
+                  landlord={property.landlord}
+                  available_beds={property.available_beds || undefined}
                   isFavorited={isFavorited(property.id)}
                   onToggleFavorite={toggleFavorite}
                   viewMode={uiState.viewMode}
+                  is_available={property.is_available ?? true}
                 />
               ))}
             </div>

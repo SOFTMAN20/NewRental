@@ -223,10 +223,10 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
   };
 
   const steps = [
-    { id: 1, title: t('dashboard.basicInfo'), icon: Home, description: 'Jina, bei na eneo' },
-    { id: 2, title: t('dashboard.details'), icon: Building, description: 'Maelezo na aina ya nyumba' },
-    { id: 3, title: t('dashboard.contact'), icon: Phone, description: 'Maelezo ya mawasiliano' },
-    { id: 4, title: t('dashboard.photos'), icon: Camera, description: 'Picha za nyumba (za lazima)' }
+    { id: 1, title: 'Maelezo ya Msingi', icon: Home, description: 'Jina, bei na eneo' },
+    { id: 2, title: 'Maelezo ya Chumba', icon: Building, description: 'Aina ya chumba na huduma' },
+    { id: 3, title: 'Mawasiliano', icon: Phone, description: 'Nambari ya simu' },
+    { id: 4, title: 'Picha', icon: Camera, description: 'Picha za nyumba (za lazima)' }
   ];
 
   /**
@@ -347,20 +347,22 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         <p className="text-gray-600">Eleza nyumba yako kwa undani</p>
       </div>
 
-      {/* Property Type */}
+      {/* Property Type - Student Housing Focus */}
       <div className="space-y-3">
         <Label className="flex items-center gap-2 text-sm font-medium">
           <Home className="h-4 w-4 text-primary" />
-          {t('dashboard.propertyType')} *
+          Aina ya Chumba *
         </Label>
         <div className="grid grid-cols-2 gap-3">
           {[
-            { value: 'apartment', label: t('dashboard.apartment'), icon: Building },
-            { value: 'house', label: t('dashboard.house'), icon: Home },
-            { value: 'room', label: t('dashboard.room'), icon: Bed },
-            { value: 'studio', label: t('dashboard.studio'), icon: Users },
-            { value: 'office', label: t('dashboard.office'), icon: Briefcase }
-          ].map(({ value, label, icon: Icon }) => (
+            { value: 'single_room', label: 'Chumba Kimoja (Single Room)', icon: Bed, desc: 'Chumba moja kwa mwanafunzi mmoja' },
+            { value: 'shared_room', label: 'Chumba cha Pamoja (Shared)', icon: Users, desc: 'Wanafunzi wawili au zaidi' },
+            { value: 'master_room', label: 'Master Room', icon: Award, desc: 'Chumba kikuu chenye choo binafsi' },
+            { value: 'self_contained', label: 'Self Contained', icon: Home, desc: 'Chumba chenye choo na bafu ndani' },
+            { value: 'apartment', label: 'Apartment/Flat', icon: Building, desc: 'Nyumba yenye vyumba vingi' },
+            { value: 'studio', label: 'Studio/Bedsitter', icon: Home, desc: 'Chumba chenye jiko na choo' },
+            { value: 'dormitory', label: 'Bweni (Dormitory)', icon: Building, desc: 'Vyumba vingi kwa hostel' }
+          ].map(({ value, label, icon: Icon, desc }) => (
             <button
               key={value}
               type="button"
@@ -371,57 +373,68 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
                   : 'border-gray-200 hover:border-gray-300'
               }`}
             >
-              <div className="flex items-center gap-3">
-                <Icon className={`h-5 w-5 ${formData.property_type === value ? 'text-primary' : 'text-gray-400'}`} />
-                <span className={`font-medium ${formData.property_type === value ? 'text-primary' : 'text-gray-700'}`}>
-                  {label}
-                </span>
+              <div className="flex items-start gap-3">
+                <Icon className={`h-5 w-5 mt-0.5 ${formData.property_type === value ? 'text-primary' : 'text-gray-400'}`} />
+                <div className="flex-1">
+                  <span className={`font-medium block ${formData.property_type === value ? 'text-primary' : 'text-gray-700'}`}>
+                    {label}
+                  </span>
+                  <span className="text-xs text-gray-500 block mt-1">{desc}</span>
+                </div>
               </div>
             </button>
           ))}
         </div>
       </div>
 
-      {/* Rooms Grid */}
-      <div className="grid grid-cols-3 gap-4">
+      {/* Student-Specific Details */}
+      <div className="space-y-4">
+        {/* Gender Restrictions */}
+        <div className="space-y-2">
+          <Label className="flex items-center gap-2 text-sm font-medium">
+            <Users className="h-4 w-4 text-primary" />
+            Wanafunzi Wanaoruhusiwa
+          </Label>
+          <div className="grid grid-cols-3 gap-2">
+            {[
+              { value: 'male_only', label: 'Wavulana Tu', emoji: '👨‍🎓' },
+              { value: 'female_only', label: 'Wasichana Tu', emoji: '👩‍🎓' },
+              { value: 'mixed', label: 'Wote', emoji: '👥' }
+            ].map(({ value, label, emoji }) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() => onInputChange('gender_restrictions', value)}
+                className={`p-3 border-2 rounded-lg transition-all duration-200 ${
+                  formData.gender_restrictions === value 
+                    ? 'border-primary bg-primary/5' 
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <div className="text-2xl mb-1">{emoji}</div>
+                <div className={`text-sm font-medium ${formData.gender_restrictions === value ? 'text-primary' : 'text-gray-700'}`}>
+                  {label}
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Available Beds */}
         <div className="space-y-2">
           <Label className="flex items-center gap-2 text-sm font-medium">
             <Bed className="h-4 w-4 text-primary" />
-            {t('dashboard.bedrooms')}
+            Idadi ya Vitanda Vilivyopo
           </Label>
           <Input
             type="number"
-            value={formData.bedrooms}
-            onChange={(e) => onInputChange('bedrooms', e.target.value)}
-            placeholder="2"
-            className="text-center"
-          />
-        </div>
-        <div className="space-y-2">
-          <Label className="flex items-center gap-2 text-sm font-medium">
-            <Bath className="h-4 w-4 text-primary" />
-            {t('dashboard.bathrooms')}
-          </Label>
-          <Input
-            type="number"
-            value={formData.bathrooms}
-            onChange={(e) => onInputChange('bathrooms', e.target.value)}
+            value={formData.available_beds}
+            onChange={(e) => onInputChange('available_beds', e.target.value)}
             placeholder="1"
-            className="text-center"
+            className="text-center text-lg"
+            min="1"
           />
-        </div>
-        <div className="space-y-2">
-          <Label className="flex items-center gap-2 text-sm font-medium">
-            <Ruler className="h-4 w-4 text-primary" />
-            Eneo (m²)
-          </Label>
-        <Input
-          type="number"
-          value={formData.area_sqm}
-          onChange={(e) => onInputChange('area_sqm', e.target.value)}
-          placeholder="100"
-            className="text-center"
-        />
+          <p className="text-xs text-gray-500">Kitanda kimoja = mwanafunzi mmoja</p>
         </div>
       </div>
 
@@ -445,71 +458,97 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         </div>
       </div>
 
-      {/* Basic Services - Interactive Toggle Cards */}
+      {/* Student Housing Amenities - Simplified */}
       <div className="space-y-3">
         <Label className="flex items-center gap-2 text-sm font-medium">
           <Award className="h-4 w-4 text-primary" />
-          {t('dashboard.basicServices')}
+          Huduma Zilizopo (Amenities)
         </Label>
         <div className="grid grid-cols-2 gap-3">
           {[
-            { key: 'electricity', label: t('dashboard.electricity'), icon: Zap, colorClass: 'border-yellow-300 bg-yellow-50 text-yellow-600' },
-            { key: 'water', label: t('dashboard.water'), icon: Droplets, colorClass: 'border-blue-300 bg-blue-50 text-blue-600' },
-            { key: 'furnished', label: t('dashboard.furniture'), icon: Sofa, colorClass: 'border-purple-300 bg-purple-50 text-purple-600' },
-            { key: 'parking', label: t('dashboard.parking'), icon: Car, colorClass: 'border-green-300 bg-green-50 text-green-600' },
-            { key: 'security', label: t('dashboard.security'), icon: Shield, colorClass: 'border-red-300 bg-red-50 text-red-600' }
-          ].map(({ key, label, icon: Icon, colorClass }) => {
-            const isSelected = formData[key as keyof PropertyFormData];
+            { key: 'WiFi', label: 'WiFi/Internet', icon: Zap, desc: 'Mtandao wa haraka' },
+            { key: '24_Hour_Security', label: 'Ulinzi 24/7', icon: Shield, desc: 'Askari na kamera' },
+            { key: 'Study_Room', label: 'Chumba cha Kusoma', icon: Building, desc: 'Nafasi ya kusomea' },
+            { key: 'Laundry_Facilities', label: 'Mashine ya Kufulia', icon: Sofa, desc: 'Huduma ya dobi' },
+            { key: 'Backup_Generator', label: 'Jenereta', icon: Zap, desc: 'Umeme wa ziada' },
+            { key: 'Study_Desk_In_Room', label: 'Meza ya Kusomea', icon: Bed, desc: 'Meza na kiti' }
+          ].map(({ key, label, icon: Icon, desc }) => {
+            const isSelected = formData.amenities?.[key];
             return (
               <button
                 key={key}
                 type="button"
-                onClick={() => onInputChange(key as keyof PropertyFormData, !formData[key as keyof PropertyFormData])}
+                onClick={() => {
+                  const newAmenities = { ...formData.amenities, [key]: !isSelected };
+                  onInputChange('amenities', newAmenities);
+                }}
                 className={`p-4 border-2 rounded-lg transition-all duration-200 text-left hover:shadow-md ${
-                  isSelected ? colorClass + ' shadow-md' : 'border-gray-200 hover:border-gray-300'
+                  isSelected ? 'border-primary bg-primary/5 shadow-md' : 'border-gray-200 hover:border-gray-300'
                 }`}
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Icon className={`h-5 w-5 ${isSelected ? colorClass.split(' ')[2] : 'text-gray-400'}`} />
-                    <span className={`font-medium ${isSelected ? 'text-gray-700' : 'text-gray-700'}`}>
-                      {label}
-                    </span>
+                <div className="flex items-start justify-between">
+                  <div className="flex items-start gap-3">
+                    <Icon className={`h-5 w-5 mt-0.5 ${isSelected ? 'text-primary' : 'text-gray-400'}`} />
+                    <div>
+                      <span className={`font-medium block ${isSelected ? 'text-primary' : 'text-gray-700'}`}>
+                        {label}
+                      </span>
+                      <span className="text-xs text-gray-500 block mt-0.5">{desc}</span>
+                    </div>
                   </div>
                   {isSelected && (
-                    <CheckCircle className={`h-5 w-5 ${colorClass.split(' ')[2]}`} />
+                    <CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
                   )}
-            </div>
+                </div>
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* Nearby Services */}
-      <div className="space-y-3">
-        <Label className="flex items-center gap-2 text-sm font-medium">
-          <MapPin className="h-4 w-4 text-primary" />
-          {t('dashboard.nearbyServices')}
-        </Label>
-        <div className="flex flex-wrap gap-2">
-          {['school', 'hospital', 'market', 'bank', 'transport'].map((service) => (
-            <button
-              key={service}
-              type="button"
-              onClick={() => onServiceToggle(service)}
-              className={`px-4 py-2 rounded-full border transition-all duration-200 ${
-                formData.nearby_services.includes(service)
-                  ? 'border-primary bg-primary text-white shadow-md'
-                  : 'border-gray-300 text-gray-600 hover:border-primary hover:text-primary'
-              }`}
-            >
-                {service === 'school' ? t('dashboard.school') :
-                 service === 'hospital' ? t('dashboard.hospital') :
-                 service === 'market' ? t('dashboard.market') :
-                 service === 'bank' ? t('dashboard.bank') : t('dashboard.transport')}
-            </button>
-          ))}
+      {/* University and Distance */}
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <Label className="flex items-center gap-2 text-sm font-medium">
+            <Building className="h-4 w-4 text-primary" />
+            Chuo Kikuu Kilichokaribu
+          </Label>
+          <Select 
+            value={formData.university_id} 
+            onValueChange={(value) => onInputChange('university_id', value)}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Chagua chuo kikuu..." />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="9c0445e4-5492-46ad-87d8-7aa19564a0d1">UDSM - University of Dar es Salaam</SelectItem>
+              <SelectItem value="3a66a06e-0dde-402c-9c85-69c992085f39">DIT - Dar es Salaam Institute of Technology</SelectItem>
+              <SelectItem value="4f57b203-d56d-4f7d-8685-79c5752ae658">OUT - Open University of Tanzania</SelectItem>
+              <SelectItem value="993c5329-9588-4d10-ba81-c0bfde085940">ARU - Ardhi University</SelectItem>
+              <SelectItem value="6321d492-87f2-49a3-899f-73380410366c">UDOM - University of Dodoma</SelectItem>
+              <SelectItem value="68794951-3342-4633-9970-ae19cbea45c7">SUA - Sokoine University</SelectItem>
+              <SelectItem value="4b003b77-b817-4371-bb2e-e3efc2f035f4">MUHAS - Muhimbili University</SelectItem>
+              <SelectItem value="3fb45e07-d761-48c6-851c-61058ae42c17">MU - Mzumbe University</SelectItem>
+              <SelectItem value="369442a2-5421-4eb3-add0-e5677f541ebe">IFM - Institute of Finance Management</SelectItem>
+              <SelectItem value="b9fd4ef3-343c-4035-b3a7-13b6d085823c">MUST - Mbeya University</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-2">
+          <Label className="flex items-center gap-2 text-sm font-medium">
+            <MapPin className="h-4 w-4 text-primary" />
+            Muda kutoka Chuo (dakika)
+          </Label>
+          <Input
+            type="number"
+            step="1"
+            value={formData.distance_from_campus}
+            onChange={(e) => onInputChange('distance_from_campus', e.target.value)}
+            placeholder="15"
+            className="text-center text-lg"
+          />
+          <p className="text-xs text-gray-500">Mfano: 0.5 km = 500 mita</p>
         </div>
       </div>
 

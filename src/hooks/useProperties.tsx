@@ -54,9 +54,12 @@ import type { Tables } from '@/lib/integrations/supabase/types';
  * Enables type-safe access to property and landlord information.
  */
 export type Property = Tables<'properties'> & {
-  profiles?: {
+  university?: Tables<'universities'>;
+  landlord?: {
     full_name: string | null;
     phone: string | null;
+    email: string;
+    verification_status: string | null;
   };
 };
 
@@ -132,9 +135,12 @@ export const useProperties = () => {
         .from('properties')
         .select(`
           *,
-          profiles!fk_landlord_profile (
+          university:universities(id, name, abbreviation, city),
+          landlord:profiles!landlord_id(
             full_name,
-            phone
+            phone,
+            email,
+            verification_status
           )
         `)
         .eq('status', 'active')
@@ -177,9 +183,12 @@ export const useProperties = () => {
        */
       const transformedData = data?.map(property => ({
         ...property,
-        profiles: Array.isArray(property.profiles) && property.profiles.length > 0 
-          ? property.profiles[0] 
-          : undefined
+        university: Array.isArray(property.university) && property.university.length > 0 
+          ? property.university[0] 
+          : property.university,
+        landlord: Array.isArray(property.landlord) && property.landlord.length > 0 
+          ? property.landlord[0] 
+          : property.landlord
       })) || [];
 
       /**
@@ -202,6 +211,10 @@ export const useProperties = () => {
       // Log API performance
       if (process.env.NODE_ENV === 'development') {
         console.log(`🚀 Properties API: ${responseTime.toFixed(0)}ms ${responseTime < 500 ? '✅' : '❌'}`);
+        console.log('📦 Raw data count:', data?.length || 0);
+        console.log('🔍 Raw data sample:', data?.[0]);
+        console.log('📦 Transformed data count:', transformedData.length);
+        console.log('🏠 Sample transformed property:', transformedData[0]);
       }
       
       return transformedData as Property[];

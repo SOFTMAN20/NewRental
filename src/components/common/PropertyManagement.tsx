@@ -40,6 +40,7 @@ interface PropertyManagementProps {
   onEditProperty: (property: Property) => void;
   onDeleteProperty: (id: string) => Promise<void>;
   onAddProperty: () => void;
+  onToggleAvailability?: (id: string, currentStatus: boolean) => Promise<void>;
 }
 
 /**
@@ -62,7 +63,8 @@ const PropertyManagement: React.FC<PropertyManagementProps> = ({
   onViewModeChange,
   onEditProperty,
   onDeleteProperty,
-  onAddProperty
+  onAddProperty,
+  onToggleAvailability
 }) => {
   const { t } = useTranslation();
 
@@ -153,6 +155,7 @@ const PropertyManagement: React.FC<PropertyManagementProps> = ({
           onEdit={onEditProperty}
           onDelete={onDeleteProperty}
           onAddProperty={onAddProperty}
+          onToggleAvailability={onToggleAvailability}
         />
       </CardContent>
     </Card>

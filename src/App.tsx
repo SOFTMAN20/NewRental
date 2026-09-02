@@ -67,11 +67,13 @@ const Index = lazy(() => import("./pages/Index"));
 const Browse = lazy(() => import("./pages/Browse"));
 const PropertyDetail = lazy(() => import("./pages/PropertyDetail"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
+const AddProperty = lazy(() => import("./pages/AddProperty"));
 const Favorites = lazy(() => import("./pages/Favorites"));
 const SignIn = lazy(() => import("./pages/SignIn"));
 const SignUp = lazy(() => import("./pages/SignUp"));
 const PropertyExample = lazy(() => import("./pages/PropertyExample"));
 const About = lazy(() => import("./pages/About"));
+const Contact = lazy(() => import("./pages/Contact"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const ColorPalette = lazy(() => import("./components/common/ColorPalette"));
 const Typography = lazy(() => import("./components/common/Typography"));
@@ -140,6 +142,7 @@ const App = () => (
                 <Route path="/browse" element={<Browse />} />
                 <Route path="/property/:id" element={<PropertyDetail />} />
                 <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
                 <Route path="/color-palette" element={<ColorPalette />} />
                 <Route path="/typography" element={<Typography />} />
                 <Route path="/loading-states" element={<LoadingStates />} />
@@ -147,6 +150,7 @@ const App = () => (
 
                 {/* User-specific routes - Njia za mtumiaji */}
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/add-property" element={<AddProperty />} />
                 <Route path="/favorites" element={<Favorites />} />
                 <Route path="/property-example" element={<PropertyExample />} />
 
