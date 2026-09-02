@@ -228,7 +228,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Sanitize metadata
     const sanitizedMetadata = {
       full_name: validateInput.text(metadata.full_name || '', 100).sanitized,
-      user_type: ['landlord', 'tenant'].includes(metadata.user_type) ? metadata.user_type : 'tenant'
+      phone: validateInput.text(metadata.phone || '', 20).sanitized,
+      user_type: ['landlord', 'tenant', 'professional'].includes(metadata.user_type) ? metadata.user_type : 'tenant'
     };
 
     const redirectUrl = `${window.location.origin}/`;

@@ -27,7 +27,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navigation from '@/components/layout/Navigation';
+import DashboardSidebar from '@/components/layout/DashboardSidebar';
 import DashboardHeader from '@/components/layout/DashboardHeader';
 import QuickActions from '@/components/common/QuickActions';
 import StatsSection from '@/components/common/StatsSection';
@@ -870,51 +870,72 @@ const Dashboard = () => {
   if (uiState.loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50">
-        <Navigation />
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
-          
-          {/* Header Skeleton */}
-          <div className="mb-6">
-            <div className="h-8 bg-gray-200 rounded w-1/3 mb-2 animate-pulse"></div>
-            <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse"></div>
-          </div>
-          
-          {/* Quick Actions Skeleton */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-lg p-4 shadow-sm animate-pulse">
-                <div className="w-8 h-8 bg-gray-200 rounded mb-3"></div>
-                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-              </div>
-            ))}
-          </div>
-          
-          {/* Stats Skeleton */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-lg p-6 shadow-sm animate-pulse">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-8 h-8 bg-gray-200 rounded"></div>
-                  <div className="h-4 bg-gray-200 rounded w-16"></div>
-                </div>
-                <div className="h-8 bg-gray-200 rounded w-20 mb-2"></div>
-                <div className="h-4 bg-gray-200 rounded w-24"></div>
-              </div>
-            ))}
-          </div>
-          
-          {/* Property Management Section Skeleton */}
-          <div className="bg-white rounded-lg shadow-sm">
+        {/* Dashboard Layout with Sidebar - No Navbar */}
+        <div className="flex">
+          {/* Sidebar Skeleton - Fixed */}
+          <aside className="hidden lg:block fixed top-0 left-0 h-screen w-64 bg-white shadow-lg">
             <div className="p-6 border-b">
-              <div className="h-6 bg-gray-200 rounded w-1/4 mb-2 animate-pulse"></div>
-              <div className="h-4 bg-gray-200 rounded w-1/3 animate-pulse"></div>
+              <div className="flex items-center space-x-2">
+                <div className="w-10 h-10 bg-gray-200 rounded-lg animate-pulse"></div>
+                <div className="flex-1">
+                  <div className="h-5 bg-gray-200 rounded w-24 mb-2 animate-pulse"></div>
+                  <div className="h-3 bg-gray-200 rounded w-20 animate-pulse"></div>
+                </div>
+              </div>
             </div>
-            <div className="p-6">
-              <PropertyGridSkeleton count={6} viewMode="grid" />
+            <div className="p-4 space-y-2">
+              {Array.from({ length: 7 }).map((_, i) => (
+                <div key={i} className="h-12 bg-gray-200 rounded-lg animate-pulse"></div>
+              ))}
+            </div>
+          </aside>
+          
+          {/* Main Content Skeleton with margin for sidebar */}
+          <div className="flex-1 lg:ml-64">
+            <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
+              {/* Header Skeleton */}
+              <div className="mb-6">
+                <div className="h-8 bg-gray-200 rounded w-1/3 mb-2 animate-pulse"></div>
+                <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse"></div>
+              </div>
+              
+              {/* Quick Actions Skeleton */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className="bg-white rounded-lg p-4 shadow-sm animate-pulse">
+                    <div className="w-8 h-8 bg-gray-200 rounded mb-3"></div>
+                    <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                    <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                  </div>
+                ))}
+              </div>
+              
+              {/* Stats Skeleton */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="bg-white rounded-lg p-6 shadow-sm animate-pulse">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="w-8 h-8 bg-gray-200 rounded"></div>
+                      <div className="h-4 bg-gray-200 rounded w-16"></div>
+                    </div>
+                    <div className="h-8 bg-gray-200 rounded w-20 mb-2"></div>
+                    <div className="h-4 bg-gray-200 rounded w-24"></div>
+                  </div>
+                ))}
+              </div>
+              
+              {/* Property Management Section Skeleton */}
+              <div className="bg-white rounded-lg shadow-sm">
+                <div className="p-6 border-b">
+                  <div className="h-6 bg-gray-200 rounded w-1/4 mb-2 animate-pulse"></div>
+                  <div className="h-4 bg-gray-200 rounded w-1/3 animate-pulse"></div>
+                </div>
+                <div className="p-6">
+                  <PropertyGridSkeleton count={6} viewMode="grid" />
+                </div>
+              </div>
             </div>
           </div>
-          
         </div>
       </div>
     );
@@ -928,78 +949,81 @@ const Dashboard = () => {
    */
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50">
-      <Navigation />
-      
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
-        {/* Dashboard Header */}
-        <DashboardHeader
-          profile={profile}
-          user={user}
-          isNewUser={uiState.isNewUser}
-          onProfileEdit={() => updateUIState({ showProfileDialog: true })}
-          onDismissWelcome={() => updateUIState({ isNewUser: false })}
-          propertiesCount={properties.length}
-        />
-
-        {/* Quick Actions */}
-        <QuickActions
-          onAddProperty={() => navigate('/add-property')}
-          onEditProfile={() => updateUIState({ showProfileDialog: true })}
-          onShowHelp={() => updateUIState({ showHelpDialog: true })}
-          isNewUser={uiState.isNewUser}
-          propertiesCount={properties.length}
-        />
+      {/* Dashboard Layout with Sidebar - No Navbar */}
+      <div className="flex">
+        {/* Sidebar - Fixed on desktop */}
+        <DashboardSidebar profile={profile} user={user} />
         
+        {/* Main Content - with left margin for sidebar */}
+        <div className="flex-1 lg:ml-64">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
+            {/* Dashboard Header */}
+            <DashboardHeader
+              profile={profile}
+              user={user}
+              isNewUser={uiState.isNewUser}
+              onProfileEdit={() => updateUIState({ showProfileDialog: true })}
+              onDismissWelcome={() => updateUIState({ isNewUser: false })}
+              propertiesCount={properties.length}
+            />
 
+            {/* Quick Actions */}
+            <QuickActions
+              onAddProperty={() => navigate('/add-property')}
+              onEditProfile={() => updateUIState({ showProfileDialog: true })}
+              onShowHelp={() => updateUIState({ showHelpDialog: true })}
+              isNewUser={uiState.isNewUser}
+              propertiesCount={properties.length}
+            />
 
-        {/* Statistics Section */}
-        <StatsSection properties={properties} />
+            {/* Statistics Section */}
+            <StatsSection properties={properties} />
 
-        {/* Property Management */}
-        <PropertyManagement
-          properties={properties}
-          searchQuery={uiState.searchQuery}
-          filterStatus={uiState.filterStatus}
-          viewMode={uiState.viewMode}
-          onSearchChange={(query) => updateUIState({ searchQuery: query })}
-          onFilterChange={(status) => updateUIState({ filterStatus: status })}
-          onViewModeChange={(mode) => updateUIState({ viewMode: mode })}
-          onEditProperty={handleEditProperty}
-          onDeleteProperty={handleDeleteProperty}
-          onAddProperty={() => navigate('/add-property')}
-          onToggleAvailability={handleToggleAvailability}
-        />
+            {/* Property Management */}
+            <PropertyManagement
+              properties={properties}
+              searchQuery={uiState.searchQuery}
+              filterStatus={uiState.filterStatus}
+              viewMode={uiState.viewMode}
+              onSearchChange={(query) => updateUIState({ searchQuery: query })}
+              onFilterChange={(status) => updateUIState({ filterStatus: status })}
+              onViewModeChange={(mode) => updateUIState({ viewMode: mode })}
+              onEditProperty={handleEditProperty}
+              onDeleteProperty={handleDeleteProperty}
+              onAddProperty={() => navigate('/add-property')}
+              onToggleAvailability={handleToggleAvailability}
+            />
 
+            {/* Property Form Modal */}
+            <PropertyForm
+              isOpen={uiState.showAddForm}
+              editingProperty={editingProperty}
+              formData={formData}
+              profile={profile}
+              submitting={uiState.submitting}
+              onClose={handleCloseForm}
+              onSubmit={handlePropertySubmit}
+              onInputChange={handleInputChange}
+              onServiceToggle={handleServiceToggle}
+            />
 
-
-        {/* Property Form Modal */}
-        <PropertyForm
-          isOpen={uiState.showAddForm}
-          editingProperty={editingProperty}
-          formData={formData}
-          profile={profile}
-          submitting={uiState.submitting}
-          onClose={handleCloseForm}
-          onSubmit={handlePropertySubmit}
-          onInputChange={handleInputChange}
-          onServiceToggle={handleServiceToggle}
-        />
-
-        {/* Profile Settings Modal */}
-        <ProfileSettings
-          isOpen={uiState.showProfileDialog}
-          profileForm={profileForm}
-          profileLoading={uiState.profileLoading}
-          onClose={() => updateUIState({ showProfileDialog: false })}
-          onSubmit={handleProfileSubmit}
-          onInputChange={handleProfileInputChange}
-        />
-        
-        {/* Help Modal */}
-        <GetHelpSection 
-          isOpen={uiState.showHelpDialog}
-          onClose={() => updateUIState({ showHelpDialog: false })}
-        />
+            {/* Profile Settings Modal */}
+            <ProfileSettings
+              isOpen={uiState.showProfileDialog}
+              profileForm={profileForm}
+              profileLoading={uiState.profileLoading}
+              onClose={() => updateUIState({ showProfileDialog: false })}
+              onSubmit={handleProfileSubmit}
+              onInputChange={handleProfileInputChange}
+            />
+            
+            {/* Help Modal */}
+            <GetHelpSection 
+              isOpen={uiState.showHelpDialog}
+              onClose={() => updateUIState({ showHelpDialog: false })}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

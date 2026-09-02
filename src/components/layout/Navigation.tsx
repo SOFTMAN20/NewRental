@@ -44,7 +44,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Home, Search, User, Menu, X, Globe, Building2, LogOut, Heart, Bell, Settings, GraduationCap } from 'lucide-react';
+import { Home, Search, User, Menu, X, Globe, Building2, LogOut, Heart, Bell, Settings, GraduationCap, Plus } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useTranslation } from 'react-i18next';
@@ -121,7 +121,7 @@ const Navigation = () => {
   };
 
   return (
-    <nav className={`${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property') ? 'bg-white shadow-lg sticky' : 'bg-transparent absolute'} backdrop-blur-sm top-0 left-0 right-0 z-50 border-b ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property') ? 'border-gray-100' : 'border-white/10'}`}>
+    <nav className={`${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property') || location.pathname.includes('/messages') || location.pathname.includes('/settings') ? 'bg-white shadow-lg sticky lg:ml-64' : 'bg-transparent absolute'} backdrop-blur-sm top-0 left-0 right-0 z-50 border-b ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property') || location.pathname.includes('/messages') || location.pathname.includes('/settings') ? 'border-gray-100' : 'border-white/10'}`}>
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
         <div className="flex justify-between items-center h-12 sm:h-14 lg:h-16">
           
@@ -276,6 +276,20 @@ const Navigation = () => {
                   <DropdownMenuSeparator />
                   
                   <DropdownMenuItem asChild>
+                    <Link to="/profile" className="flex items-center">
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  
+                  <DropdownMenuItem asChild>
+                    <Link to="/add-property" className="flex items-center">
+                      <Plus className="mr-2 h-4 w-4" />
+                      <span>Tangaza Nyumba</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  
+                  <DropdownMenuItem asChild>
                     <Link to="/favorites" className="flex items-center">
                       <Heart className="mr-2 h-4 w-4" />
                       <span>Vipendwa</span>
@@ -289,7 +303,7 @@ const Navigation = () => {
                   
                   <DropdownMenuItem asChild>
                     <Link to="/dashboard" className="flex items-center">
-                      <User className="mr-2 h-4 w-4" />
+                      <Home className="mr-2 h-4 w-4" />
                       <span>{t('navigation.dashboard')}</span>
                     </Link>
                   </DropdownMenuItem>
@@ -466,19 +480,49 @@ const Navigation = () => {
               
               {/* Enhanced Mobile Dashboard Link - Kiungo cha dashibodi kwa simu */}
               {user && (
-                <Link
-                  to="/dashboard"
-                  className={`block px-3 sm:px-4 py-2 sm:py-3 text-gray-700 hover:bg-primary/10 hover:text-primary 
-                             rounded-lg sm:rounded-xl text-sm transition-all duration-300 ${
-                    location.pathname === '/dashboard' ? 'bg-primary/15 text-primary border border-primary/20' : ''
-                  }`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <div className="flex items-center">
-                    <User className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-gray-400" />
-                    {t('navigation.dashboard')}
-                  </div>
-                </Link>
+                <>
+                  <Link
+                    to="/profile"
+                    className={`block px-3 sm:px-4 py-2 sm:py-3 text-gray-700 hover:bg-primary/10 hover:text-primary 
+                               rounded-lg sm:rounded-xl text-sm transition-all duration-300 ${
+                      location.pathname === '/profile' ? 'bg-primary/15 text-primary border border-primary/20' : ''
+                    }`}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <div className="flex items-center">
+                      <User className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-gray-400" />
+                      Profile
+                    </div>
+                  </Link>
+                  
+                  <Link
+                    to="/add-property"
+                    className={`block px-3 sm:px-4 py-2 sm:py-3 text-gray-700 hover:bg-primary/10 hover:text-primary 
+                               rounded-lg sm:rounded-xl text-sm transition-all duration-300 ${
+                      location.pathname === '/add-property' ? 'bg-primary/15 text-primary border border-primary/20' : ''
+                    }`}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <div className="flex items-center">
+                      <Plus className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-gray-400" />
+                      Tangaza Nyumba
+                    </div>
+                  </Link>
+                  
+                  <Link
+                    to="/dashboard"
+                    className={`block px-3 sm:px-4 py-2 sm:py-3 text-gray-700 hover:bg-primary/10 hover:text-primary 
+                               rounded-lg sm:rounded-xl text-sm transition-all duration-300 ${
+                      location.pathname === '/dashboard' ? 'bg-primary/15 text-primary border border-primary/20' : ''
+                    }`}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <div className="flex items-center">
+                      <Home className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-gray-400" />
+                      {t('navigation.dashboard')}
+                    </div>
+                  </Link>
+                </>
               )}
               
               {/* Only show "Become Host" for non-landlords */}

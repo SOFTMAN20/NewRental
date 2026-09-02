@@ -61,6 +61,7 @@ import ErrorBoundary from "@/components/ui/error-boundary";
 import { lazy, Suspense } from "react";
 import MobileBottomNav from "./components/layout/MobileBottomNav";
 import PerformanceDashboard from "./components/common/PerformanceDashboard";
+import FloatingWhatsApp from "./components/common/FloatingWhatsApp";
 
 // Lazy load pages for code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -69,6 +70,11 @@ const PropertyDetail = lazy(() => import("./pages/PropertyDetail"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const AddProperty = lazy(() => import("./pages/AddProperty"));
 const Favorites = lazy(() => import("./pages/Favorites"));
+const Applications = lazy(() => import("./pages/Applications"));
+const Leads = lazy(() => import("./pages/Leads"));
+const Messages = lazy(() => import("./pages/Messages"));
+const Settings = lazy(() => import("./pages/Settings"));
+const Profile = lazy(() => import("./pages/Profile"));
 const SignIn = lazy(() => import("./pages/SignIn"));
 const SignUp = lazy(() => import("./pages/SignUp"));
 const PropertyExample = lazy(() => import("./pages/PropertyExample"));
@@ -152,6 +158,11 @@ const App = () => (
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/add-property" element={<AddProperty />} />
                 <Route path="/favorites" element={<Favorites />} />
+                <Route path="/applications" element={<Applications />} />
+                <Route path="/leads" element={<Leads />} />
+                <Route path="/messages" element={<Messages />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/profile" element={<Profile />} />
                 <Route path="/property-example" element={<PropertyExample />} />
 
                 {/* Authentication routes - Njia za uthibitisho */}
@@ -166,6 +177,12 @@ const App = () => (
 
             {/* Mobile Bottom Navigation - Only visible on mobile screens */}
             <MobileBottomNav />
+
+            {/* Floating WhatsApp Button - Visible on all pages */}
+            <FloatingWhatsApp 
+              phoneNumber="+255123456789"
+              message="Hello! I need help finding a room on Wanachuo.com"
+            />
           </BrowserRouter>
 
           {/* Performance Dashboard - Development only */}

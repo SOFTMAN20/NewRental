@@ -24,7 +24,7 @@ const SignUp = () => {
     phone: '',
     password: '',
     confirmPassword: '',
-    userType: 'landlord' // Always landlord since only landlords register
+    userType: 'tenant' // Default to tenant (student)
   });
   const navigate = useNavigate();
   const { signUp, user, loading, checkUserTypeAndRedirect } = useAuth();
@@ -101,13 +101,13 @@ const SignUp = () => {
           >
             <Link to="/" className="flex items-center justify-center space-x-2 mb-6">
               <Home className="h-8 w-8 text-primary" />
-              <span className="text-2xl font-bold text-primary">Nyumba Link</span>
+              <span className="text-2xl font-bold text-primary">Wanachuo.com</span>
             </Link>
             <h2 className="text-3xl font-bold text-gray-900">
-              {t('auth.becomeLandlord')}
+              Create Your Account
             </h2>
             <p className="mt-2 text-gray-600">
-              {t('auth.signUpSubtitle')}
+              Join Wanachuo.com - Find or list student housing
             </p>
           </motion.div>
 
@@ -172,6 +172,26 @@ const SignUp = () => {
                 </div>
 
                 <div>
+                  <Label htmlFor="userType">Account Type</Label>
+                  <Select
+                    value={formData.userType}
+                    onValueChange={(value) => handleInputChange('userType', value)}
+                  >
+                    <SelectTrigger className="mt-1">
+                      <SelectValue placeholder="Select account type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="tenant">👨‍🎓 Student</SelectItem>
+                      <SelectItem value="professional">💼 Professional</SelectItem>
+                      <SelectItem value="landlord">🏠 Property Host</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Students and professionals can search for rooms. Property hosts can list properties.
+                  </p>
+                </div>
+
+                <div>
                   <Label htmlFor="password">{t('auth.password')}</Label>
                   <div className="relative mt-1">
                     <Input
@@ -231,7 +251,11 @@ const SignUp = () => {
                   className="w-full bg-gradient-to-r from-primary via-serengeti-500 to-kilimanjaro-600 hover:from-primary/90 hover:via-serengeti-400 hover:to-kilimanjaro-500 text-white font-bold py-3 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
                   disabled={isLoading}
                 >
-                  {isLoading ? t('auth.registering') : t('auth.registerAsLandlord')}
+                  {isLoading ? t('auth.registering') : 
+                    formData.userType === 'landlord' ? 'Register as Property Host' : 
+                    formData.userType === 'professional' ? 'Register as Professional' :
+                    'Register as Student'
+                  }
                 </Button>
               </form>
 
@@ -247,7 +271,7 @@ const SignUp = () => {
             </Card>
           </motion.div>
 
-          {/* Benefits */}
+          {/* Benefits - Dynamic based on user type */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -262,30 +286,81 @@ const SignUp = () => {
                 <div className="w-8 h-8 bg-gradient-to-r from-primary to-serengeti-500 rounded-full flex items-center justify-center mr-3 shadow-lg">
                   <Check className="h-4 w-4 text-white" />
                 </div>
-                {t('auth.landlordBenefits')}
+                {formData.userType === 'landlord' ? 'Property Host Benefits' : 
+                 formData.userType === 'professional' ? 'Professional Benefits' :
+                 'Student Benefits'}
               </h3>
-              <ul className="text-sm text-gray-700 space-y-2">
-                <li className="flex items-center">
-                  <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
-                  {t('auth.freeListings')}
-                </li>
-                <li className="flex items-center">
-                  <div className="w-2 h-2 bg-serengeti-500 rounded-full mr-3"></div>
-                  {t('auth.findTenants')}
-                </li>
-                <li className="flex items-center">
-                  <div className="w-2 h-2 bg-kilimanjaro-600 rounded-full mr-3"></div>
-                  {t('auth.manageListings')}
-                </li>
-                <li className="flex items-center">
-                  <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
-                  {t('auth.directContact')}
-                </li>
-                <li className="flex items-center">
-                  <div className="w-2 h-2 bg-serengeti-500 rounded-full mr-3"></div>
-                  {t('auth.getAnalytics')}
-                </li>
-              </ul>
+              
+              {formData.userType === 'landlord' ? (
+                <ul className="text-sm text-gray-700 space-y-2">
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
+                    List properties for free
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-serengeti-500 rounded-full mr-3"></div>
+                    Reach thousands of students and professionals
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-kilimanjaro-600 rounded-full mr-3"></div>
+                    Manage all your listings in one place
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
+                    Direct contact with tenants
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-serengeti-500 rounded-full mr-3"></div>
+                    Get analytics and insights
+                  </li>
+                </ul>
+              ) : formData.userType === 'professional' ? (
+                <ul className="text-sm text-gray-700 space-y-2">
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
+                    Find quality housing near workplaces
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-serengeti-500 rounded-full mr-3"></div>
+                    Browse verified properties
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-kilimanjaro-600 rounded-full mr-3"></div>
+                    Apply directly to property hosts
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
+                    Save and compare properties
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-serengeti-500 rounded-full mr-3"></div>
+                    Quick contact via WhatsApp
+                  </li>
+                </ul>
+              ) : (
+                <ul className="text-sm text-gray-700 space-y-2">
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
+                    Browse thousands of student rooms
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-serengeti-500 rounded-full mr-3"></div>
+                    Find rooms near your campus
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-kilimanjaro-600 rounded-full mr-3"></div>
+                    Apply directly to property hosts
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
+                    Save your favorite properties
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-serengeti-500 rounded-full mr-3"></div>
+                    Contact hosts via WhatsApp
+                  </li>
+                </ul>
+              )}
             </div>
           </motion.div>
         </div>

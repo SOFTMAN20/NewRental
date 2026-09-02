@@ -6,7 +6,7 @@
  * 
  * FUNCTIONALITY / KAZI:
  * - Fetches real property data from Supabase database (Kupata data halisi kutoka database)
- * - Displays property images, details, and landlord contact info (Kuonyesha picha, maelezo, na mawasiliano)
+ * - Displays property images, details, and host contact info (Kuonyesha picha, maelezo, na mawasiliano)
  * - Provides WhatsApp and phone contact integration (Kuunganisha WhatsApp na simu)
  * - Handles loading and error states gracefully (Kushughulikia hali za kupakia na makosa)
  * 
@@ -15,7 +15,7 @@
  * 
  * FEATURES / VIPENGELE:
  * - Real property images from database (Picha halisi kutoka database)
- * - Actual landlord contact information (Maelezo halisi ya mwenye nyumba)
+ * - Actual property host contact information (Maelezo halisi ya mwenyeji wa nyumba)
  * - Dynamic property details and amenities (Maelezo ya nyumba yanayobadilika)
  * - Error handling for missing properties (Kushughulikia nyumba zisizopo)
  */
@@ -26,8 +26,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
 import LoadingSpinner from '@/components/ui/loading-spinner';
-import Map from '@/components/ui/map';
 import ShareDropdown from '@/components/common/ShareDropdown';
+import ApplicationModal from '@/components/forms/ApplicationModal';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -75,6 +75,7 @@ const PropertyDetail = () => {
   // UI state management - Usimamizi wa hali ya UI
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
 
   // Favorites functionality - Utendakazi wa vipendwa
   const { isFavorited, toggleFavorite } = useFavorites();
@@ -149,7 +150,7 @@ const PropertyDetail = () => {
    * ===================
    * 
    * Creates a WhatsApp link with pre-filled message for easy communication
-   * between potential tenants and landlords.
+   * between potential tenants and property hosts.
    * 
    * Kuunda kiungo cha WhatsApp na ujumbe uliojazwa awali kwa mawasiliano rahisi
    * kati ya wapangaji watarajiwa na wenye nyumba.
@@ -276,7 +277,7 @@ const PropertyDetail = () => {
    * =======================
    * 
    * Render the complete property details page with real data from database.
-   * Includes image gallery, property information, and landlord contact details.
+   * Includes image gallery, property information, and property host contact details.
    * 
    * Kuonyesha ukurasa kamili wa maelezo ya nyumba na data halisi kutoka database.
    * Inajumuisha galeri ya picha, maelezo ya nyumba, na maelezo ya mawasiliano ya mwenye nyumba.
@@ -317,8 +318,17 @@ const PropertyDetail = () => {
                         : 'https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=800&h=600&fit=crop'
                     }
                     alt={property.title}
-                    className="w-full h-full object-cover"
+                    className={`w-full h-full object-cover ${!property.is_available ? 'opacity-60' : ''}`}
                   />
+                  
+                  {/* SOLD OUT Badge for Mobile */}
+                  {!property.is_available && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/40 z-20">
+                      <div className="bg-red-600 text-white px-8 py-4 rounded-lg font-bold text-2xl shadow-xl transform rotate-[-15deg]">
+                        SOLD OUT
+                      </div>
+                    </div>
+                  )}
 
                   {property.images && property.images.length > 1 && (
                     <>
@@ -380,13 +390,22 @@ const PropertyDetail = () => {
                     <button
                       type="button"
                       onClick={() => setIsGalleryOpen(true)}
-                      className="col-span-2 row-span-2 w-full h-full"
+                      className="col-span-2 row-span-2 w-full h-full relative"
                     >
                       <img
                         src={(property.images && property.images[0]) || 'https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=1200&h=900&fit=crop'}
                         alt={property.title}
-                        className="w-full h-full object-cover"
+                        className={`w-full h-full object-cover ${!property.is_available ? 'opacity-60' : ''}`}
                       />
+                      
+                      {/* SOLD OUT Badge for Desktop */}
+                      {!property.is_available && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/40 z-20">
+                          <div className="bg-red-600 text-white px-10 py-5 rounded-lg font-bold text-3xl shadow-xl transform rotate-[-15deg]">
+                            SOLD OUT
+                          </div>
+                        </div>
+                      )}
                     </button>
 
                     {/* Four small images on the right */}
@@ -497,7 +516,7 @@ const PropertyDetail = () => {
                       </h1>
                       <div className="text-left sm:text-right">
                         <div className="text-2xl sm:text-3xl font-bold text-primary">
-                          TZS {Number(property.price).toLocaleString()}
+                          TZS {Number(property.monthly_rent || 0).toLocaleString()}
                         </div>
                         <div className="text-sm sm:text-base text-gray-600">{t('propertyDetail.perMonth')}</div>
                       </div>
@@ -563,34 +582,103 @@ const PropertyDetail = () => {
 
                   <Separator />
 
-                  {/* Property Features - Vipengele vya nyumba */}
+                  {/* What this place offers - Amenities */}
                   <div className="overflow-hidden">
-                    <h3 className="text-lg sm:text-xl font-semibold mb-3">{t('propertyDetail.propertyFeatures')}</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                      {property.property_type && (
-                        <div className="flex items-center">
-                          <div className="w-2 h-2 bg-primary rounded-full mr-3 flex-shrink-0"></div>
+                    <h3 className="text-lg sm:text-xl font-semibold mb-4">What this place offers</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {/* Room Type */}
+                      {property.room_type && (
+                        <div className="flex items-center gap-3">
+                          <Home className="h-5 w-5 text-gray-700 flex-shrink-0" />
                           <span className="text-sm sm:text-base text-gray-700 break-words overflow-hidden">
-                            {t('propertyDetail.type')}: {t(`propertyDetail.propertyTypes.${property.property_type}`)}
+                            {property.room_type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                           </span>
                         </div>
                       )}
-                      {property.bedrooms && (
-                        <div className="flex items-center">
-                          <div className="w-2 h-2 bg-primary rounded-full mr-3 flex-shrink-0"></div>
-                          <span className="text-sm sm:text-base text-gray-700 break-words overflow-hidden">{t('propertyDetail.bedroomsCount', { count: property.bedrooms })}</span>
+                      
+                      {/* Bed Count */}
+                      {property.bed_count && (
+                        <div className="flex items-center gap-3">
+                          <svg className="h-5 w-5 text-gray-700 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                          </svg>
+                          <span className="text-sm sm:text-base text-gray-700 break-words overflow-hidden">
+                            {property.bed_count} {property.bed_count === 1 ? 'Bed' : 'Beds'}
+                          </span>
                         </div>
                       )}
-                      {property.bathrooms && (
-                        <div className="flex items-center">
-                          <div className="w-2 h-2 bg-primary rounded-full mr-3 flex-shrink-0"></div>
-                          <span className="text-sm sm:text-base text-gray-700 break-words overflow-hidden">{t('propertyDetail.bathroomsCount', { count: property.bathrooms })}</span>
+                      
+                      {/* Distance from Campus */}
+                      {property.minutes_from_campus && (
+                        <div className="flex items-center gap-3">
+                          <svg className="h-5 w-5 text-gray-700 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <span className="text-sm sm:text-base text-gray-700 break-words overflow-hidden">
+                            {property.minutes_from_campus} minutes from campus
+                          </span>
                         </div>
                       )}
-                      {property.area_sqm && (
-                        <div className="flex items-center">
-                          <div className="w-2 h-2 bg-primary rounded-full mr-3 flex-shrink-0"></div>
-                          <span className="text-sm sm:text-base text-gray-700 break-words overflow-hidden">{t('propertyDetail.size', { size: property.area_sqm })}</span>
+
+                      {/* Utilities Included */}
+                      {property.utilities_included && (
+                        <div className="flex items-center gap-3">
+                          <Zap className="h-5 w-5 text-gray-700 flex-shrink-0" />
+                          <span className="text-sm sm:text-base text-gray-700">Utilities Included</span>
+                        </div>
+                      )}
+
+                      {/* Amenities from JSONB */}
+                      {property.amenities && typeof property.amenities === 'object' && Object.entries(property.amenities).map(([key, value]) => {
+                        if (value === true || value === 'true') {
+                          const displayName = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                          return (
+                            <div key={key} className="flex items-center gap-3">
+                              <svg className="h-5 w-5 text-gray-700 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                              </svg>
+                              <span className="text-sm sm:text-base text-gray-700">{displayName}</span>
+                            </div>
+                          );
+                        }
+                        return null;
+                      })}
+
+                      {/* Gender Restrictions */}
+                      {property.gender_restrictions && property.gender_restrictions !== 'mixed' && (
+                        <div className="flex items-center gap-3">
+                          <svg className="h-5 w-5 text-gray-700 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          </svg>
+                          <span className="text-sm sm:text-base text-gray-700">
+                            {property.gender_restrictions === 'male_only' ? 'Male Only' : 'Female Only'}
+                          </span>
+                        </div>
+                      )}
+
+
+                      {/* Nearby Services */}
+                      {property.nearby_services?.map((service) => {
+                        const serviceInfo = serviceIcons[service as keyof typeof serviceIcons];
+                        if (!serviceInfo) return null;
+                        const { icon: ServiceIcon, label } = serviceInfo;
+                        return (
+                          <div key={service} className="flex items-center gap-3">
+                            <ServiceIcon className="h-5 w-5 text-gray-700 flex-shrink-0" />
+                            <span className="text-sm sm:text-base text-gray-700">
+                              Near {label}
+                            </span>
+                          </div>
+                        );
+                      })}
+
+                      {/* Distance from Campus */}
+                      {property.minutes_from_campus && (
+                        <div className="flex items-center gap-3">
+                          <School className="h-5 w-5 text-gray-700 flex-shrink-0" />
+                          <span className="text-sm sm:text-base text-gray-700">
+                            {property.minutes_from_campus} mins from campus
+                          </span>
                         </div>
                       )}
                     </div>
@@ -605,79 +693,80 @@ const PropertyDetail = () => {
             {/* Service Fee Calculator */}
               {/* { <ServiceFeeCalculator monthlyRent={Number(property.price)} /> }   */ }
 
-            {/* Landlord Contact Card - Kadi ya mawasiliano ya mwenye nyumba */}
+            {/* Property Host Contact Card - Kadi ya mawasiliano ya mwenyeji wa nyumba */}
             <Card>
               <CardContent className="p-3 sm:p-4 lg:p-6">
-                <h3 className="text-base sm:text-lg lg:text-xl font-semibold mb-3 sm:mb-4">{t('propertyDetail.contactLandlord')}</h3>
+                <h3 className="text-base sm:text-lg lg:text-xl font-semibold mb-3 sm:mb-4">Contact Property Host</h3>
 
                 <div className="space-y-3 sm:space-y-4">
-                  {/* Landlord Information - Maelezo ya mwenye nyumba */}
+                  {/* Property Host Information - Maelezo ya mwenyeji wa nyumba */}
                   <div className="flex items-center space-x-2 sm:space-x-3">
                     <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
                       <User className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-primary" />
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="font-semibold text-gray-900 text-sm sm:text-base line-clamp-1">
-                        {property.profiles?.full_name || 'Mwenye Nyumba'}
+                        {property.profiles?.full_name || 'Property Host'}
                         <Badge className="ml-1 sm:ml-2 bg-green-100 text-green-800 text-xs">
                           {t('propertyDetail.verified')}
                         </Badge>
                       </div>
-                      <div className="text-xs sm:text-sm text-gray-600">{t('propertyDetail.landlord')}</div>
+                      <div className="text-xs sm:text-sm text-gray-600">Property Host</div>
                     </div>
                   </div>
 
                   <Separator />
 
-                  {/* Contact Options - Chaguo za mawasiliano */}
-                  <div className="space-y-3">
-                    {property.contact_phone && (
-                      <>
-                        <Button
-                          className="w-full bg-primary hover:bg-primary/90 text-sm sm:text-base py-2 sm:py-3"
-                          onClick={() => window.open(`tel:${property.contact_phone}`, '_self')}
-                        >
-                          <Phone className="h-4 w-4 mr-2 flex-shrink-0" />
-                          <span className="truncate">{t('propertyDetail.callPhone', { phone: property.contact_phone })}</span>
-                        </Button>
-                        {(property.contact_whatsapp_phone || property.contact_phone) && (
-                          <Button
-                            className="w-full bg-green-600 hover:bg-green-700 text-white text-sm sm:text-base py-2 sm:py-3"
-                            onClick={() => window.open(getWhatsAppLink(), '_blank')}
-                          >
-                            <svg className="h-4 w-4 mr-2 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488" />
-                            </svg>
-                            <span className="truncate">{t('propertyDetail.whatsappPhone', { phone: property.contact_whatsapp_phone || property.contact_phone })}</span>
-                          </Button>
-                        )}
-                      </>
-                    )}
-
-                    {!property.contact_phone && (
-                      <div className="text-center text-gray-500 py-3 sm:py-4">
-                        <Phone className="h-6 w-6 sm:h-8 sm:w-8 mx-auto mb-2 text-gray-400" />
-                        <p className="text-xs sm:text-sm">{t('propertyDetail.noContactInfo')}</p>
+                  {/* Property Availability Status */}
+                  {!property.is_available && (
+                    <div className="bg-red-50 border-2 border-red-200 rounded-lg p-4 mb-3">
+                      <div className="flex items-center justify-center space-x-2">
+                        <AlertCircle className="h-5 w-5 text-red-600" />
+                        <span className="font-semibold text-red-600 text-sm sm:text-base">
+                          Nyumba Hii Haipatikani Tena
+                        </span>
                       </div>
-                    )}
-                  </div>
+                      <p className="text-xs sm:text-sm text-red-600 text-center mt-2">
+                        This property is no longer available for rent
+                      </p>
+                    </div>
+                  )}
 
-                  <div className="text-xs sm:text-sm text-gray-600 text-center">
-                    {t('propertyDetail.contactDirectly')}
+                  {/* Action Buttons */}
+                  <div className="space-y-3">
+                    {/* Apply Now Button */}
+                    <Button
+                      className="w-full bg-primary hover:bg-primary/90 text-white text-sm sm:text-base py-3 sm:py-4 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                      disabled={!property.is_available}
+                      onClick={() => setIsApplicationModalOpen(true)}
+                    >
+                      {property.is_available ? 'Apply Now' : 'Not Available'}
+                    </Button>
+
+                    {/* WhatsApp Button */}
+                    {(property.contact_whatsapp_phone || property.contact_phone) && (
+                      <Button
+                        className="w-full bg-green-600 hover:bg-green-700 text-white text-sm sm:text-base py-2 sm:py-3 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400"
+                        onClick={() => window.open(getWhatsAppLink(), '_blank')}
+                        disabled={!property.is_available}
+                      >
+                        <svg className="h-4 w-4 mr-2 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488" />
+                        </svg>
+                        <span className="truncate">
+                          {property.is_available
+                            ? 'Contact via WhatsApp'
+                            : 'Haipatikani / Unavailable'
+                          }
+                        </span>
+                      </Button>
+                    )}
+
+                    <p className="text-xs sm:text-sm text-gray-600 text-center">
+                      Apply now or contact the property host via WhatsApp
+                    </p>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-
-            {/* Location Map Placeholder - Mahali pa ramani */}
-            <Card>
-              <CardContent className="p-4 sm:p-6">
-                <h3 className="text-lg sm:text-xl font-semibold mb-4">{t('propertyDetail.location')}</h3>
-                <Map
-                  location={property.full_address || property.location}
-                  title={property.title}
-                  height="h-64"
-                />
               </CardContent>
             </Card>
 
@@ -697,6 +786,14 @@ const PropertyDetail = () => {
           </div>
         </div>
       </div>
+
+      {/* Application Modal */}
+      <ApplicationModal
+        isOpen={isApplicationModalOpen}
+        onClose={() => setIsApplicationModalOpen(false)}
+        propertyId={property.id}
+        propertyTitle={property.title}
+      />
 
       <Footer />
     </div>
