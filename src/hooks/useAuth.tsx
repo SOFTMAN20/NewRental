@@ -253,7 +253,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       toast({
         title: "Umefanikiwa kujisajili!",
         description: sanitizedMetadata.user_type === 'landlord' 
-          ? "Karibu kwenye Nyumba Link! Unaweza kuanza kuongeza nyumba zako sasa."
+          ? "Karibu kwenye Wanachuo.com! Unaweza kuanza kuongeza nyumba zako sasa."
           : "Tafadhali kagua barua pepe yako ili kuthibitisha akaunti yako."
       });
     }
@@ -323,7 +323,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       toast({
         title: "Umefanikiwa kuingia!",
-        description: "Karibu kwenye Nyumba Link"
+        description: "Karibu kwenye Wanachuo.com"
       });
     }
 

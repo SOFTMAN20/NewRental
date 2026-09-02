@@ -62,8 +62,8 @@ const Footer = () => {
                 <div className="w-8 h-8 bg-gray-800/50 rounded-lg flex items-center justify-center mr-3 group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
                   <Mail className="h-4 w-4" />
                 </div>
-                <a href="mailto:info@nyumbalink.co.tz" className="text-sm sm:text-base hover:underline break-all">
-                  info@nyumbalink.co.tz
+                <a href="mailto:info@wanachuo.com" className="text-sm sm:text-base hover:underline break-all">
+                  info@wanachuo.com
                 </a>
               </div>
             </div>
@@ -152,7 +152,7 @@ const Footer = () => {
         <div className="border-t border-gray-700/50 py-6 sm:py-8">
           <div className="text-center">
             <div className="text-gray-300 text-xs sm:text-sm">
-              © {currentYear} Nyumba Link. {t('footer.rightsReserved')}
+              © {currentYear} Wanachuo.com. {t('footer.rightsReserved')}
             </div>
           </div>
         </div>

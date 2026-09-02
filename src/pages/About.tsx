@@ -646,11 +646,11 @@ const About = () => {
                   {t('about.emailDescription')}
                 </p>
                 <a 
-                  href="mailto:info@nyumbalink.co.tz"
+                  href="mailto:info@wanachuo.com"
                   className="inline-flex items-center text-green-600 font-bold text-base sm:text-lg lg:text-xl hover:text-green-700 transition-colors duration-300 group-hover:scale-110 transform break-all"
                 >
                   <Mail className="h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3 flex-shrink-0" />
-                  info@nyumbalink.co.tz
+                  info@wanachuo.com
                 </a>
                 
                 {/* Pulse Effect */}

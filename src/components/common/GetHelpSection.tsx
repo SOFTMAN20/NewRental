@@ -91,7 +91,7 @@ const GetHelpSection: React.FC<GetHelpSectionProps> = ({
    */
   const handleWhatsAppChat = (): void => {
     const message = encodeURIComponent(
-      'Hello! I am a landlord on Nyumba Link and I need help. Please assist me.'
+      'Hello! I am a landlord on Wanachuo.com and I need help. Please assist me.'
     );
     const whatsappUrl = `https://wa.me/${SUPPORT_PHONE.replace(/[^0-9]/g, '')}?text=${message}`;
     window.open(whatsappUrl, '_blank', 'noopener,noreferrer');

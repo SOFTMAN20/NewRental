@@ -134,12 +134,12 @@ const Navigation = () => {
                 <Home className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-white" />
               </div>
               <div className="transform group-hover:scale-105 transition-transform duration-300">
-                {/* Mobile label: NyLink */}
-                <span className={`md:hidden text-base sm:text-lg lg:text-2xl font-bold bg-gradient-to-r from-primary to-serengeti-600 bg-clip-text text-transparent`}>NyLink</span>
+                {/* Mobile label: Wanachuo */}
+                <span className={`md:hidden text-base sm:text-lg lg:text-2xl font-bold bg-gradient-to-r from-primary to-serengeti-600 bg-clip-text text-transparent`}>Wanachuo</span>
                 <span className="md:hidden text-base sm:text-lg lg:text-2xl font-bold text-serengeti-600"></span>
 
-                {/* Desktop/large label: NyumbaLink Tz */}
-                <span className={`hidden md:inline text-base sm:text-lg lg:text-2xl font-bold bg-gradient-to-r from-primary to-serengeti-600 bg-clip-text text-transparent`}>NyumbaLink</span>
+                {/* Desktop/large label: Wanachuo.com */}
+                <span className={`hidden md:inline text-base sm:text-lg lg:text-2xl font-bold bg-gradient-to-r from-primary to-serengeti-600 bg-clip-text text-transparent`}>Wanachuo.com</span>
                 <span className="hidden md:inline text-base sm:text-lg lg:text-2xl font-bold text-serengeti-600"> </span>
               </div>
             </Link>
