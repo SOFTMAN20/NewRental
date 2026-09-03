@@ -2,7 +2,7 @@
  * ABOUT.TSX - ENHANCED ABOUT US PAGE
  * ==================================
  * 
- * Ukurasa wa kuhusu WanaChuo.com ulioboreshwa - Enhanced About Us page for WanaChuo.com
+ * Ukurasa wa kuhusu Wanachuo.com ulioboreshwa - Enhanced About Us page for Wanachuo.com
  * 
  * FUNCTIONALITY / KAZI:
  * - Displays company information and mission (Kuonyesha maelezo ya kampuni na dhamira)
@@ -58,10 +58,10 @@ import { useTranslation } from 'react-i18next';
  * ENHANCED ABOUT US PAGE COMPONENT
  * ===============================
  * 
- * Main component that displays comprehensive information about WanaChuo.com,
+ * Main component that displays comprehensive information about Wanachuo.com,
  * with enhanced visual design, animations, and modern UI elements.
  * 
- * Kipengele kikuu kinachoonyesha maelezo makamilifu kuhusu WanaChuo.com,
+ * Kipengele kikuu kinachoonyesha maelezo makamilifu kuhusu Wanachuo.com,
  * na muundo wa kuona ulioboreshwa, mchoro, na vipengele vya kisasa vya UI.
  */
 const About = () => {
@@ -203,7 +203,7 @@ const About = () => {
             <div className="w-8 h-8 sm:w-12 sm:h-12 bg-white/80 rounded-full flex items-center justify-center shadow-lg overflow-hidden">
               <img 
                 src="/images/logo.png" 
-                alt="WanaChuo.com Logo" 
+                alt="Wanachuo.com Logo" 
                 className="h-5 w-5 sm:h-8 sm:w-8 object-contain"
               />
             </div>
@@ -224,7 +224,7 @@ const About = () => {
                 <div className="relative w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-primary to-serengeti-500 rounded-2xl flex items-center justify-center shadow-2xl transform hover:scale-110 transition-all duration-300 overflow-hidden">
                   <img 
                     src="/images/logo.png" 
-                    alt="WanaChuo.com Logo" 
+                    alt="Wanachuo.com Logo" 
                     className="h-10 w-10 sm:h-16 sm:w-16 object-contain"
                   />
                 </div>
@@ -235,7 +235,7 @@ const About = () => {
               <div className="text-center sm:text-left">
                 <div className="flex items-center space-x-2">
                   <span className="text-4xl sm:text-6xl font-bold bg-gradient-to-r from-primary to-serengeti-600 bg-clip-text text-transparent">
-                    WanaChuo.com
+                    Wanachuo.com
                   </span>
                 </div>
                 <Badge className="mt-2 sm:mt-3 bg-gradient-to-r from-primary to-serengeti-500 text-white border-0 px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm">

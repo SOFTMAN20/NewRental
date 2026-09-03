@@ -51,7 +51,7 @@
     "startingFrom": "Starting from"
   },
   "features": {
-    "whyChoose": "Why Choose WanaChuo.com?",
+    "whyChoose": "Why Choose Wanachuo.com?",
     "subtitle": "We provide excellent services for finding and offering student housing throughout Tanzania. Register today and start your journey to find your dream home.",
     "easySearch": {
       "title": "Easy Search",
@@ -78,7 +78,7 @@
       "description": "Join a community of Tanzanians looking for and offering houses. Real advice and opinions."
     },
     "readyToStart": "Ready to Start? Register Now!",
-    "joinThousands": "Join thousands of students using WanaChuo.com to find their dream homes.",
+    "joinThousands": "Join thousands of students using Wanachuo.com to find their dream homes.",
     "registerAsLandlord": "Register as Landlord",
     "searchHouses": "Search Houses"
   },
@@ -180,7 +180,7 @@
   },
   "auth": {
     "welcomeBack": "Welcome Back!",
-    "signInSubtitle": "Sign in to your WanaChuo.com account",
+    "signInSubtitle": "Sign in to your Wanachuo.com account",
     "signIn": "Sign In",
     "email": "Email",
     "emailPlaceholder": "example@email.com",
@@ -219,7 +219,7 @@
   },
   "dashboard": {
     "loading": "Loading your dashboard...",
-    "welcome": "Welcome to WanaChuo.com!",
+    "welcome": "Welcome to Wanachuo.com!",
     "welcomeMessage": "Start your journey of adding your properties and finding tenants. We'll guide you step by step!",
     "completeAccount": "Complete Account",
     "viewGuide": "View Guide",
@@ -247,7 +247,7 @@
     "averagePrice": "Average Price",
     "yourProperties": "Your Properties ({{count}})",
     "manageProperties": "Manage and update all your properties",
-    "welcomeToWanaChuo": "Welcome to WanaChuo.com!",
+    "welcomeToWanaChuo": "Welcome to Wanachuo.com!",
     "noPropertiesYet": "You don't have any properties yet. Start your journey of listing properties and finding tenants.",
     "addFirstPropertyAction": "Add Your First Property",
     "viewExample": "View Example",
@@ -344,8 +344,8 @@
     "noQuestionTooSmall": "💡 Remember:"
   },
   "about": {
-    "title": "About WanaChuo.com",
-    "subtitle": "WanaChuo.com is a modern student housing platform for Tanzania that connects landlords with students. The system allows landlords to advertise their properties and students to search and find suitable housing near universities.",
+    "title": "About Wanachuo.com",
+    "subtitle": "Wanachuo.com is a modern student housing platform for Tanzania that connects landlords with students. The system allows landlords to advertise their properties and students to search and find suitable housing near universities.",
     "mission": "Our Mission",
     "missionText": "To simplify the process of finding and offering student housing in Tanzania using modern technology. We aim to build an environment of trust and security for landlords and students.",
     "vision": "Our Vision",
@@ -367,7 +367,7 @@
     "excellence": "Excellence",
     "excellenceText": "We provide high-quality services to every user.",
     "team": "Our Team",
-    "teamSubtitle": "People who make WanaChuo.com unique",
+    "teamSubtitle": "People who make Wanachuo.com unique",
     "leadDeveloper": "Lead Developer",
     "aiTeamDescription": "A team of AI technology experts focused on improving the lives of Tanzanians.",
     "developmentTeam": "Development Team",
@@ -385,7 +385,7 @@
     "location": "Location",
     "locationDescription": "Our main office",
     "readyToStart": "Ready to Start Your Journey?",
-    "joinThousands": "Join thousands of students using WanaChuo.com to find and offer student housing.",
+    "joinThousands": "Join thousands of students using Wanachuo.com to find and offer student housing.",
     "registerAsLandlord": "Register as Landlord",
     "searchHouses": "Search Houses"
   },

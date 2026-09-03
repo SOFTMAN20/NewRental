@@ -195,8 +195,7 @@ const PropertyDetail = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navigation />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 lg:pt-28 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col items-center justify-center py-16">
             <LoadingSpinner size="lg" className="mb-4" />
             <p className="text-lg text-gray-600">Inapakia maelezo ya nyumba...</p>
@@ -217,8 +216,7 @@ const PropertyDetail = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50 flex flex-col">
-        <Navigation />
-        <div className="flex-1 flex items-center justify-center pt-20 sm:pt-24 lg:pt-28">
+        <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <LoadingSpinner size="lg" className="mb-4" />
             <p className="text-gray-600">Inapakia maelezo ya nyumba...</p>
@@ -242,8 +240,7 @@ const PropertyDetail = () => {
   if (error || !property) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navigation />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 lg:pt-28 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center py-16">
             <AlertCircle className="h-16 w-16 text-red-500 mx-auto mb-4" />
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
@@ -284,33 +281,27 @@ const PropertyDetail = () => {
    */
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50 flex flex-col">
-      <Navigation />
+      {/* Navbar - Desktop only */}
+      <div className="hidden lg:block">
+        <Navigation />
+      </div>
 
-      <div className="flex-1 max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 pt-20 sm:pt-24 lg:pt-28 pb-3 sm:pb-4 lg:pb-6 xl:pb-8">
-        {/* Back Navigation Button */}
-        <Button
-          variant="ghost"
-          onClick={() => navigate(-1)}
-          className="mb-3 sm:mb-4 lg:mb-2 hover:bg-transparent"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          {t('propertyDetail.goBack')}
-        </Button>
-
+      <div className="flex-1 max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 lg:pt-20 pb-3 sm:pb-4 lg:pb-6 xl:pb-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {/* Main Content Section - Sehemu ya maudhui makuu */}
-          <div className="lg:col-span-2 space-y-3 sm:space-y-4 lg:space-y-6">
-            {/* Property Title - Above Gallery */}
-            <div>
+          <div className="lg:col-span-2 space-y-2 sm:space-y-3 lg:space-y-4">
+            {/* Property Title - Desktop only, above gallery */}
+            <div className="hidden lg:block">
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
                 {property.title}
               </h1>
             </div>
+            
             {/* Image Gallery Section - Sehemu ya galeri ya picha */}
             <Card>
               <CardContent className="p-0">
                 {/* Mobile/Tablet carousel - Onyesho la simu na tablet */}
-                <div className="relative aspect-[4/3] sm:aspect-[16/10] overflow-hidden rounded-t-lg lg:hidden">
+                <div className="relative aspect-[3/4] sm:aspect-[16/10] overflow-hidden rounded-t-lg lg:hidden">
                   <img
                     src={
                       property.images && property.images.length > 0

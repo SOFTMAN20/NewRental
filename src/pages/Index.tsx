@@ -63,7 +63,7 @@ const Index = () => {
                   Tayari Kuanza? Jisajili Sasa!
                 </h3>
                 <p className="text-base sm:text-lg md:text-xl mb-6 sm:mb-8 text-white/95 font-medium leading-relaxed max-w-2xl mx-auto">
-                  Jiunge na elfu za Watanzania wanaotumia WanaChuo.com kupata nyumba zao za ndoto.
+                  Jiunge na elfu za Watanzania wanaotumia Wanachuo.com kupata nyumba zao za ndoto.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center">
                   <Link

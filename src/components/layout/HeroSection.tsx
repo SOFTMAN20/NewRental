@@ -3,7 +3,7 @@
  * HEROSECTION.TSX - MAIN SEARCH AND HERO COMPONENT
  * ================================================
  * 
- * Sehemu ya utafutaji mkuu wa WanaChuo.com - Main search section for WanaChuo.com
+ * Sehemu ya utafutaji mkuu wa Wanachuo.com - Main search section for Wanachuo.com
  * 
  * FUNCTIONALITY / KAZI:
  * - Primary landing section with search capabilities (Sehemu ya kwanza na utafutaji)

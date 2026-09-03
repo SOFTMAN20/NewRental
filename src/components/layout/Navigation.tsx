@@ -71,11 +71,24 @@ const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Mobile menu visibility
   const [isCollegesModalOpen, setIsCollegesModalOpen] = useState(false); // Colleges modal visibility
   const [profile, setProfile] = useState<Profile | null>(null); // User profile
+  const [isScrolled, setIsScrolled] = useState(false); // Scroll detection for homepage
   const location = useLocation(); // Current page location for active states
   const navigate = useNavigate(); // Navigation function
   const { user, signOut } = useAuth(); // Authentication state
   const { getFavoritesCount } = useFavorites(); // Favorites functionality
   const { t, i18n } = useTranslation();
+
+  // Scroll detection for homepage navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      if (location.pathname === '/') {
+        setIsScrolled(window.scrollY > 50);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [location.pathname]);
 
   // Fetch user profile when user changes
   useEffect(() => {
@@ -121,7 +134,7 @@ const Navigation = () => {
   };
 
   return (
-    <nav className={`${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property') || location.pathname.includes('/messages') || location.pathname.includes('/settings') ? 'bg-white shadow-lg sticky lg:ml-64 border-b border-gray-100' : location.pathname === '/' ? 'bg-transparent absolute border-b border-white/10' : 'bg-gradient-to-r from-blue-100/95 via-purple-100/95 to-blue-50/95 backdrop-blur-md sticky shadow-lg border-b border-blue-200/50 rounded-b-3xl overflow-hidden'} top-0 left-0 right-0 z-50`}>
+    <nav className={`${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property') || location.pathname.includes('/messages') || location.pathname.includes('/settings') ? 'bg-white shadow-lg fixed lg:ml-64 border-b border-gray-100' : location.pathname === '/' ? (isScrolled ? 'bg-blue-100/95 backdrop-blur-md shadow-lg border-b border-blue-200/50 rounded-b-3xl' : 'bg-transparent border-b border-white/10') + ' fixed' : 'bg-gradient-to-r from-blue-100/95 via-purple-100/95 to-blue-50/95 backdrop-blur-md fixed shadow-lg border-b border-blue-200/50 rounded-b-3xl overflow-hidden'} top-0 left-0 right-0 z-50 transition-all duration-300`}>
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
         <div className="flex justify-between items-center h-12 sm:h-14 lg:h-16">
           
@@ -155,7 +168,7 @@ const Navigation = () => {
                              ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property') 
                                ? 'hover:bg-gray-100 text-gray-700 hover:text-gray-900' 
                                : location.pathname === '/'
-                               ? 'hover:bg-white/20 text-white hover:text-white'
+                               ? (isScrolled ? 'hover:bg-gray-100 text-gray-700 hover:text-gray-900' : 'hover:bg-white/20 text-white hover:text-white')
                                : 'hover:bg-white/60 text-gray-700 hover:text-gray-900'} hover:scale-105`}
                 >
                   {t('navigation.becomeHost')}
@@ -175,7 +188,7 @@ const Navigation = () => {
                          ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
                            ? 'text-gray-700 hover:bg-gray-200 hover:text-gray-900'
                            : location.pathname === '/'
-                           ? 'text-white hover:bg-white/30 hover:text-white'
+                           ? (isScrolled ? 'text-gray-700 hover:bg-gray-200 hover:text-gray-900' : 'text-white hover:bg-white/30 hover:text-white')
                            : 'text-gray-700 hover:bg-white/70 hover:text-gray-900'}`}
             >
               Colleges
@@ -190,13 +203,13 @@ const Navigation = () => {
                     ? location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
                       ? 'bg-gray-200'
                       : location.pathname === '/'
-                      ? 'bg-white/30'
+                      ? (isScrolled ? 'bg-gray-200' : 'bg-white/30')
                       : 'bg-white/60'
                     : ''
                 } ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
                      ? 'text-gray-700 hover:bg-gray-200 hover:text-gray-900'
                      : location.pathname === '/'
-                     ? 'text-white hover:bg-white/30 hover:text-white'
+                     ? (isScrolled ? 'text-gray-700 hover:bg-gray-200 hover:text-gray-900' : 'text-white hover:bg-white/30 hover:text-white')
                      : 'text-gray-700 hover:bg-white/70 hover:text-gray-900'}`}
               >
                 About
@@ -212,13 +225,13 @@ const Navigation = () => {
                     ? location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
                       ? 'bg-gray-200'
                       : location.pathname === '/'
-                      ? 'bg-white/30'
+                      ? (isScrolled ? 'bg-gray-200' : 'bg-white/30')
                       : 'bg-white/60'
                     : ''
                 } ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
                      ? 'text-gray-700 hover:bg-gray-200 hover:text-gray-900'
                      : location.pathname === '/'
-                     ? 'text-white hover:bg-white/30 hover:text-white'
+                     ? (isScrolled ? 'text-gray-700 hover:bg-gray-200 hover:text-gray-900' : 'text-white hover:bg-white/30 hover:text-white')
                      : 'text-gray-700 hover:bg-white/70 hover:text-gray-900'}`}
               >
                 Contact
@@ -235,7 +248,7 @@ const Navigation = () => {
                   variant="ghost"
                   className={`flex items-center space-x-2 px-3 py-2 rounded-full hover:scale-105 transition-all duration-300 ${
                     location.pathname === '/'
-                      ? 'text-white hover:bg-white/20 hover:text-white'
+                      ? (isScrolled ? 'text-gray-700 hover:bg-gray-100 hover:text-gray-900' : 'text-white hover:bg-white/20 hover:text-white')
                       : 'text-gray-700 hover:bg-white/60 hover:text-gray-900'
                   }`}
                   title={t('navigation.browse')}
@@ -266,23 +279,23 @@ const Navigation = () => {
                     >
                       <div className={`w-10 h-10 backdrop-blur-md rounded-full flex items-center justify-center group-hover:ring-2 transition-all duration-300 ${
                         location.pathname === '/'
-                          ? 'bg-white/20 group-hover:ring-white/50'
+                          ? (isScrolled ? 'bg-white/60 group-hover:ring-primary/50' : 'bg-white/20 group-hover:ring-white/50')
                           : 'bg-white/60 group-hover:ring-primary/50'
                       }`}>
                         <span className={`text-base font-semibold ${
-                          location.pathname === '/' ? 'text-white' : 'text-gray-700'
+                          location.pathname === '/' ? (isScrolled ? 'text-gray-700' : 'text-white') : 'text-gray-700'
                         }`}>
                           {profile?.full_name?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase() || 'U'}
                         </span>
                       </div>
                       <div className="hidden lg:flex items-center gap-2">
                         <span className={`font-medium ${
-                          location.pathname === '/' ? 'text-white' : 'text-gray-700'
+                          location.pathname === '/' ? (isScrolled ? 'text-gray-700' : 'text-white') : 'text-gray-700'
                         }`}>
                           Hi, {profile?.full_name?.split(' ')[0] || user.email?.split('@')[0] || 'User'}
                         </span>
                         <svg className={`w-4 h-4 ${
-                          location.pathname === '/' ? 'text-white' : 'text-gray-700'
+                          location.pathname === '/' ? (isScrolled ? 'text-gray-700' : 'text-white') : 'text-gray-700'
                         }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                         </svg>
@@ -365,9 +378,13 @@ const Navigation = () => {
               </>
             ) : (
               <Link to="/signin">
-                <Button size="sm" className="bg-white/20 backdrop-blur-md hover:bg-white/30 text-white text-sm px-4 py-2
+                <Button size="sm" className={`backdrop-blur-md text-sm px-4 py-2
                                             shadow-lg hover:shadow-xl transform hover:scale-105 
-                                            transition-all duration-300 border border-white/20">
+                                            transition-all duration-300 border ${
+                  location.pathname === '/' && !isScrolled
+                    ? 'bg-white/20 hover:bg-white/30 text-white border-white/20'
+                    : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-200'
+                }`}>
                   {t('navigation.signIn')}
                 </Button>
               </Link>
@@ -378,8 +395,11 @@ const Navigation = () => {
               variant="ghost"
               size="sm"
               onClick={toggleLanguage}
-              className="flex items-center space-x-2 px-3 py-2 rounded-full text-white hover:bg-white/20
-                         hover:scale-105 transition-all duration-300 border border-white/20 hover:border-white/30"
+              className={`flex items-center space-x-2 px-3 py-2 rounded-full hover:scale-105 transition-all duration-300 border ${
+                location.pathname === '/' && !isScrolled
+                  ? 'text-white hover:bg-white/20 border-white/20 hover:border-white/30'
+                  : 'text-gray-700 hover:bg-gray-100 border-gray-200 hover:border-gray-300'
+              }`}
             >
               <Globe className="h-4 w-4" />
               <span className="text-sm font-medium">{i18n.language.toUpperCase()}</span>
@@ -393,7 +413,11 @@ const Navigation = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                className="p-1.5 hover:bg-white/20 text-white hover:text-white rounded-full transition-all duration-300 hover:scale-105"
+                className={`p-1.5 rounded-full transition-all duration-300 hover:scale-105 ${
+                  location.pathname === '/' && !isScrolled
+                    ? 'hover:bg-white/20 text-white hover:text-white'
+                    : 'hover:bg-gray-100 text-gray-700 hover:text-gray-900'
+                }`}
               >
                 <Search className="h-4 w-4 sm:h-5 sm:w-5" />
               </Button>
@@ -404,7 +428,11 @@ const Navigation = () => {
               variant="ghost"
               size="sm"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-1.5 hover:bg-white/20 text-white rounded-full transition-all duration-300 hover:scale-105"
+              className={`p-1.5 rounded-full transition-all duration-300 hover:scale-105 ${
+                location.pathname === '/' && !isScrolled
+                  ? 'hover:bg-white/20 text-white'
+                  : 'hover:bg-gray-100 text-gray-700'
+              }`}
             >
               {isMenuOpen ? (
                 <X className="h-4 w-4 sm:h-5 sm:w-5" />

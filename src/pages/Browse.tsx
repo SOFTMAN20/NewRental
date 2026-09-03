@@ -378,163 +378,168 @@ const Browse = () => {
       <Navigation />
 
       {/* Hero Search Section */}
-      <div className="bg-gradient-to-r from-primary/5 to-serengeti-50 border-b pt-16 sm:pt-20 lg:pt-24">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
-          {/* Main Search Interface */}
-          <Card className="shadow-xl border-0 rounded-xl lg:rounded-2xl bg-white/95 backdrop-blur-sm">
-            <CardContent className="p-3 sm:p-4 lg:p-6 xl:p-8">
-              <div className="flex flex-col lg:flex-row gap-2 sm:gap-3 lg:gap-4">
-                {/* Location Search Input */}
-                <div className="flex-1">
-                  <div className="relative border-2 border-gray-300 rounded-full hover:border-primary/50 transition-colors duration-200 focus-within:border-primary shadow-sm">
-                    <Input
-                      placeholder={t('browse.cityPlaceholder')}
-                      value={filters.searchQuery}
-                      onChange={(e) => updateFilter('searchQuery', e.target.value)}
-                      className="pl-4 sm:pl-5 lg:pl-6 pr-14 sm:pr-16 lg:pr-20 h-10 sm:h-12 lg:h-14 text-sm sm:text-base lg:text-lg border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 rounded-full"
-                    />
-                    <button
-                      type="button"
-                      className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-full p-2 sm:p-2.5 lg:p-3 transition-all duration-200 shadow-md hover:shadow-lg"
-                    >
-                      <Search className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />
-                    </button>
-                  </div>
-                </div>
+      <div className="bg-gradient-to-r from-primary/5 to-serengeti-50 border-b pt-20 sm:pt-20 lg:pt-24">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 pb-2 sm:pb-3 lg:pb-4">
+          {/* Title */}
+          <div className="text-center mb-2 sm:mb-2 lg:mb-3">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
+              Find Your Student Room, Hostel & Apartment
+            </h1>
+          </div>
 
-                {/* Price Range Selector */}
-                <div className="flex flex-row gap-2 sm:gap-4">
-                  <Select value={filters.priceRange} onValueChange={(value) => updateFilter('priceRange', value)}>
-                    <SelectTrigger className="flex-1 h-10 sm:h-12 lg:h-14 border-2 border-gray-300 rounded-full hover:border-primary/50 min-w-0 focus:ring-2 focus:ring-primary/20 transition-all duration-200 bg-white">
-                      <SelectValue placeholder={t('browse.priceLabel')} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">{t('browse.anyPrice')}</SelectItem>
-                      <SelectItem value="0-100000">{t('browse.under100k')}</SelectItem>
-                      <SelectItem value="100000-500000">{t('browse.100kTo500k')}</SelectItem>
-                      <SelectItem value="500000-1000000">{t('browse.500kTo1m')}</SelectItem>
-                      <SelectItem value="1000000-2000000">{t('browse.1mTo2m')}</SelectItem>
-                      <SelectItem value="2000000+">{t('browse.over2m')}</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  {/* Filter Toggle Button */}
-                  <Button
-                    variant="outline"
-                    onClick={() => updateUIState('showFilters', !uiState.showFilters)}
-                    className="flex-1 h-10 sm:h-12 lg:h-14 min-w-0 border-2 border-gray-300 rounded-full hover:border-primary/50 hover:bg-primary/5 flex items-center justify-center px-3 sm:px-4 transition-all duration-200 bg-white"
+          {/* Main Search Interface - No Card/Block */}
+          <div className="pb-2 sm:pb-3 lg:pb-4">
+            <div className="flex flex-col lg:flex-row gap-2 sm:gap-3 lg:gap-4">
+              {/* Location Search Input */}
+              <div className="flex-1">
+                <div className="relative border-2 border-gray-300 rounded-full hover:border-primary/50 transition-colors duration-200 focus-within:border-primary shadow-lg bg-white">
+                  <Input
+                    placeholder={t('browse.cityPlaceholder')}
+                    value={filters.searchQuery}
+                    onChange={(e) => updateFilter('searchQuery', e.target.value)}
+                    className="pl-4 sm:pl-5 lg:pl-6 pr-14 sm:pr-16 lg:pr-20 h-10 sm:h-12 lg:h-14 text-sm sm:text-base lg:text-lg border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 rounded-full"
+                  />
+                  <button
+                    type="button"
+                    className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-full p-2 sm:p-2.5 lg:p-3 transition-all duration-200 shadow-md hover:shadow-lg"
                   >
-                    <SlidersHorizontal className="h-4 w-4 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                    <span className="text-sm sm:text-sm whitespace-nowrap">{t('browse.filters')}</span>
-                  </Button>
+                    <Search className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />
+                  </button>
                 </div>
               </div>
 
-              {/* Advanced Filters Panel */}
-              {uiState.showFilters && (
-                <div className="border-t mt-6 pt-6">
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    {/* Custom Price Range */}
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-3">{t('browse.customPrice')}</h4>
-                      <div className="space-y-3">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            {t('browse.minPriceLabel')}
-                          </label>
-                          <Input
-                            type="number"
-                            placeholder="30,000"
-                            value={filters.minPrice}
-                            onChange={(e) => updateFilter('minPrice', e.target.value)}
-                            className="w-full"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            {t('browse.maxPriceLabel')}
-                          </label>
-                          <Input
-                            type="number"
-                            placeholder="500,000"
-                            value={filters.maxPrice}
-                            onChange={(e) => updateFilter('maxPrice', e.target.value)}
-                            className="w-full"
-                          />!
-                        </div>
-                      </div>
-                    </div>
+              {/* Price Range Selector */}
+              <div className="flex flex-row gap-2 sm:gap-4">
+                <Select value={filters.priceRange} onValueChange={(value) => updateFilter('priceRange', value)}>
+                  <SelectTrigger className="flex-1 h-10 sm:h-12 lg:h-14 border-2 border-gray-300 rounded-full hover:border-primary/50 min-w-0 focus:ring-2 focus:ring-primary/20 transition-all duration-200 bg-white shadow-lg">
+                    <SelectValue placeholder={t('browse.priceLabel')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">{t('browse.anyPrice')}</SelectItem>
+                    <SelectItem value="0-100000">{t('browse.under100k')}</SelectItem>
+                    <SelectItem value="100000-500000">{t('browse.100kTo500k')}</SelectItem>
+                    <SelectItem value="500000-1000000">{t('browse.500kTo1m')}</SelectItem>
+                    <SelectItem value="1000000-2000000">{t('browse.1mTo2m')}</SelectItem>
+                    <SelectItem value="2000000+">{t('browse.over2m')}</SelectItem>
+                  </SelectContent>
+                </Select>
 
-                    {/* Utilities Filter */}
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-3">{t('browse.basicUtilities')}</h4>
-                      <div className="space-y-3">
-                        {[
-                          { key: 'electricity', label: t('browse.electricity') },
-                          { key: 'water', label: t('browse.water') }
-                        ].map(({ key, label }) => (
-                          <label key={key} className="flex items-center">
-                            <input
-                              type="checkbox"
-                              checked={filters.utilities.includes(key)}
-                              onChange={() => handleUtilityToggle(key)}
-                              className="mr-3 w-4 h-4 text-primary"
-                            />
-                            <span className="text-gray-700">{label}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
+                {/* Filter Toggle Button */}
+                <Button
+                  variant="outline"
+                  onClick={() => updateUIState('showFilters', !uiState.showFilters)}
+                  className="flex-1 h-10 sm:h-12 lg:h-14 min-w-0 border-2 border-gray-300 rounded-full hover:border-primary/50 hover:bg-primary/5 flex items-center justify-center px-3 sm:px-4 transition-all duration-200 bg-white shadow-lg"
+                >
+                  <SlidersHorizontal className="h-4 w-4 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                  <span className="text-sm sm:text-sm whitespace-nowrap">{t('browse.filters')}</span>
+                </Button>
+              </div>
+            </div>
 
-                    {/* Nearby Services Filter */}
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-3">{t('browse.nearbyServices')}</h4>
-                      <div className="space-y-3">
-                        {[
-                          { key: 'school', label: t('browse.school') },
-                          { key: 'hospital', label: t('browse.hospital') },
-                          { key: 'market', label: t('browse.market') }
-                        ].map(({ key, label }) => (
-                          <label key={key} className="flex items-center">
-                            <input
-                              type="checkbox"
-                              checked={filters.nearbyServices.includes(key)}
-                              onChange={() => handleNearbyServiceToggle(key)}
-                              className="mr-3 w-4 h-4 text-primary"
-                            />
-                            <span className="text-gray-700">{label}</span>
-                          </label>
-                        ))}
+            {/* Advanced Filters Panel */}
+            {uiState.showFilters && (
+              <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border-0 mt-4 sm:mt-6 p-4 sm:p-6">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                  {/* Custom Price Range */}
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-3">{t('browse.customPrice')}</h4>
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          {t('browse.minPriceLabel')}
+                        </label>
+                        <Input
+                          type="number"
+                          placeholder="30,000"
+                          value={filters.minPrice}
+                          onChange={(e) => updateFilter('minPrice', e.target.value)}
+                          className="w-full"
+                        />
                       </div>
-                    </div>
-
-                    {/* Sort Options */}
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-3">{t('browse.sortBy')}</h4>
-                      <Select value={filters.sortBy} onValueChange={(value) => updateFilter('sortBy', value)}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="newest">{t('browse.newest')}</SelectItem>
-                          <SelectItem value="price-low">{t('browse.priceLow')}</SelectItem>
-                          <SelectItem value="price-high">{t('browse.priceHigh')}</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          {t('browse.maxPriceLabel')}
+                        </label>
+                        <Input
+                          type="number"
+                          placeholder="500,000"
+                          value={filters.maxPrice}
+                          onChange={(e) => updateFilter('maxPrice', e.target.value)}
+                          className="w-full"
+                        />
+                      </div>
                     </div>
                   </div>
 
-                  {/* Clear Filters Button */}
-                  <div className="flex justify-between items-center mt-6">
-                    <Button variant="ghost" onClick={handleClearAllFilters} className="text-gray-600">
-                      <X className="h-4 w-4 mr-2" />
-                      {t('browse.clearFilters')}
-                    </Button>
+                  {/* Utilities Filter */}
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-3">{t('browse.basicUtilities')}</h4>
+                    <div className="space-y-3">
+                      {[
+                        { key: 'electricity', label: t('browse.electricity') },
+                        { key: 'water', label: t('browse.water') }
+                      ].map(({ key, label }) => (
+                        <label key={key} className="flex items-center">
+                          <input
+                            type="checkbox"
+                            checked={filters.utilities.includes(key)}
+                            onChange={() => handleUtilityToggle(key)}
+                            className="mr-3 w-4 h-4 text-primary"
+                          />
+                          <span className="text-gray-700">{label}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Nearby Services Filter */}
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-3">{t('browse.nearbyServices')}</h4>
+                    <div className="space-y-3">
+                      {[
+                        { key: 'school', label: t('browse.school') },
+                        { key: 'hospital', label: t('browse.hospital') },
+                        { key: 'market', label: t('browse.market') }
+                      ].map(({ key, label }) => (
+                        <label key={key} className="flex items-center">
+                          <input
+                            type="checkbox"
+                            checked={filters.nearbyServices.includes(key)}
+                            onChange={() => handleNearbyServiceToggle(key)}
+                            className="mr-3 w-4 h-4 text-primary"
+                          />
+                          <span className="text-gray-700">{label}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Sort Options */}
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-3">{t('browse.sortBy')}</h4>
+                    <Select value={filters.sortBy} onValueChange={(value) => updateFilter('sortBy', value)}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="newest">{t('browse.newest')}</SelectItem>
+                        <SelectItem value="price-low">{t('browse.priceLow')}</SelectItem>
+                        <SelectItem value="price-high">{t('browse.priceHigh')}</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
-              )}
-            </CardContent>
-          </Card>
+
+                {/* Clear Filters Button */}
+                <div className="flex justify-between items-center mt-6 pt-6 border-t">
+                  <Button variant="ghost" onClick={handleClearAllFilters} className="text-gray-600">
+                    <X className="h-4 w-4 mr-2" />
+                    {t('browse.clearFilters')}
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

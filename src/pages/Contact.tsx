@@ -2,7 +2,7 @@
  * CONTACT.TSX - CONTACT PAGE
  * ==========================
  * 
- * Contact page for WanaChuo.com - Get in touch with us
+ * Contact page for Wanachuo.com - Get in touch with us
  */
 
 import React, { useState } from 'react';

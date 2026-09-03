@@ -70,10 +70,10 @@ const SignIn = () => {
             <Link to="/" className="flex items-center justify-center space-x-2 mb-6">
               <img 
                 src="/images/logo.png" 
-                alt="WanaChuo.com Logo" 
+                alt="Wanachuo.com Logo" 
                 className="h-8 w-8 object-contain"
               />
-              <span className="text-2xl font-bold text-primary">WanaChuo.com</span>
+              <span className="text-2xl font-bold text-primary">Wanachuo.com</span>
             </Link>
             <h2 className="text-3xl font-bold text-gray-900">
               {t('auth.welcomeBack')}

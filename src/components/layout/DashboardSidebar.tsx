@@ -167,7 +167,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ profile, user }) =>
               <Home className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-gray-900">WanaChuo.com</h2>
+              <h2 className="text-lg font-bold text-gray-900">Wanachuo.com</h2>
               <p className="text-xs text-gray-500">Student Housing</p>
             </div>
           </Link>

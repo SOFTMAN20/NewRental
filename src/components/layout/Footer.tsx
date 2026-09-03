@@ -25,13 +25,13 @@ const Footer = () => {
                 <div className="relative group">
                   <img 
                     src="/images/logo.png" 
-                    alt="WanaChuo.com Logo" 
+                    alt="Wanachuo.com Logo" 
                     className="h-10 w-10 sm:h-12 sm:w-12 object-contain group-hover:scale-110 transition-all duration-300"
                   />
                 </div>
                 <div>
                     <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-primary to-serengeti-400 bg-clip-text text-transparent">
-                      WanaChuo.com
+                      Wanachuo.com
                     </span>
                 </div>
               </div>
@@ -150,7 +150,7 @@ const Footer = () => {
         <div className="border-t border-gray-700/50 py-6 sm:py-8">
           <div className="text-center">
             <div className="text-gray-300 text-xs sm:text-sm">
-              © {currentYear} WanaChuo.com. {t('footer.rightsReserved')}
+              © {currentYear} Wanachuo.com. {t('footer.rightsReserved')}
             </div>
           </div>
         </div>

@@ -102,16 +102,16 @@ const SignUp = () => {
             <Link to="/" className="flex items-center justify-center space-x-2 mb-6">
               <img 
                 src="/images/logo.png" 
-                alt="WanaChuo.com Logo" 
+                alt="Wanachuo.com Logo" 
                 className="h-8 w-8 object-contain"
               />
-              <span className="text-2xl font-bold text-primary">WanaChuo.com</span>
+              <span className="text-2xl font-bold text-primary">Wanachuo.com</span>
             </Link>
             <h2 className="text-3xl font-bold text-gray-900">
               Create Your Account
             </h2>
             <p className="mt-2 text-gray-600">
-              Join WanaChuo.com - Find or list student housing
+              Join Wanachuo.com - Find or list student housing
             </p>
           </motion.div>
 
@@ -129,7 +129,7 @@ const SignUp = () => {
                 <div className="w-12 h-12 bg-gradient-to-r from-primary to-serengeti-500 rounded-full mx-auto mb-4 flex items-center justify-center shadow-lg overflow-hidden">
                   <img 
                     src="/images/logo.png" 
-                    alt="WanaChuo.com Logo" 
+                    alt="Wanachuo.com Logo" 
                     className="h-8 w-8 object-contain"
                   />
                 </div>
