@@ -128,10 +128,12 @@ const Navigation = () => {
           {/* Enhanced Brand Logo Section - Sehemu ya nembo ya chapa */}
           <div className="flex items-center space-x-2 sm:space-x-4">
             <Link to="/" className="flex items-center space-x-2 sm:space-x-3 group">
-              <div className="p-1 sm:p-1.5 lg:p-2 bg-gradient-to-br from-primary to-serengeti-500
-                              rounded-md sm:rounded-lg lg:rounded-xl transform group-hover:scale-110 transition-all duration-300 
-                              shadow-lg group-hover:shadow-xl">
-                <Home className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-white" />
+              <div className="transform group-hover:scale-110 transition-all duration-300">
+                <img 
+                  src="/images/logo.png" 
+                  alt="Wanachuo.com Logo" 
+                  className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 object-contain"
+                />
               </div>
               <div className="transform group-hover:scale-105 transition-transform duration-300">
                 {/* Mobile label: Wanachuo */}
@@ -310,7 +312,7 @@ const Navigation = () => {
                   <DropdownMenuItem asChild>
                     <Link to="/add-property" className="flex items-center">
                       <Plus className="mr-2 h-4 w-4" />
-                      <span>Tangaza Nyumba</span>
+                      <span>List Property</span>
                     </Link>
                   </DropdownMenuItem>
                   
@@ -530,7 +532,7 @@ const Navigation = () => {
                   >
                     <div className="flex items-center">
                       <Plus className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-gray-400" />
-                      Tangaza Nyumba
+                      List Property
                     </div>
                   </Link>
                   

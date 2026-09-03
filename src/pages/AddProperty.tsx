@@ -261,8 +261,8 @@ const AddProperty = () => {
       
       // Clear saved form data
       try {
-        localStorage.removeItem('nyumba_link_property_form_data');
-        localStorage.removeItem('nyumba_link_property_form_step');
+        localStorage.removeItem('wanachuo_property_form_data');
+        localStorage.removeItem('wanachuo_property_form_step');
       } catch (error) {
         console.error('Error clearing saved form data:', error);
       }

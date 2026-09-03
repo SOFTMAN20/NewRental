@@ -45,7 +45,7 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
   },
   global: {
     headers: {
-      'X-Client-Info': 'nyumbalink-web',
+      'X-Client-Info': 'wanachuo-web',
     },
   },
   db: {

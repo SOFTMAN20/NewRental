@@ -50,7 +50,7 @@ class ErrorBoundary extends Component<Props, State> {
                   onClick={() => window.location.href = '/'}
                   className="w-full"
                 >
-                  Rudi Nyumbani
+                  Back to Home
                 </Button>
               </div>
             </div>

@@ -32,7 +32,7 @@ import {
 } from 'lucide-react';
 
 /**
- * COMPONENT LIBRARY - NYUMBA LINK UI SYSTEM
+ * COMPONENT LIBRARY - WANACHUO.COM UI SYSTEM
  * ==========================================
  * 
  * A comprehensive showcase of all reusable UI components built with the new color system.
@@ -305,7 +305,7 @@ const ComponentLibrary: React.FC = () => {
           </h1>
           <p className="text-body-large text-muted-foreground max-w-2xl mx-auto">
             A comprehensive showcase of all reusable UI components built with the new color system, 
-            typography, and design tokens for Nyumba Link.
+            typography, and design tokens for WanaChuo.com.
           </p>
         </div>
 
@@ -717,7 +717,7 @@ const ComponentLibrary: React.FC = () => {
             <h3 className="text-heading-2 mb-4">Ready to Use These Components?</h3>
             <p className="text-body-medium text-muted-foreground mb-6 max-w-2xl mx-auto">
               All these components are built with the new color system and are ready to be used 
-              throughout your Nyumba Link application. They're fully responsive and accessible.
+              throughout your WanaChuo.com application. They're fully responsive and accessible.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Button size="lg" icon={<Sparkles className="h-5 w-5" />}>

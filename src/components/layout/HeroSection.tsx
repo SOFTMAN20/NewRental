@@ -3,7 +3,7 @@
  * HEROSECTION.TSX - MAIN SEARCH AND HERO COMPONENT
  * ================================================
  * 
- * Sehemu ya utafutaji mkuu wa Nyumba Link - Main search section for Nyumba Link
+ * Sehemu ya utafutaji mkuu wa WanaChuo.com - Main search section for WanaChuo.com
  * 
  * FUNCTIONALITY / KAZI:
  * - Primary landing section with search capabilities (Sehemu ya kwanza na utafutaji)
@@ -107,7 +107,7 @@ const HeroSection = () => {
           {/* Single Search Bar with Airbnb-style design */}
           <div className="relative border-2 border-gray-300 rounded-full hover:border-primary/50 transition-colors duration-200 focus-within:border-primary shadow-2xl bg-white">
             <Input
-              placeholder="Tafuta nyumba karibu na chuo chako (UDSM, UDOM, DIT...)"
+              placeholder="Search for housing near your university (UDSM, UDOM, DIT...)"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-5 sm:pl-6 lg:pl-7 pr-16 sm:pr-20 lg:pr-24 h-12 sm:h-14 lg:h-16 text-sm sm:text-base lg:text-lg border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 rounded-full"

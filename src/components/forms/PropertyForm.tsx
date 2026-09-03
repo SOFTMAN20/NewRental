@@ -2,15 +2,15 @@
  * PROPERTYFORM.TSX - ENHANCED INTERACTIVE PROPERTY FORM
  * ====================================================
  * 
- * Kipengele cha fomu ya nyumba iliyoboreshwa - Enhanced property form component
+ * Enhanced property form component
  * 
- * ENHANCED FEATURES / VIPENGELE VILIVYOBORESHWA:
- * - Multi-step wizard with progress indicator (Mchakato wa hatua nyingi na kiashiria cha maendeleo)
- * - Interactive animations and transitions (Michoro na mabadiliko ya mwingiliano)
- * - Enhanced visual feedback and validation (Majibu ya kuona na uthibitisho ulioboboreshwa)
- * - Smart form sections with icons (Sehemu za fomu zenye akili na ikoni)
- * - Beautiful UI with gradients and shadows (UI nzuri na mivuto na vivuli)
- * - Real-time preview and feedback (Muhtasari wa wakati halisi na majibu)
+ * ENHANCED FEATURES:
+ * - Multi-step wizard with progress indicator
+ * - Interactive animations and transitions
+ * - Enhanced visual feedback and validation
+ * - Smart form sections with icons
+ * - Beautiful UI with gradients and shadows
+ * - Real-time preview and feedback
  */
 
 import React, { useState, useEffect } from 'react';
@@ -102,8 +102,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
   const [currentStep, setCurrentStep] = useState(1);
 
   // Form persistence constants
-  const FORM_STORAGE_KEY = 'nyumba_link_property_form_data';
-  const STEP_STORAGE_KEY = 'nyumba_link_property_form_step';
+  const FORM_STORAGE_KEY = 'wanachuo_property_form_data';
+  const STEP_STORAGE_KEY = 'wanachuo_property_form_step';
 
   // Load saved form data and step from localStorage on component mount
   useEffect(() => {
@@ -224,10 +224,10 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
   };
 
   const steps = [
-    { id: 1, title: 'Maelezo ya Msingi', icon: Home, description: 'Jina, bei na eneo' },
-    { id: 2, title: 'Maelezo ya Chumba', icon: Building, description: 'Aina ya chumba na huduma' },
-    { id: 3, title: 'Mawasiliano', icon: Phone, description: 'Nambari ya simu' },
-    { id: 4, title: 'Picha', icon: Camera, description: 'Picha za nyumba (za lazima)' }
+    { id: 1, title: 'Basic Info', icon: Home, description: 'Title, price and location' },
+    { id: 2, title: 'Property Details', icon: Building, description: 'Room type and amenities' },
+    { id: 3, title: 'Contact', icon: Phone, description: 'Phone numbers' },
+    { id: 4, title: 'Photos', icon: Camera, description: 'Property photos (required)' }
   ];
 
   /**
@@ -243,8 +243,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         <div className="w-16 h-16 bg-gradient-to-br from-primary to-serengeti-500 rounded-full flex items-center justify-center mx-auto mb-4">
           <Home className="h-8 w-8 text-white" />
         </div>
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">Maelezo ya Msingi</h3>
-        <p className="text-gray-600">Jaza maelezo muhimu ya nyumba yako</p>
+        <h3 className="text-xl font-semibold text-gray-900 mb-2">Basic Information</h3>
+        <p className="text-gray-600">Fill in essential details about your property</p>
       </div>
 
       {/* Property Name */}
@@ -375,8 +375,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         <div className="w-16 h-16 bg-gradient-to-br from-serengeti-500 to-kilimanjaro-500 rounded-full flex items-center justify-center mx-auto mb-4">
           <Building className="h-8 w-8 text-white" />
         </div>
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">Maelezo ya Nyumba</h3>
-        <p className="text-gray-600">Eleza nyumba yako kwa undani</p>
+        <h3 className="text-xl font-semibold text-gray-900 mb-2">Property Details</h3>
+        <p className="text-gray-600">Describe your property in detail</p>
       </div>
 
       {/* Property Type - Student Housing Focus */}
@@ -389,11 +389,11 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
           {[
             { value: 'single_room', label: 'Chumba Kimoja (Single Room)', icon: Bed, desc: 'Chumba moja kwa mwanafunzi mmoja' },
             { value: 'shared_room', label: 'Chumba cha Pamoja (Shared)', icon: Users, desc: 'Wanafunzi wawili au zaidi' },
-            { value: 'master_room', label: 'Master Room', icon: Award, desc: 'Chumba kikuu chenye choo binafsi' },
-            { value: 'self_contained', label: 'Self Contained', icon: Home, desc: 'Chumba chenye choo na bafu ndani' },
-            { value: 'apartment', label: 'Apartment/Flat', icon: Building, desc: 'Nyumba yenye vyumba vingi' },
-            { value: 'studio', label: 'Studio/Bedsitter', icon: Home, desc: 'Chumba chenye jiko na choo' },
-            { value: 'dormitory', label: 'Bweni (Dormitory)', icon: Building, desc: 'Vyumba vingi kwa hostel' }
+            { value: 'master_room', label: 'Master Room', icon: Award, desc: 'Main room with private bathroom' },
+            { value: 'self_contained', label: 'Self Contained', icon: Home, desc: 'Room with bathroom and toilet inside' },
+            { value: 'apartment', label: 'Apartment/Flat', icon: Building, desc: 'Multi-room property' },
+            { value: 'studio', label: 'Studio/Bedsitter', icon: Home, desc: 'Room with kitchenette and bathroom' },
+            { value: 'dormitory', label: 'Dormitory', icon: Building, desc: 'Multiple rooms for hostel' }
           ].map(({ value, label, icon: Icon, desc }) => (
             <button
               key={value}
@@ -587,9 +587,9 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
       {/* Progress indicator */}
       <div className="mt-6 pt-4 border-t border-gray-100">
         <div className="flex items-center justify-between text-sm text-gray-600">
-          <span>Hatua ya 2: Maelezo ya Nyumba</span>
+          <span>Step 2: Property Details</span>
           <Badge variant={isStepValid(2) ? "default" : "secondary"}>
-            {isStepValid(2) ? "Kamili" : "Inahitajika"}
+            {isStepValid(2) ? "Complete" : "Required"}
           </Badge>
         </div>
       </div>
@@ -705,9 +705,9 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         <div className="w-16 h-16 bg-gradient-to-br from-safari-500 to-primary rounded-full flex items-center justify-center mx-auto mb-4">
           <Camera className="h-8 w-8 text-white" />
         </div>
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">Picha za Nyumba *</h3>
-        <p className="text-gray-600">Ongeza picha nzuri za nyumba yako ili kuvutia wapangaji</p>
-        <p className="text-sm text-red-600 font-medium">⚠️ Picha ni za lazima - ongeza angalau picha moja</p>
+        <h3 className="text-xl font-semibold text-gray-900 mb-2">Property Photos *</h3>
+        <p className="text-gray-600">Add quality photos of your property to attract tenants</p>
+        <p className="text-sm text-red-600 font-medium">⚠️ Photos are required - add at least one photo</p>
       </div>
 
       {/* Photo Upload Component */}
@@ -725,17 +725,17 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
           Vidokezo vya Picha Nzuri
         </h4>
         <ul className="text-sm text-blue-800 space-y-1">
-          <li>• Piga picha za sebule, chumba cha kulala, na jiko</li>
-          <li>• Hakikisha mwanga wa kutosha</li>
-          <li>• Onyesha mazingira ya nje ya nyumba</li>
-          <li>• Tumia picha za quality nzuri</li>
+          <li>• Take photos of living room, bedroom, and kitchen</li>
+          <li>• Ensure good lighting</li>
+          <li>• Show the exterior of the property</li>
+          <li>• Use high quality images</li>
         </ul>
       </div>
 
       {/* Progress indicator */}
       <div className="mt-6 pt-4 border-t border-gray-100">
         <div className="flex items-center justify-between text-sm text-gray-600">
-          <span>Hatua ya 4: Picha za Nyumba</span>
+          <span>Step 4: Property Photos</span>
           <div className="flex items-center gap-2">
             <Badge variant={formData.images.length > 0 ? "default" : "destructive"}>
               {formData.images.length} picha
@@ -884,14 +884,14 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
           });
           
           // Show alert to user about missing fields
-          alert('Tafadhali jaza sehemu zote za lazima kabla ya kuongeza nyumba:\n\n' +
-            `• Jina la nyumba: ${formData.title?.trim() ? '✓' : '✗'}\n` +
-            `• Bei ya kodi: ${formData.price?.trim() ? '✓' : '✗'}\n` +
-            `• Eneo: ${formData.location?.trim() ? '✓' : '✗'}\n` +
-            `• Maelezo ya nyumba: ${formData.description?.trim() ? '✓' : '✗'}\n` +
-            `• Aina ya nyumba: ${formData.property_type?.trim() ? '✓' : '✗'}\n` +
-            `• Nambari ya simu: ${formData.contact_phone?.trim() ? '✓' : '✗'}\n` +
-            `• Picha za nyumba: ${formData.images && formData.images.length > 0 ? '✓' : '✗'} (${formData.images?.length || 0} picha)`
+          alert('Please fill in all required fields before adding property:\n\n' +
+            `• Property title: ${formData.title?.trim() ? '✓' : '✗'}\n` +
+            `• Rental price: ${formData.price?.trim() ? '✓' : '✗'}\n` +
+            `• Location: ${formData.location?.trim() ? '✓' : '✗'}\n` +
+            `• Property description: ${formData.description?.trim() ? '✓' : '✗'}\n` +
+            `• Property type: ${formData.property_type?.trim() ? '✓' : '✗'}\n` +
+            `• Phone number: ${formData.contact_phone?.trim() ? '✓' : '✗'}\n` +
+            `• Property photos: ${formData.images && formData.images.length > 0 ? '✓' : '✗'} (${formData.images?.length || 0} photos)`
           );
           return;
         }
@@ -912,7 +912,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
           clearSavedData();
         } catch (error) {
           console.error('Form submission error:', error);
-          alert('Kuna tatizo la kuongeza nyumba. Tafadhali jaribu tena.');
+          alert('There was a problem adding the property. Please try again.');
         }
       } else {
         console.log('Not on final step, cannot submit yet');
@@ -987,8 +987,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
                 ) : (
                   <>
                     <Save className="h-4 w-4" />
-                    <span className="hidden xs:inline">{editingProperty ? 'Sasisha Nyumba' : 'Ongeza Nyumba'}</span>
-                    <span className="inline xs:hidden">{editingProperty ? 'Sasisha' : 'Ongeza'}</span>
+                    <span className="hidden xs:inline">{editingProperty ? 'Update Property' : 'Add Property'}</span>
+                    <span className="inline xs:hidden">{editingProperty ? 'Update' : 'Add'}</span>
                   </>
                 )}
               </Button>
@@ -1058,7 +1058,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
                 ) : (
                   <>
                     <Save className="h-4 w-4" />
-                    {editingProperty ? 'Sasisha Nyumba' : 'Ongeza Nyumba'}
+                    {editingProperty ? 'Update Property' : 'Add Property'}
                   </>
                 )}
               </Button>

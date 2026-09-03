@@ -2,7 +2,7 @@
  * ABOUT.TSX - ENHANCED ABOUT US PAGE
  * ==================================
  * 
- * Ukurasa wa kuhusu Nyumba Link ulioboreshwa - Enhanced About Us page for Nyumba Link
+ * Ukurasa wa kuhusu WanaChuo.com ulioboreshwa - Enhanced About Us page for WanaChuo.com
  * 
  * FUNCTIONALITY / KAZI:
  * - Displays company information and mission (Kuonyesha maelezo ya kampuni na dhamira)
@@ -58,10 +58,10 @@ import { useTranslation } from 'react-i18next';
  * ENHANCED ABOUT US PAGE COMPONENT
  * ===============================
  * 
- * Main component that displays comprehensive information about Nyumba Link,
+ * Main component that displays comprehensive information about WanaChuo.com,
  * with enhanced visual design, animations, and modern UI elements.
  * 
- * Kipengele kikuu kinachoonyesha maelezo makamilifu kuhusu Nyumba Link,
+ * Kipengele kikuu kinachoonyesha maelezo makamilifu kuhusu WanaChuo.com,
  * na muundo wa kuona ulioboreshwa, mchoro, na vipengele vya kisasa vya UI.
  */
 const About = () => {
@@ -200,8 +200,12 @@ const About = () => {
           
           {/* Floating Icons */}
           <div className="absolute top-16 sm:top-32 right-10 sm:right-20 animate-bounce delay-1000">
-            <div className="w-8 h-8 sm:w-12 sm:h-12 bg-white/80 rounded-full flex items-center justify-center shadow-lg">
-              <Home className="h-4 w-4 sm:h-6 sm:w-6 text-primary" />
+            <div className="w-8 h-8 sm:w-12 sm:h-12 bg-white/80 rounded-full flex items-center justify-center shadow-lg overflow-hidden">
+              <img 
+                src="/images/logo.png" 
+                alt="WanaChuo.com Logo" 
+                className="h-5 w-5 sm:h-8 sm:w-8 object-contain"
+              />
             </div>
           </div>
           <div className="absolute bottom-16 sm:bottom-32 left-10 sm:left-20 animate-bounce delay-2000">
@@ -217,8 +221,12 @@ const About = () => {
             <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-8 sm:mb-12 animate-fade-in">
               <div className="relative group">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary to-serengeti-500 rounded-2xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-300"></div>
-                <div className="relative w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-primary to-serengeti-500 rounded-2xl flex items-center justify-center shadow-2xl transform hover:scale-110 transition-all duration-300">
-                  <Home className="h-8 w-8 sm:h-14 sm:w-14 text-white" />
+                <div className="relative w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-primary to-serengeti-500 rounded-2xl flex items-center justify-center shadow-2xl transform hover:scale-110 transition-all duration-300 overflow-hidden">
+                  <img 
+                    src="/images/logo.png" 
+                    alt="WanaChuo.com Logo" 
+                    className="h-10 w-10 sm:h-16 sm:w-16 object-contain"
+                  />
                 </div>
                 <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 w-6 h-6 sm:w-8 sm:h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg animate-pulse">
                   <CheckCircle className="h-3 w-3 sm:h-5 sm:w-5 text-white" />
@@ -227,15 +235,12 @@ const About = () => {
               <div className="text-center sm:text-left">
                 <div className="flex items-center space-x-2">
                   <span className="text-4xl sm:text-6xl font-bold bg-gradient-to-r from-primary to-serengeti-600 bg-clip-text text-transparent">
-                    Nyumba
-                  </span>
-                  <span className="text-4xl sm:text-6xl font-bold bg-gradient-to-r from-serengeti-600 to-primary bg-clip-text text-transparent">
-                    Link
+                    WanaChuo.com
                   </span>
                 </div>
                 <Badge className="mt-2 sm:mt-3 bg-gradient-to-r from-primary to-serengeti-500 text-white border-0 px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm">
                   <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                  Tanzania's #1 Housing Platform
+                  Tanzania's #1 Student Housing Platform
                 </Badge>
               </div>
             </div>
@@ -703,8 +708,12 @@ const About = () => {
           
           {/* Floating Particles */}
           <div className="absolute top-16 sm:top-32 right-10 sm:right-20 animate-bounce delay-1000">
-            <div className="w-8 h-8 sm:w-12 sm:h-12 bg-white/80 rounded-full flex items-center justify-center shadow-lg">
-              <Home className="h-4 w-4 sm:h-6 sm:w-6 text-primary" />
+            <div className="w-8 h-8 sm:w-12 sm:h-12 bg-white/80 rounded-full flex items-center justify-center shadow-lg overflow-hidden">
+              <img 
+                src="/images/logo.png" 
+                alt="Wanachuo.com Logo" 
+                className="h-5 w-5 sm:h-8 sm:w-8 object-contain"
+              />
             </div>
           </div>
           

@@ -100,14 +100,18 @@ const SignUp = () => {
             className="text-center"
           >
             <Link to="/" className="flex items-center justify-center space-x-2 mb-6">
-              <Home className="h-8 w-8 text-primary" />
-              <span className="text-2xl font-bold text-primary">Wanachuo.com</span>
+              <img 
+                src="/images/logo.png" 
+                alt="WanaChuo.com Logo" 
+                className="h-8 w-8 object-contain"
+              />
+              <span className="text-2xl font-bold text-primary">WanaChuo.com</span>
             </Link>
             <h2 className="text-3xl font-bold text-gray-900">
               Create Your Account
             </h2>
             <p className="mt-2 text-gray-600">
-              Join Wanachuo.com - Find or list student housing
+              Join WanaChuo.com - Find or list student housing
             </p>
           </motion.div>
 
@@ -122,8 +126,12 @@ const SignUp = () => {
               <div className="absolute inset-0 bg-gradient-to-br from-white/50 via-transparent to-primary/5 pointer-events-none"></div>
               
               <CardHeader className="relative z-10 pb-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-primary to-serengeti-500 rounded-full mx-auto mb-4 flex items-center justify-center shadow-lg">
-                  <Home className="h-6 w-6 text-white" />
+                <div className="w-12 h-12 bg-gradient-to-r from-primary to-serengeti-500 rounded-full mx-auto mb-4 flex items-center justify-center shadow-lg overflow-hidden">
+                  <img 
+                    src="/images/logo.png" 
+                    alt="WanaChuo.com Logo" 
+                    className="h-8 w-8 object-contain"
+                  />
                 </div>
                 <CardTitle className="text-center text-2xl font-bold bg-gradient-to-r from-gray-900 to-primary bg-clip-text text-transparent">
                   {t('auth.signUp')}

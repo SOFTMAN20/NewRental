@@ -181,7 +181,7 @@ const App = () => (
             {/* Floating WhatsApp Button - Visible on all pages */}
             <FloatingWhatsApp 
               phoneNumber="+255123456789"
-              message="Hello! I need help finding a room on Wanachuo.com"
+              message="Hello! I need help finding a room on WanaChuo.com"
             />
           </BrowserRouter>
 

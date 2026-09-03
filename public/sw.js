@@ -1,5 +1,5 @@
 // Simple Service Worker for caching static assets
-const CACHE_NAME = 'nyumbalink-v1';
+const CACHE_NAME = 'wanachuo-v1';
 const urlsToCache = [
   '/',
   '/src/styles/index.css',

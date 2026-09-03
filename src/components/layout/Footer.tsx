@@ -22,21 +22,19 @@ const Footer = () => {
           <div className="col-span-1 sm:col-span-2 lg:col-span-1 space-y-6">
             <div className="group">
               <div className="flex items-center space-x-3 mb-6">
-                <div className="relative">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary to-serengeti-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110">
-                    <Home className="text-white font-bold h-5 w-5 sm:h-6 sm:w-6" />
-                  </div>
-                  <div className="absolute -inset-1 bg-gradient-to-br from-primary/20 to-serengeti-500/20 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative group">
+                  <img 
+                    src="/images/logo.png" 
+                    alt="WanaChuo.com Logo" 
+                    className="h-10 w-10 sm:h-12 sm:w-12 object-contain group-hover:scale-110 transition-all duration-300"
+                  />
+                </div>
+                <div>
+                    <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-primary to-serengeti-400 bg-clip-text text-transparent">
+                      WanaChuo.com
+                    </span>
+                </div>
               </div>
-              <div>
-                  <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-primary to-serengeti-400 bg-clip-text text-transparent">
-                    Nyumba
-                  </span>
-                  <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-serengeti-400 to-kilimanjaro-400 bg-clip-text text-transparent">
-                    Link
-                  </span>
-              </div>
-            </div>
               <p className="text-gray-300 mb-6 max-w-md leading-relaxed text-sm sm:text-base">
               {t('footer.description')}
             </p>
@@ -152,7 +150,7 @@ const Footer = () => {
         <div className="border-t border-gray-700/50 py-6 sm:py-8">
           <div className="text-center">
             <div className="text-gray-300 text-xs sm:text-sm">
-              © {currentYear} Wanachuo.com. {t('footer.rightsReserved')}
+              © {currentYear} WanaChuo.com. {t('footer.rightsReserved')}
             </div>
           </div>
         </div>

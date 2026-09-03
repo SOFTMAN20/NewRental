@@ -38,7 +38,7 @@ export const measurePageLoad = () => {
         
         // Only log in development and if metrics are valid
         if (process.env.NODE_ENV === 'development' && metrics.loadTime > 0) {
-          console.group('🚀 NyumbaLink Performance');
+          console.group('🚀 WanaChuo.com Performance');
           console.log(`📊 Load Time: ${metrics.loadTime}ms ${metrics.loadTime < 3000 ? '✅' : '❌'}`);
           console.log(`🎨 First Paint: ${metrics.firstPaint}ms`);
           console.log(`📱 3G Target: ${metrics.loadTime < 3000 ? 'ACHIEVED' : 'NEEDS WORK'}`);

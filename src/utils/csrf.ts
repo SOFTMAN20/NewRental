@@ -9,7 +9,7 @@ import { generateSecureToken } from './security';
 
 class CSRFProtection {
   private token: string | null = null;
-  private readonly tokenKey = 'nyumbalink_csrf_token';
+  private readonly tokenKey = 'wanachuo_csrf_token';
   
   // Generate and store CSRF token
   generateToken(): string {

@@ -127,7 +127,7 @@ export const browserCache = {
       expiration: Date.now() + (expirationMinutes * 60 * 1000),
     };
     try {
-      localStorage.setItem(`nyumbalink_${key}`, JSON.stringify(item));
+      localStorage.setItem(`wanachuo_${key}`, JSON.stringify(item));
     } catch (error) {
       console.warn('Failed to store in localStorage:', error);
     }
@@ -136,12 +136,12 @@ export const browserCache = {
   // Get data from localStorage
   get: (key: string) => {
     try {
-      const item = localStorage.getItem(`nyumbalink_${key}`);
+      const item = localStorage.getItem(`wanachuo_${key}`);
       if (!item) return null;
 
       const parsed = JSON.parse(item);
       if (Date.now() > parsed.expiration) {
-        localStorage.removeItem(`nyumbalink_${key}`);
+        localStorage.removeItem(`wanachuo_${key}`);
         return null;
       }
 
@@ -158,7 +158,7 @@ export const browserCache = {
   cleanup: () => {
     const keys = Object.keys(localStorage);
     keys.forEach(key => {
-      if (key.startsWith('nyumbalink_')) {
+      if (key.startsWith('wanachuo_')) {
         const item = localStorage.getItem(key);
         if (item) {
           try {

@@ -61,7 +61,7 @@ const PropertyGrid: React.FC<PropertyGridProps> = ({
         {/* Welcome Message */}
         <div className="space-y-2">
           <h3 className="text-xl font-semibold text-gray-900">
-            {t('dashboard.welcomeToNyumbaLink')}
+            {t('dashboard.welcomeToWanaChuo')}
           </h3>
           <p className="text-gray-600 max-w-md mx-auto">
               {t('dashboard.yourProperties', { count: properties.length })}
