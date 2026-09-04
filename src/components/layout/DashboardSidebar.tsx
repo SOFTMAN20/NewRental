@@ -163,9 +163,11 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ profile, user }) =>
         {/* Logo Section */}
         <div className="p-6 border-b">
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary to-serengeti-500 rounded-lg flex items-center justify-center">
-              <Home className="h-6 w-6 text-white" />
-            </div>
+            <img 
+              src="/images/logo.png" 
+              alt="Wanachuo.com Logo" 
+              className="h-10 w-10 object-contain"
+            />
             <div>
               <h2 className="text-lg font-bold text-gray-900">Wanachuo.com</h2>
               <p className="text-xs text-gray-500">Student Housing</p>

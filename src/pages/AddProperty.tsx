@@ -133,6 +133,9 @@ const AddProperty = () => {
     if (!formData.price || parseFloat(formData.price) <= 0) {
       errors.push('Bei ya nyumba lazima iwe zaidi ya 0');
     }
+    if (parseFloat(formData.price) > 999999999) {
+      errors.push('Bei ya nyumba ni kubwa sana. Weka bei sahihi');
+    }
     if (!formData.location?.trim() || formData.location.trim().length < 2) {
       errors.push('Eneo la nyumba lazima liwe na angalau herufi 2');
     }
@@ -251,7 +254,13 @@ const AddProperty = () => {
 
       if (error) {
         console.error('Database insert error:', error);
-        throw new Error(`Hitilafu ya database: ${error.message}`);
+        console.error('Property data being sent:', propertyData);
+        toast({
+          title: "Kosa la Database",
+          description: error.message || 'Imeshindikana kuongeza nyumba',
+          variant: "destructive"
+        });
+        return;
       }
       
       toast({

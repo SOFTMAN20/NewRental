@@ -31,7 +31,7 @@ const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex items-end gap-3">
+    <div className="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-50 flex items-end gap-3">
       {/* Tooltip */}
       {showTooltip && (
         <div className="bg-white shadow-lg rounded-lg p-3 mb-2 max-w-xs animate-in slide-in-from-right">

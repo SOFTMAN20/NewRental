@@ -28,7 +28,8 @@ import {
   X, Save, RefreshCw, Home, MapPin, Phone, Camera, 
   Building, Bed, Bath, Ruler, Zap, Droplets, Car, 
   Shield, Sofa, ChevronRight, ChevronLeft, CheckCircle,
-  Star, Info, Heart, Users, Award, Briefcase
+  Star, Info, Heart, Users, Award, Briefcase,
+  Wifi, Utensils, BookOpen, Volume2, Waves, Laptop
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { Tables } from '@/lib/integrations/supabase/types';
@@ -503,13 +504,15 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         </Label>
         <div className="grid grid-cols-2 gap-3">
           {[
-            { key: 'WiFi', label: 'WiFi/Internet', icon: Zap, desc: 'Mtandao wa haraka' },
-            { key: '24_Hour_Security', label: 'Ulinzi 24/7', icon: Shield, desc: 'Askari na kamera' },
-            { key: 'Study_Room', label: 'Chumba cha Kusoma', icon: Building, desc: 'Nafasi ya kusomea' },
-            { key: 'Laundry_Facilities', label: 'Mashine ya Kufulia', icon: Sofa, desc: 'Huduma ya dobi' },
-            { key: 'Backup_Generator', label: 'Jenereta', icon: Zap, desc: 'Umeme wa ziada' },
-            { key: 'Study_Desk_In_Room', label: 'Meza ya Kusomea', icon: Bed, desc: 'Meza na kiti' }
-          ].map(({ key, label, icon: Icon, desc }) => {
+            { key: 'WiFi', label: 'WiFi/Internet', icon: Wifi, desc: 'Mtandao wa haraka', color: 'text-blue-600' },
+            { key: '24_Hour_Security', label: 'Ulinzi 24/7', icon: Shield, desc: 'Askari na kamera', color: 'text-green-600' },
+            { key: 'Meal_Plan', label: 'Chakula', icon: Utensils, desc: 'Mipango ya chakula', color: 'text-orange-600' },
+            { key: 'Study_Room', label: 'Chumba cha Kusoma', icon: BookOpen, desc: 'Nafasi ya kusomea', color: 'text-purple-600' },
+            { key: 'Quiet_Hours', label: 'Wakati wa Utulivu', icon: Volume2, desc: 'Masaa ya kimya', color: 'text-gray-600' },
+            { key: 'Backup_Generator', label: 'Jenereta', icon: Zap, desc: 'Umeme wa ziada', color: 'text-yellow-600' },
+            { key: 'Laundry_Facilities', label: 'Mashine ya Kufulia', icon: Waves, desc: 'Huduma ya dobi', color: 'text-cyan-600' },
+            { key: 'Study_Desk_In_Room', label: 'Meza ya Kusomea', icon: Laptop, desc: 'Meza na kiti', color: 'text-indigo-600' }
+          ].map(({ key, label, icon: Icon, desc, color }) => {
             const isSelected = formData.amenities?.[key];
             return (
               <button
@@ -525,7 +528,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-start gap-3">
-                    <Icon className={`h-5 w-5 mt-0.5 ${isSelected ? 'text-primary' : 'text-gray-400'}`} />
+                    <Icon className={`h-5 w-5 mt-0.5 ${isSelected ? color : 'text-gray-400'}`} />
                     <div>
                       <span className={`font-medium block ${isSelected ? 'text-primary' : 'text-gray-700'}`}>
                         {label}
@@ -741,8 +744,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
    */
   const renderStepNavigation = () => (
     <div className="mb-6 sm:mb-8">
-      {/* Mobile step indicator */}
-      <div className="block sm:hidden mb-4">
+      {/* Mobile step indicator - HIDDEN */}
+      <div className="hidden">
         <div className="flex items-center justify-between text-sm text-gray-600">
           <span>Hatua {currentStep} ya {totalSteps}</span>
           <span>{Math.round(progress)}% kamili</span>
@@ -895,30 +898,27 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
     };
 
     return (
-      <div className="pt-6 border-t bg-gray-50 -mx-6 px-4 sm:px-6 -mb-6 pb-6">
-        {/* Mobile Layout - Stack vertically */}
-        <div className="block sm:hidden space-y-4">
-          
-          {/* Buttons - Mobile */}
-          <div className="flex gap-3">
+      <>
+        {/* Buttons Layout - Separated */}
+        <div className="flex justify-between items-center gap-3">
             <Button 
               type="button" 
               variant="outline"
               onClick={currentStep === 1 ? () => { clearSavedData(); onClose(); } : prevStep}
               disabled={submitting}
-              className="flex-1 flex items-center justify-center gap-2 min-h-[44px]"
+              className="flex items-center justify-center gap-2 min-h-[44px] px-6"
             >
               {currentStep === 1 ? (
                 <>
                   <X className="h-4 w-4" />
-                  <span className="hidden xs:inline">{t('dashboard.cancel')}</span>
-                  <span className="inline xs:hidden">Funga</span>
+                  <span className="hidden xs:inline sm:inline">{t('dashboard.cancel')}</span>
+                  <span className="inline xs:hidden sm:hidden">Funga</span>
                 </>
               ) : (
                 <>
                   <ChevronLeft className="h-4 w-4" />
-                  <span className="hidden xs:inline">Rudi Nyuma</span>
-                  <span className="inline xs:hidden">Rudi</span>
+                  <span className="hidden xs:inline sm:inline">Rudi Nyuma</span>
+                  <span className="inline xs:hidden sm:hidden">Rudi</span>
                 </>
               )}
             </Button>
@@ -929,7 +929,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
                 type="button"
                 onClick={nextStep}
                 disabled={!isStepValid(currentStep)}
-                className="flex-1 flex items-center justify-center gap-2 min-h-[44px]"
+                className="flex items-center justify-center gap-2 min-h-[44px] px-6"
               >
                 <span>Endelea</span>
                 <ChevronRight className="h-4 w-4" />
@@ -938,92 +938,33 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
               <Button 
                 type="button"
                 onClick={handleSubmitClick}
-                className="flex-1 bg-gradient-to-r from-primary to-serengeti-500 hover:from-primary/90 hover:to-serengeti-400 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all duration-200 min-h-[44px]"
+                className="bg-gradient-to-r from-primary to-serengeti-500 hover:from-primary/90 hover:to-serengeti-400 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all duration-200 min-h-[44px] px-6"
                 disabled={submitting || !isStepValid(currentStep)}
                 title={`Submit button - Current step: ${currentStep}, Total steps: ${totalSteps}, Submitting: ${submitting}, Valid: ${isStepValid(currentStep)}`}
               >
                 {submitting ? (
                   <>
                     <RefreshCw className="h-4 w-4 animate-spin" />
-                    <span className="hidden xs:inline">{editingProperty ? t('dashboard.updating') : t('dashboard.adding')}</span>
-                    <span className="inline xs:hidden">{editingProperty ? 'Sasisha' : 'Ongeza'}</span>
+                    <span className="hidden xs:inline sm:inline">{editingProperty ? t('dashboard.updating') : t('dashboard.adding')}</span>
+                    <span className="inline xs:hidden sm:hidden">{editingProperty ? 'Sasisha' : 'Ongeza'}</span>
                   </>
                 ) : (
                   <>
                     <Save className="h-4 w-4" />
-                    <span className="hidden xs:inline">{editingProperty ? 'Update Property' : 'Add Property'}</span>
-                    <span className="inline xs:hidden">{editingProperty ? 'Update' : 'Add'}</span>
+                    <span className="hidden xs:inline sm:inline">{editingProperty ? 'Update Property' : 'Add Property'}</span>
+                    <span className="inline xs:hidden sm:hidden">{editingProperty ? 'Update' : 'Add'}</span>
                   </>
                 )}
               </Button>
             )}
           </div>
-        </div>
-
-        {/* Desktop Layout - Original horizontal */}
-        <div className="hidden sm:flex justify-between items-center">
-          <Button 
-            type="button" 
-            variant="outline"
-            onClick={currentStep === 1 ? () => { clearSavedData(); onClose(); } : prevStep}
-            disabled={submitting}
-            className="flex items-center gap-2"
-          >
-            {currentStep === 1 ? (
-              <>
-                <X className="h-4 w-4" />
-                {t('dashboard.cancel')}
-              </>
-            ) : (
-              <>
-                <ChevronLeft className="h-4 w-4" />
-                Rudi Nyuma
-              </>
-            )}
-          </Button>
-
-          <div className="flex items-center gap-3">
-            {/* Next/Submit button - Desktop */}
-            {currentStep < totalSteps ? (
-              <Button 
-                type="button"
-                onClick={nextStep}
-                disabled={!isStepValid(currentStep)}
-                className="flex items-center gap-2"
-              >
-                Endelea
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            ) : (
-              <Button 
-                type="button"
-                onClick={handleSubmitClick}
-                className="bg-gradient-to-r from-primary to-serengeti-500 hover:from-primary/90 hover:to-serengeti-400 flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
-                disabled={submitting || !isStepValid(currentStep)}
-                title={`Submit button - Current step: ${currentStep}, Total steps: ${totalSteps}, Submitting: ${submitting}, Valid: ${isStepValid(currentStep)}`}
-              >
-                {submitting ? (
-                  <>
-                    <RefreshCw className="h-4 w-4 animate-spin" />
-                    {editingProperty ? t('dashboard.updating') : t('dashboard.adding')}
-                  </>
-                ) : (
-                  <>
-                    <Save className="h-4 w-4" />
-                    {editingProperty ? 'Update Property' : 'Add Property'}
-                  </>
-                )}
-              </Button>
-            )}
-          </div>
-        </div>
-      </div>
+      </>
     );
   };
 
   return (
     <div className="fixed inset-0 bg-white sm:bg-black/60 sm:backdrop-blur-sm sm:flex sm:items-center sm:justify-center sm:p-4 z-[150]">
-      <Card className="w-full h-full sm:h-auto sm:max-w-2xl lg:max-w-4xl sm:max-h-[95vh] overflow-hidden shadow-none sm:shadow-2xl border-0 rounded-none sm:rounded-lg">
+      <Card className="w-full h-full sm:h-[98vh] sm:max-w-[98vw] sm:w-[98vw] lg:max-w-[96vw] xl:max-w-[94vw] overflow-hidden shadow-none sm:shadow-2xl border-0 rounded-none sm:rounded-lg relative flex flex-col">
         {/* Enhanced Header */}
         <CardHeader className="bg-gradient-to-r from-primary/10 to-serengeti-50 border-b">
           <div className="flex justify-between items-center">
@@ -1046,18 +987,25 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
           </div>
         </CardHeader>
 
-        <CardContent className="p-3 sm:p-4 lg:p-6 overflow-y-auto h-[calc(100vh-140px)] sm:h-auto sm:max-h-[calc(95vh-200px)]">
-          {/* Step Navigation */}
-          {renderStepNavigation()}
-          
-          {/* Current Step Content */}
-          <div className="min-h-[400px]">
-            {renderCurrentStep()}
+        <CardContent className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-6 flex flex-col items-center">
+          {/* Centered Content Container */}
+          <div className="w-full max-w-3xl mx-auto">
+            {/* Step Navigation */}
+            {renderStepNavigation()}
+            
+            {/* Current Step Content */}
+            <div className="min-h-[400px]">
+              {renderCurrentStep()}
             </div>
-          
-          {/* Navigation Buttons */}
-          {renderNavigationButtons()}
+          </div>
         </CardContent>
+
+        {/* Fixed Footer with Navigation Buttons */}
+        <div className="border-t bg-white">
+          <div className="max-w-3xl mx-auto px-3 sm:px-4 lg:px-6 py-4">
+            {renderNavigationButtons()}
+          </div>
+        </div>
       </Card>
     </div>
   );

@@ -49,7 +49,15 @@ import {
   ChevronRight,
   Home,
   AlertCircle,
-  Images
+  Images,
+  Wifi,
+  Shield,
+  Utensils,
+  BookOpen,
+  Volume2,
+  Waves,
+  Laptop,
+  Check
 } from 'lucide-react';
 import { useProperties, type Property } from '@/hooks/useProperties';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -623,11 +631,34 @@ const PropertyDetail = () => {
                       {property.amenities && typeof property.amenities === 'object' && Object.entries(property.amenities).map(([key, value]) => {
                         if (value === true || value === 'true') {
                           const displayName = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                          
+                          // Icon mapping for each amenity
+                          const getAmenityIcon = () => {
+                            switch(key.toLowerCase()) {
+                              case 'wifi':
+                                return <Wifi className="h-5 w-5 text-blue-600 flex-shrink-0" />;
+                              case '24_hour_security':
+                                return <Shield className="h-5 w-5 text-green-600 flex-shrink-0" />;
+                              case 'meal_plan':
+                                return <Utensils className="h-5 w-5 text-orange-600 flex-shrink-0" />;
+                              case 'study_room':
+                                return <BookOpen className="h-5 w-5 text-purple-600 flex-shrink-0" />;
+                              case 'quiet_hours':
+                                return <Volume2 className="h-5 w-5 text-gray-600 flex-shrink-0" />;
+                              case 'backup_generator':
+                                return <Zap className="h-5 w-5 text-yellow-600 flex-shrink-0" />;
+                              case 'laundry_facilities':
+                                return <Waves className="h-5 w-5 text-cyan-600 flex-shrink-0" />;
+                              case 'study_desk_in_room':
+                                return <Laptop className="h-5 w-5 text-indigo-600 flex-shrink-0" />;
+                              default:
+                                return <Check className="h-5 w-5 text-green-500 flex-shrink-0" />;
+                            }
+                          };
+                          
                           return (
                             <div key={key} className="flex items-center gap-3">
-                              <svg className="h-5 w-5 text-gray-700 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                              </svg>
+                              {getAmenityIcon()}
                               <span className="text-sm sm:text-base text-gray-700">{displayName}</span>
                             </div>
                           );
