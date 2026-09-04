@@ -38,6 +38,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Search, MapPin, Calendar, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import OptimizedImage from '@/components/common/OptimizedImage';
 
 /**
  * Hero Section Component
@@ -72,13 +73,12 @@ const HeroSection = () => {
   return (
     <div className="relative min-h-[40vh] sm:min-h-[50vh] lg:min-h-[55vh] flex items-center justify-center overflow-hidden">
       {/* Hero Background Image - Picha ya nyuma ya kishujaa */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed"
-        style={{ 
-          backgroundImage: `url(${heroImage})`,
-          backgroundPosition: 'center center',
-          backgroundAttachment: 'scroll'
-        }}
+      <OptimizedImage
+        src={heroImage}
+        alt="Student Housing Hero"
+        className="absolute inset-0 w-full h-full object-cover"
+        priority={true}
+        placeholder="blur"
       />
       
       {/* Dark overlay for text readability - Uwazi wa giza kwa kusoma vizuri */}

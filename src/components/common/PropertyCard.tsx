@@ -8,8 +8,9 @@
 
 import React from 'react';
 import { Card } from '@/components/ui/card';
-import { MapPin } from 'lucide-react';
+import DirectionsWalk from '@/components/icons/DirectionsWalk';
 import { Link } from 'react-router-dom';
+import OptimizedImage from '@/components/common/OptimizedImage';
 
 interface PropertyCardProps {
   id: string;
@@ -44,6 +45,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   distance_from_campus,
   university,
   is_available = true,
+  gender_restrictions,
 }) => {
   const imageUrl = images && images.length > 0
     ? images[0]
@@ -54,10 +56,13 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
       <Card className="group overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-300 bg-white rounded-2xl">
         {/* Property Image */}
         <div className="relative overflow-hidden rounded-2xl">
-          <img
+          <OptimizedImage
             src={imageUrl}
             alt={title}
             className={`w-full h-48 sm:h-56 object-cover group-hover:scale-105 transition-transform duration-500 rounded-2xl ${!is_available ? 'opacity-60' : ''}`}
+            width={500}
+            height={400}
+            placeholder="blur"
           />
           
           {/* SOLD OUT Badge */}
@@ -77,10 +82,10 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             {title}
           </h3>
 
-          {/* Location/Distance Info */}
+          {/* Location/Distance Info - Always show if available */}
           {university && distance_from_campus && (
             <div className="flex items-center text-gray-500 mb-3">
-              <MapPin className="h-4 w-4 mr-1.5 flex-shrink-0" />
+              <DirectionsWalk className="h-4 w-4 mr-1.5 flex-shrink-0" />
               <span className="text-sm">
                 {distance_from_campus} mins from {university.name}
               </span>

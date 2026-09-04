@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Star, MapPin, Wifi, Car, Utensils, Zap, Eye } from 'lucide-react';
+import { Star, Wifi, Car, Utensils, Zap, Eye } from 'lucide-react';
+import DirectionsWalk from '@/components/icons/DirectionsWalk';
 import { Link } from 'react-router-dom';
 import { useProperties, type Property } from '@/hooks/useProperties';
 import LoadingSpinner from '@/components/ui/loading-spinner';
 import { PropertyGridSkeleton } from '@/components/common/PropertyCardSkeleton';
 import { useTranslation } from 'react-i18next';
+import OptimizedImage from '@/components/common/OptimizedImage';
 
 /**
  * INDIVIDUAL PROPERTY CARD COMPONENT WITH MOBILE TOUCH
@@ -47,13 +49,17 @@ const FeaturedPropertyCard = ({ property, index, t }: { property: any, index: nu
             onTouchStart={handleMobileTouch}
             onClick={handleMobileTouch}
           >
-            <img
+            <OptimizedImage
               src={property.images && property.images.length > 0
                 ? property.images[0]
                 : 'https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=500&h=400&fit=crop'
               }
               alt={property.title}
               className={`w-full h-32 sm:h-48 object-cover group-hover:scale-110 transition-transform duration-700 rounded-2xl ${!property.is_available ? 'opacity-60' : ''}`}
+              width={500}
+              height={400}
+              priority={index < 4}
+              placeholder="blur"
             />
             
             {/* SOLD OUT Badge */}
@@ -98,7 +104,7 @@ const FeaturedPropertyCard = ({ property, index, t }: { property: any, index: nu
           {/* Location/Distance */}
           {property.university && property.distance_from_campus && (
             <div className="flex items-center text-gray-500 mb-3">
-              <MapPin className="h-4 w-4 mr-1.5 flex-shrink-0" />
+              <DirectionsWalk className="h-4 w-4 mr-1.5 flex-shrink-0" />
               <span className="text-sm line-clamp-1">
                 {/* Mobile: Show abbreviation */}
                 <span className="sm:hidden">
