@@ -323,9 +323,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     <div className="space-y-4">
       <Label>{t('dashboard.propertyImages', { current: images.length, max: maxImages })}</Label>
       
-      {/* Upload button */}
+      {/* Upload Area - Large Clickable Zone */}
       <div className="space-y-3">
-      <div className="flex items-center gap-4">
         <Input
           type="file"
           accept="image/*"
@@ -335,32 +334,50 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           className="hidden"
           id="image-upload"
         />
+        
+        {/* Large Clickable Upload Area */}
         <Label 
           htmlFor="image-upload" 
-            className={`cursor-pointer flex items-center gap-2 px-4 py-2 border-2 border-dashed rounded-lg transition-all duration-200 ${
+          className={`cursor-pointer flex flex-col items-center justify-center gap-3 px-6 py-8 sm:py-12 border-2 border-dashed rounded-xl transition-all duration-200 ${
             uploading || images.length >= maxImages 
-                ? 'opacity-50 cursor-not-allowed bg-gray-50' 
-                : 'border-gray-300 hover:border-primary hover:bg-primary/5'
+              ? 'opacity-50 cursor-not-allowed bg-gray-50 border-gray-300' 
+              : 'border-primary/30 hover:border-primary hover:bg-primary/5 bg-primary/[0.02]'
           }`}
         >
+          <div className={`p-4 rounded-full ${
+            uploading || images.length >= maxImages 
+              ? 'bg-gray-200' 
+              : 'bg-primary/10'
+          }`}>
             {uploading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <Loader2 className="h-8 w-8 sm:h-10 sm:w-10 animate-spin text-primary" />
             ) : (
-          <Upload className="h-4 w-4" />
+              <Upload className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
             )}
-            {uploading ? 'Processing...' : t('dashboard.selectImages')}
+          </div>
+          
+          <div className="text-center">
+            <p className="text-base sm:text-lg font-semibold text-gray-700 mb-1">
+              {uploading ? 'Processing images...' : 'Click to upload property photos'}
+            </p>
+            <p className="text-sm text-gray-500">
+              {uploading 
+                ? 'Please wait while we process your images' 
+                : 'JPG, PNG or WebP (Max 5MB per image)'
+              }
+            </p>
+            {images.length < maxImages && !uploading && (
+              <p className="text-xs sm:text-sm text-primary font-medium mt-2">
+                {maxImages - images.length} {maxImages - images.length === 1 ? 'photo' : 'photos'} remaining
+              </p>
+            )}
+          </div>
         </Label>
-          {images.length < maxImages && !uploading && (
-          <span className="text-sm text-gray-600">
-            {t('dashboard.canAddMore', { remaining: maxImages - images.length })}
-          </span>
-        )}
-        </div>
 
         {/* Compression Status Display */}
         {compressionStatus && (
           <div className={`p-3 rounded-lg text-sm font-medium ${
-            compressionStatus.includes('✅') 
+            compressionStatus.includes('✅') || compressionStatus.includes('🎉')
               ? 'bg-green-50 text-green-700 border border-green-200' 
               : compressionStatus.includes('❌')
               ? 'bg-red-50 text-red-700 border border-red-200'
@@ -369,8 +386,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             {compressionStatus}
           </div>
         )}
-
-
       </div>
 
       {/* Image preview grid */}

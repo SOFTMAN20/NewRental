@@ -50,6 +50,11 @@ interface PropertyFormData {
   location: string;
   full_address: string;
   property_type: string;
+  available_beds: string;
+  gender_restrictions: string;
+  university_id: string;
+  distance_from_campus: string;
+  amenities: any;
   bedrooms: string;
   bathrooms: string;
   area_sqm: string;
@@ -199,13 +204,13 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
   const isStepValid = (step: number): boolean => {
     switch (step) {
       case 1:
-        return !!(formData.title?.trim() && formData.price?.trim() && formData.location?.trim());
+        return formData.images && formData.images.length > 0; // Photos - at least 1 required
       case 2:
-        return !!(formData.description?.trim() && formData.property_type?.trim());
+        return !!(formData.title?.trim() && formData.price?.trim() && formData.location?.trim());
       case 3:
-        return !!formData.contact_phone?.trim();
+        return !!(formData.description?.trim() && formData.property_type?.trim());
       case 4:
-        return formData.images && formData.images.length > 0; // Images are now required
+        return !!formData.contact_phone?.trim();
       default:
         return false;
     }
@@ -224,10 +229,10 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
   };
 
   const steps = [
-    { id: 1, title: 'Basic Info', icon: Home, description: 'Title, price and location' },
-    { id: 2, title: 'Property Details', icon: Building, description: 'Room type and amenities' },
-    { id: 3, title: 'Contact', icon: Phone, description: 'Phone numbers' },
-    { id: 4, title: 'Photos', icon: Camera, description: 'Property photos (required)' }
+    { id: 1, title: 'Photos', icon: Camera, description: 'Property photos (at least 1 required)' },
+    { id: 2, title: 'Basic Info', icon: Home, description: 'Title, price and location' },
+    { id: 3, title: 'Property Details', icon: Building, description: 'Room type and amenities' },
+    { id: 4, title: 'Contact', icon: Phone, description: 'Phone numbers' }
   ];
 
   /**
@@ -609,8 +614,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         <div className="w-16 h-16 bg-gradient-to-br from-kilimanjaro-500 to-safari-500 rounded-full flex items-center justify-center mx-auto mb-4">
           <Phone className="h-8 w-8 text-white" />
         </div>
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">Maelezo ya Mawasiliano</h3>
-        <p className="text-gray-600">Weka maelezo ya mawasiliano ili wapangaji waweze kuwasiliana nawe</p>
+        <h3 className="text-xl font-semibold text-gray-900 mb-2">Maelezo ya Mawasiliano *</h3>
+        <p className="text-gray-600">Weka namba ya simu ili wapangaji waweze kuwasiliana nawe</p>
       </div>
 
       {/* Contact Phone */}
@@ -631,12 +636,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         <p className="text-xs text-gray-500">
           {t('dashboard.contactPhoneDescription')}
         </p>
-        {formData.contact_phone && (
-          <div className="flex items-center gap-1 text-green-600 text-xs">
-            <CheckCircle className="h-3 w-3" />
-            Nambari ya simu imejazwa
-          </div>
-        )}
       </div>
 
       {/* WhatsApp Phone */}
@@ -683,10 +682,12 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
       {/* Progress indicator */}
       <div className="mt-6 pt-4 border-t border-gray-100">
         <div className="flex items-center justify-between text-sm text-gray-600">
-          <span>Hatua ya 3: Maelezo ya Mawasiliano</span>
-          <Badge variant={isStepValid(3) ? "default" : "secondary"}>
-            {isStepValid(3) ? "Kamili" : "Inahitajika"}
-          </Badge>
+          <span>Hatua ya 4: Maelezo ya Mawasiliano</span>
+          <div className="flex items-center gap-2">
+            <Badge variant={isStepValid(4) ? "default" : "destructive"}>
+              {isStepValid(4) ? "Kamili ✓" : "Namba ya simu inahitajika"}
+            </Badge>
+          </div>
         </div>
       </div>
     </div>
@@ -705,9 +706,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         <div className="w-16 h-16 bg-gradient-to-br from-safari-500 to-primary rounded-full flex items-center justify-center mx-auto mb-4">
           <Camera className="h-8 w-8 text-white" />
         </div>
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">Property Photos *</h3>
-        <p className="text-gray-600">Add quality photos of your property to attract tenants</p>
-        <p className="text-sm text-red-600 font-medium">⚠️ Photos are required - add at least one photo</p>
+        <h3 className="text-xl font-semibold text-gray-900 mb-2">Picha za Nyumba *</h3>
+        <p className="text-gray-600">Ongeza picha nzuri za nyumba yako ili kuvutia wapangaji</p>
       </div>
 
       {/* Photo Upload Component */}
@@ -718,39 +718,14 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         />
       </div>
 
-      {/* Photo Tips */}
-      <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-        <h4 className="font-medium text-blue-900 mb-2 flex items-center gap-2">
-          <Info className="h-4 w-4" />
-          Vidokezo vya Picha Nzuri
-        </h4>
-        <ul className="text-sm text-blue-800 space-y-1">
-          <li>• Take photos of living room, bedroom, and kitchen</li>
-          <li>• Ensure good lighting</li>
-          <li>• Show the exterior of the property</li>
-          <li>• Use high quality images</li>
-        </ul>
-      </div>
-
       {/* Progress indicator */}
       <div className="mt-6 pt-4 border-t border-gray-100">
         <div className="flex items-center justify-between text-sm text-gray-600">
-          <span>Step 4: Property Photos</span>
+          <span>Hatua ya 1: Picha za Nyumba</span>
           <div className="flex items-center gap-2">
             <Badge variant={formData.images.length > 0 ? "default" : "destructive"}>
               {formData.images.length} picha
             </Badge>
-            {formData.images.length > 0 ? (
-              <div className="flex items-center gap-1 text-green-600 text-xs">
-                <CheckCircle className="h-3 w-3" />
-                Picha zimeongezwa
-              </div>
-            ) : (
-              <div className="flex items-center gap-1 text-red-600 text-xs">
-                <X className="h-3 w-3" />
-                Ongeza picha za lazima
-              </div>
-            )}
           </div>
         </div>
       </div>
@@ -823,15 +798,15 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
   const renderCurrentStep = () => {
     switch (currentStep) {
       case 1:
-        return renderStep1();
+        return renderStep4(); // Photos - Step 1
       case 2:
-        return renderStep2();
+        return renderStep1(); // Basic Info - Step 2
       case 3:
-        return renderStep3();
+        return renderStep2(); // Property Details - Step 3
       case 4:
-        return renderStep4();
+        return renderStep3(); // Contact - Step 4
       default:
-        return renderStep1();
+        return renderStep4(); // Photos as default
     }
   };
 
@@ -923,17 +898,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
       <div className="pt-6 border-t bg-gray-50 -mx-6 px-4 sm:px-6 -mb-6 pb-6">
         {/* Mobile Layout - Stack vertically */}
         <div className="block sm:hidden space-y-4">
-          {/* Progress indicator - Mobile */}
-          <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
-            <span>{currentStep} ya {totalSteps}</span>
-            <div className="w-20 bg-gray-200 rounded-full h-2">
-              <div 
-                className="bg-primary h-2 rounded-full transition-all duration-300"
-                style={{ width: `${(currentStep / totalSteps) * 100}%` }}
-              />
-            </div>
-            <span>{Math.round(progress)}% kamili</span>
-          </div>
           
           {/* Buttons - Mobile */}
           <div className="flex gap-3">
@@ -975,8 +939,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
                 type="button"
                 onClick={handleSubmitClick}
                 className="flex-1 bg-gradient-to-r from-primary to-serengeti-500 hover:from-primary/90 hover:to-serengeti-400 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all duration-200 min-h-[44px]"
-                disabled={submitting}
-                title={`Submit button - Current step: ${currentStep}, Total steps: ${totalSteps}, Submitting: ${submitting}`}
+                disabled={submitting || !isStepValid(currentStep)}
+                title={`Submit button - Current step: ${currentStep}, Total steps: ${totalSteps}, Submitting: ${submitting}, Valid: ${isStepValid(currentStep)}`}
               >
                 {submitting ? (
                   <>
@@ -1019,18 +983,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
           </Button>
 
           <div className="flex items-center gap-3">
-            {/* Progress indicator - Desktop */}
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <span>{currentStep} ya {totalSteps}</span>
-              <div className="w-16 bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-primary h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${(currentStep / totalSteps) * 100}%` }}
-                />
-              </div>
-              <span>{Math.round(progress)}% kamili</span>
-            </div>
-
             {/* Next/Submit button - Desktop */}
             {currentStep < totalSteps ? (
               <Button 
@@ -1047,8 +999,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
                 type="button"
                 onClick={handleSubmitClick}
                 className="bg-gradient-to-r from-primary to-serengeti-500 hover:from-primary/90 hover:to-serengeti-400 flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
-                disabled={submitting}
-                title={`Submit button - Current step: ${currentStep}, Total steps: ${totalSteps}, Submitting: ${submitting}`}
+                disabled={submitting || !isStepValid(currentStep)}
+                title={`Submit button - Current step: ${currentStep}, Total steps: ${totalSteps}, Submitting: ${submitting}, Valid: ${isStepValid(currentStep)}`}
               >
                 {submitting ? (
                   <>
@@ -1070,8 +1022,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 z-50">
-      <Card className="w-full max-w-sm sm:max-w-2xl lg:max-w-4xl max-h-[95vh] overflow-hidden shadow-2xl border-0">
+    <div className="fixed inset-0 bg-white sm:bg-black/60 sm:backdrop-blur-sm sm:flex sm:items-center sm:justify-center sm:p-4 z-[150]">
+      <Card className="w-full h-full sm:h-auto sm:max-w-2xl lg:max-w-4xl sm:max-h-[95vh] overflow-hidden shadow-none sm:shadow-2xl border-0 rounded-none sm:rounded-lg">
         {/* Enhanced Header */}
         <CardHeader className="bg-gradient-to-r from-primary/10 to-serengeti-50 border-b">
           <div className="flex justify-between items-center">
@@ -1079,7 +1031,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
               <CardTitle className="text-lg sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-primary to-serengeti-600 bg-clip-text text-transparent line-clamp-1">
               {editingProperty ? t('dashboard.updateProperty') : t('dashboard.addNewPropertyTitle')}
             </CardTitle>
-              <p className="text-gray-600 mt-1 text-sm sm:text-base line-clamp-2">
+              <p className="hidden sm:block text-gray-600 mt-1 text-sm sm:text-base line-clamp-2">
                 {steps[currentStep - 1]?.description}
               </p>
             </div>
@@ -1092,19 +1044,9 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
               <X className="h-5 w-5" />
             </Button>
           </div>
-          
-          {/* Progress bar */}
-          <div className="mt-4">
-            <Progress value={progress} className="h-2" />
-            <p className="text-xs text-gray-500 mt-1">
-              {Math.round(progress)}% ya fomu imejazwa
-            </p>
-          </div>
-          
-
         </CardHeader>
 
-        <CardContent className="p-3 sm:p-4 lg:p-6 overflow-y-auto max-h-[calc(95vh-200px)]">
+        <CardContent className="p-3 sm:p-4 lg:p-6 overflow-y-auto h-[calc(100vh-140px)] sm:h-auto sm:max-h-[calc(95vh-200px)]">
           {/* Step Navigation */}
           {renderStepNavigation()}
           

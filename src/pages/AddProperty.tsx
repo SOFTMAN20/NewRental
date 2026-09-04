@@ -322,7 +322,7 @@ const AddProperty = () => {
             Rudi Dashibodi
           </Button>
           
-          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+          <div className="hidden md:block bg-white rounded-lg shadow-sm p-6 mb-6">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               Ongeza Nyumba Mpya
             </h1>
