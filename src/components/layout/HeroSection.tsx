@@ -71,18 +71,18 @@ const HeroSection = () => {
   const heroImage = isMobile ? '/hero3.webp' : '/heroimage.png';
 
   return (
-    <div className="relative min-h-[40vh] sm:min-h-[50vh] lg:min-h-[55vh] flex items-center justify-center overflow-hidden">
+    <div className="relative min-h-[40vh] sm:min-h-[50vh] lg:min-h-[55vh] flex items-center justify-center overflow-hidden rounded-b-[2rem] sm:rounded-b-[3rem] lg:rounded-b-[4rem]">
       {/* Hero Background Image - Picha ya nyuma ya kishujaa */}
       <OptimizedImage
         src={heroImage}
         alt="Student Housing Hero"
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full object-cover rounded-b-[2rem] sm:rounded-b-[3rem] lg:rounded-b-[4rem]"
         priority={true}
         placeholder="blur"
       />
       
       {/* Dark overlay for text readability - Uwazi wa giza kwa kusoma vizuri */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/50" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/50 rounded-b-[2rem] sm:rounded-b-[3rem] lg:rounded-b-[4rem]" />
 
       <div className="relative max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 w-full py-8 sm:py-12 pt-20 sm:pt-24 lg:pt-28">
         {/* Main Hero Content - Maudhui makuu ya kishujaa */}
