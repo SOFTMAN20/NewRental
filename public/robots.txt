@@ -1,22 +1,29 @@
+# Robots.txt for Wanachuo.com
+# Allow all search engines to index everything
+
 User-agent: *
 Allow: /
-
-# Disallow admin and private areas
-Disallow: /dashboard/
 Disallow: /api/
-Disallow: /admin/
+Disallow: /dashboard/private/
+Disallow: /*.json$
 
-# Allow important pages
-Allow: /browse
-Allow: /about
-Allow: /signin
-Allow: /signup
-Allow: /contact
-Allow: /privacy
-Allow: /terms
+# Sitemaps
+Sitemap: https://wanachuo.com/sitemap.xml
+Sitemap: https://wanachuo.com/sitemap-properties.xml
 
-# Sitemap location
-Sitemap: https://nyumba-link.com/sitemap.xml
+# Crawl-delay for polite bots
+User-agent: *
+Crawl-delay: 1
 
-# Crawl delay (optional - helps with server load)
+# Special rules for major search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
 Crawl-delay: 1
