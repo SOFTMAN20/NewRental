@@ -44,19 +44,19 @@ const PWAInstallPrompt: React.FC = () => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
       
-      // Show prompt after 5 seconds
+      // Show prompt after 3 seconds
       setTimeout(() => {
         setShowPrompt(true);
-      }, 5000);
+      }, 3000);
     };
 
     window.addEventListener('beforeinstallprompt', handler);
 
-    // Show iOS instructions after 5 seconds
+    // Show iOS instructions after 3 seconds
     if (iOS && !isStandalone) {
       setTimeout(() => {
         setShowPrompt(true);
-      }, 5000);
+      }, 3000);
     }
 
     return () => {
