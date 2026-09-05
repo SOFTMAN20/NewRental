@@ -92,11 +92,11 @@ const PWAInstallPrompt: React.FC = () => {
 
   return (
     <div className="fixed bottom-24 sm:bottom-20 left-4 right-4 sm:left-auto sm:right-24 z-40 animate-in slide-in-from-bottom">
-      <div className="bg-gradient-to-r from-primary to-serengeti-600 text-white rounded-xl shadow-2xl p-4 max-w-sm relative">
+      <div className="bg-gradient-to-r from-primary to-serengeti-600 text-white rounded-xl shadow-2xl p-3 max-w-sm relative">
         {/* Close button */}
         <button
           onClick={handleDismiss}
-          className="absolute top-2 right-2 text-white/80 hover:text-white"
+          className="absolute top-1.5 right-1.5 text-white/80 hover:text-white"
         >
           <X className="h-4 w-4" />
         </button>
@@ -108,24 +108,24 @@ const PWAInstallPrompt: React.FC = () => {
           </div>
           
           <div className="flex-1 pr-6">
-            <h3 className="font-bold text-base mb-1">
-              {isIOS ? 'Weka App' : 'Pakua App'}
-            </h3>
-            <p className="text-sm text-white/90 mb-2">
-              {isIOS 
-                ? 'Bonyeza (⬆️) → "Add to Home Screen"'
-                : 'Tumia Wanachuo kama app!'
-              }
+            <p className="text-sm font-medium mb-2">
+              Install app
             </p>
             
             {!isIOS && deferredPrompt && (
               <Button
                 onClick={handleInstallClick}
                 size="sm"
-                className="bg-white text-primary hover:bg-white/90 h-8 text-xs px-3"
+                className="bg-white text-primary hover:bg-white/90 h-7 text-xs px-4"
               >
-                Pakua
+                Install
               </Button>
+            )}
+
+            {isIOS && (
+              <p className="text-xs text-white/80">
+                Tap (⬆️) → Add to Home Screen
+              </p>
             )}
           </div>
         </div>
