@@ -91,42 +91,38 @@ const PWAInstallPrompt: React.FC = () => {
   if (!showPrompt) return null;
 
   return (
-    <div className="fixed bottom-24 sm:bottom-20 left-4 right-4 sm:left-auto sm:right-24 z-40 animate-in slide-in-from-bottom">
-      <div className="bg-gradient-to-r from-primary to-serengeti-600 text-white rounded-xl shadow-2xl p-3 max-w-sm relative">
+    <div className="fixed bottom-24 sm:bottom-20 left-4 right-4 sm:left-auto sm:right-6 z-40 animate-in slide-in-from-bottom">
+      <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-3 max-w-xs relative">
         {/* Close button */}
         <button
           onClick={handleDismiss}
-          className="absolute top-1.5 right-1.5 text-white/80 hover:text-white"
+          className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
+          aria-label="Close"
         >
           <X className="h-4 w-4" />
         </button>
 
         {/* Content */}
-        <div className="flex items-center gap-3">
-          <div className="bg-white/20 rounded-lg p-2 flex-shrink-0">
-            <Download className="h-5 w-5" />
-          </div>
+        <div className="flex items-center gap-3 pr-6">
+          <Download className="h-5 w-5 text-primary flex-shrink-0" />
           
-          <div className="flex-1 pr-6">
-            <p className="text-sm font-medium mb-2">
-              Install app
-            </p>
-            
-            {!isIOS && deferredPrompt && (
-              <Button
-                onClick={handleInstallClick}
-                size="sm"
-                className="bg-white text-primary hover:bg-white/90 h-7 text-xs px-4"
-              >
-                Install
-              </Button>
-            )}
-
-            {isIOS && (
-              <p className="text-xs text-white/80">
-                Tap (⬆️) → Add to Home Screen
-              </p>
-            )}
+          <div className="flex-1">
+            {!isIOS && deferredPrompt ? (
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-700">Install Wanachuo</span>
+                <Button
+                  onClick={handleInstallClick}
+                  size="sm"
+                  className="bg-primary hover:bg-primary/90 h-7 text-xs px-3"
+                >
+                  Install
+                </Button>
+              </div>
+            ) : isIOS ? (
+              <div className="text-sm text-gray-700">
+                Install Wanachuo: Tap ⬆️ then "Add to Home Screen"
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
