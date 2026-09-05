@@ -5,8 +5,8 @@
  * Enables offline functionality and app installation
  */
 
-const CACHE_NAME = 'wanachuo-v2-2026';
-const RUNTIME_CACHE = 'wanachuo-runtime-v2';
+const CACHE_NAME = 'wanachuo-v3-2026';
+const RUNTIME_CACHE = 'wanachuo-runtime-v3';
 
 // Assets to cache on install
 const STATIC_ASSETS = [
