@@ -57,7 +57,6 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { createOptimizedQueryClient } from "@/utils/cache";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
-import ErrorBoundary from "@/components/ui/error-boundary";
 import { lazy, Suspense } from "react";
 import MobileBottomNav from "./components/layout/MobileBottomNav";
 import PerformanceDashboard from "./components/common/PerformanceDashboard";
