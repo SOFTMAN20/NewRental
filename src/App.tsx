@@ -62,6 +62,7 @@ import { lazy, Suspense } from "react";
 import MobileBottomNav from "./components/layout/MobileBottomNav";
 import PerformanceDashboard from "./components/common/PerformanceDashboard";
 import FloatingWhatsApp from "./components/common/FloatingWhatsApp";
+import PWAInstallPrompt from "./components/common/PWAInstallPrompt";
 
 // Lazy load pages for code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -183,6 +184,9 @@ const App = () => (
               phoneNumber="+255750929317"
               message="Habari! Nahitaji msaada kutafuta nyumba kwenye Wanachuo.com (Hello! I need help finding accommodation on Wanachuo.com)"
             />
+
+            {/* PWA Install Prompt */}
+            <PWAInstallPrompt />
           </BrowserRouter>
 
           {/* Performance Dashboard - Development only */}

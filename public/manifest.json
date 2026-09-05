@@ -1,7 +1,7 @@
 {
-  "name": "NyumbaLink - Tanzania Housing Platform",
-  "short_name": "NyumbaLink",
-  "description": "Find your perfect home in Tanzania with NyumbaLink",
+  "name": "Wanachuo.com - Student Housing Tanzania",
+  "short_name": "Wanachuo",
+  "description": "Tafuta nyumba za wanafunzi Tanzania. Find student housing, hostels, and apartments near universities. UDSM, UDOM, DIT, MUST, Ardhi.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -9,13 +9,72 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ],
-  "categories": ["lifestyle", "business"],
+  "categories": ["lifestyle", "education", "business"],
   "lang": "sw",
   "scope": "/",
-  "prefer_related_applications": false
+  "prefer_related_applications": false,
+  "screenshots": [
+    {
+      "src": "/hero3.webp",
+      "sizes": "1280x720",
+      "type": "image/webp",
+      "form_factor": "wide"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Tafuta Nyumba",
+      "short_name": "Browse",
+      "description": "Search for student housing",
+      "url": "/browse",
+      "icons": [
+        {
+          "src": "/favicon-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Ongeza Nyumba",
+      "short_name": "Add Property",
+      "description": "List your property",
+      "url": "/add-property",
+      "icons": [
+        {
+          "src": "/favicon-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ]
 }
