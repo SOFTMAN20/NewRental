@@ -92,7 +92,7 @@ const PWAInstallPrompt: React.FC = () => {
 
   return (
     <div className="fixed bottom-24 sm:bottom-20 left-4 right-4 sm:left-auto sm:right-24 z-40 animate-in slide-in-from-bottom">
-      <div className="bg-gradient-to-r from-primary to-serengeti-600 text-white rounded-2xl shadow-2xl p-4 max-w-sm relative">
+      <div className="bg-gradient-to-r from-primary to-serengeti-600 text-white rounded-xl shadow-2xl p-4 max-w-sm relative">
         {/* Close button */}
         <button
           onClick={handleDismiss}
@@ -102,19 +102,19 @@ const PWAInstallPrompt: React.FC = () => {
         </button>
 
         {/* Content */}
-        <div className="flex items-start gap-3">
+        <div className="flex items-center gap-3">
           <div className="bg-white/20 rounded-lg p-2 flex-shrink-0">
-            <Download className="h-6 w-6" />
+            <Download className="h-5 w-5" />
           </div>
           
           <div className="flex-1 pr-6">
             <h3 className="font-bold text-base mb-1">
-              {isIOS ? 'Weka App kwenye Simu' : 'Sakinisha App'}
+              {isIOS ? 'Weka App' : 'Pakua App'}
             </h3>
-            <p className="text-sm text-white/90 mb-3">
+            <p className="text-sm text-white/90 mb-2">
               {isIOS 
-                ? 'Bonyeza share button (⬆️) kisha "Add to Home Screen"'
-                : 'Pakua Wanachuo.com kwenye simu yako kwa urahisi zaidi!'
+                ? 'Bonyeza (⬆️) → "Add to Home Screen"'
+                : 'Tumia Wanachuo kama app!'
               }
             </p>
             
@@ -122,10 +122,9 @@ const PWAInstallPrompt: React.FC = () => {
               <Button
                 onClick={handleInstallClick}
                 size="sm"
-                className="bg-white text-primary hover:bg-white/90"
+                className="bg-white text-primary hover:bg-white/90 h-8 text-xs px-3"
               >
-                <Download className="h-4 w-4 mr-2" />
-                Sakinisha Sasa
+                Pakua
               </Button>
             )}
           </div>
