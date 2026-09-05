@@ -63,6 +63,9 @@ import MobileBottomNav from "./components/layout/MobileBottomNav";
 import PerformanceDashboard from "./components/common/PerformanceDashboard";
 import FloatingWhatsApp from "./components/common/FloatingWhatsApp";
 import PWAInstallPrompt from "./components/common/PWAInstallPrompt";
+import ErrorBoundary from "./components/common/ErrorBoundary";
+import NetworkStatus from "./components/common/NetworkStatus";
+import PageLoadingFallback from "./components/common/PageLoadingFallback";
 
 // Lazy load pages for code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -135,14 +138,7 @@ const App = () => (
 
           {/* Main routing configuration - Mipangilio ya uongozaji */}
           <BrowserRouter>
-            <Suspense fallback={
-              <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50">
-                <div className="text-center">
-                  <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                  <p className="text-gray-600 text-sm">Inapakia...</p>
-                </div>
-              </div>
-            }>
+            <Suspense fallback={<PageLoadingFallback />}>
               <Routes>
                 {/* Public routes - Njia za umma */}
                 <Route path="/" element={<Index />} />
@@ -187,6 +183,9 @@ const App = () => (
 
             {/* PWA Install Prompt */}
             <PWAInstallPrompt />
+
+            {/* Network Status Indicator */}
+            <NetworkStatus />
           </BrowserRouter>
 
           {/* Performance Dashboard - Development only */}
