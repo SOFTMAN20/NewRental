@@ -27,6 +27,13 @@ interface College {
 
 const colleges: College[] = [
   {
+    id: '9',
+    name: 'Mbeya University of Science and Technology',
+    abbreviation: 'MUST',
+    city: 'Mbeya',
+    image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=300&fit=crop'
+  },
+  {
     id: '1',
     name: 'University of Dar es Salaam',
     abbreviation: 'UDSM',
