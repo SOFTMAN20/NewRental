@@ -57,9 +57,69 @@ const HeroSection = () => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState(''); // Single search input
   const [isCollegesModalOpen, setIsCollegesModalOpen] = useState(false); // Colleges modal
+  const [placeholderText, setPlaceholderText] = useState(''); // Typing animation
+  const [placeholderIndex, setPlaceholderIndex] = useState(0); // Current placeholder
+  
+  // Typing animation placeholders
+  const placeholders = [
+    'Search for single room near MUST...',
+    'Find apartment near UDSM...',
+    'Looking for hostel in Mbeya...',
+    'Search self contained near DIT...',
+    'Find shared room in Dar es Salaam...',
+    'Looking for bedsitter near UDOM...'
+  ];
   
   // Detect screen size for responsive image
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  
+  // Typing animation effect
+  React.useEffect(() => {
+    let currentText = '';
+    let currentIndex = 0;
+    let isDeleting = false;
+    let timeoutId: NodeJS.Timeout;
+
+    const type = () => {
+      const fullText = placeholders[placeholderIndex];
+      
+      if (!isDeleting) {
+        // Typing
+        currentText = fullText.substring(0, currentIndex + 1);
+        currentIndex++;
+        
+        if (currentIndex === fullText.length) {
+          // Pause at end
+          timeoutId = setTimeout(() => {
+            isDeleting = true;
+            type();
+          }, 2000);
+          setPlaceholderText(currentText);
+          return;
+        }
+      } else {
+        // Deleting
+        currentText = fullText.substring(0, currentIndex - 1);
+        currentIndex--;
+        
+        if (currentIndex === 0) {
+          // Move to next placeholder
+          isDeleting = false;
+          setPlaceholderIndex((prev) => (prev + 1) % placeholders.length);
+          timeoutId = setTimeout(type, 500);
+          setPlaceholderText(currentText);
+          return;
+        }
+      }
+      
+      setPlaceholderText(currentText);
+      timeoutId = setTimeout(type, isDeleting ? 50 : 100);
+    };
+
+    timeoutId = setTimeout(type, 1000);
+
+    return () => clearTimeout(timeoutId);
+  }, [placeholderIndex]);
   
   React.useEffect(() => {
     const handleResize = () => {
@@ -126,7 +186,7 @@ const HeroSection = () => {
             
             {/* Search Input */}
             <Input
-              placeholder="Search by property name, location..."
+              placeholder={placeholderText}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="flex-1 pl-3 sm:pl-4 pr-14 sm:pr-16 h-12 sm:h-14 lg:h-16 text-sm sm:text-base border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
