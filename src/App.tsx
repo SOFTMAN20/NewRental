@@ -65,6 +65,7 @@ import PWAInstallPrompt from "./components/common/PWAInstallPrompt";
 import ErrorBoundary from "./components/common/ErrorBoundary";
 import NetworkStatus from "./components/common/NetworkStatus";
 import PageLoadingFallback from "./components/common/PageLoadingFallback";
+import UpdateNotifier from "./components/common/UpdateNotifier";
 
 // Lazy load pages for code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -185,6 +186,9 @@ const App = () => (
 
             {/* Network Status Indicator */}
             <NetworkStatus />
+
+            {/* Update Notifier - Auto-checks for updates */}
+            <UpdateNotifier />
           </BrowserRouter>
 
           {/* Performance Dashboard - Development only */}

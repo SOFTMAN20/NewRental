@@ -62,12 +62,14 @@ export const createOptimizedQueryClient = () => {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        // Aggressive caching for better hit rates
-        staleTime: 5 * 60 * 1000, // 5 minutes - data stays fresh longer
-        cacheTime: 30 * 60 * 1000, // 30 minutes - keep in cache longer
+        // Auto-refresh properties for real-time updates
+        staleTime: 30 * 1000, // 30 seconds - refetch after 30s
+        cacheTime: 5 * 60 * 1000, // 5 minutes - keep in cache
+        refetchInterval: 30 * 1000, // Auto-refetch every 30 seconds
+        refetchIntervalInBackground: true, // Keep refetching even when tab is not focused
         retry: 2,
-        refetchOnWindowFocus: false,
-        refetchOnReconnect: true,
+        refetchOnWindowFocus: true, // Refetch when user returns to tab
+        refetchOnReconnect: true, // Refetch when internet reconnects
         
         // Custom cache behavior
         onSuccess: () => {
@@ -78,12 +80,18 @@ export const createOptimizedQueryClient = () => {
         },
       },
       mutations: {
-        // Optimistic updates for better UX
+        // Immediate cache invalidation for instant updates
         onSuccess: (data, variables, context, mutation) => {
-          // Invalidate related queries to maintain data consistency
+          // Invalidate related queries to show new data immediately
           const queryClient = mutation.meta?.queryClient as QueryClient;
           if (queryClient) {
+            // Invalidate all property-related queries
             queryClient.invalidateQueries({ queryKey: ['properties'] });
+            queryClient.invalidateQueries({ queryKey: ['featured-properties'] });
+            queryClient.invalidateQueries({ queryKey: ['property'] });
+            
+            // Refetch immediately
+            queryClient.refetchQueries({ queryKey: ['properties'], type: 'active' });
           }
         },
       },
