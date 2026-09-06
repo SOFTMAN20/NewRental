@@ -177,6 +177,19 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
       console.error('Error clearing saved form data:', error);
     }
   };
+
+  // Pre-fill contact phone numbers from user profile
+  useEffect(() => {
+    if (profile && profile.phone && !editingProperty) {
+      // Only pre-fill for new properties if the fields are empty
+      if (!formData.contact_phone) {
+        onInputChange('contact_phone', profile.phone);
+      }
+      if (!formData.contact_whatsapp_phone) {
+        onInputChange('contact_whatsapp_phone', profile.phone);
+      }
+    }
+  }, [profile, editingProperty]); // Only run when profile changes or when opening form
   
   // PropertyForm component rendered
   const totalSteps = 5;
@@ -676,6 +689,12 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
           className={`transition-all duration-200 ${formData.contact_phone ? 'border-green-300 bg-green-50' : ''}`}
           required
         />
+        {profile?.phone && formData.contact_phone === profile.phone && (
+          <p className="text-xs text-green-600 flex items-center gap-1">
+            <CheckCircle className="h-3 w-3" />
+            Namba kutoka profile yako
+          </p>
+        )}
         <p className="text-xs text-gray-500">
           {t('dashboard.contactPhoneDescription')}
         </p>
@@ -696,6 +715,12 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
           placeholder="+255712345678"
           className={`transition-all duration-200 ${formData.contact_whatsapp_phone ? 'border-green-300 bg-green-50' : ''}`}
         />
+        {profile?.phone && formData.contact_whatsapp_phone === profile.phone && (
+          <p className="text-xs text-green-600 flex items-center gap-1">
+            <CheckCircle className="h-3 w-3" />
+            Namba kutoka profile yako
+          </p>
+        )}
         <p className="text-xs text-gray-500">
           {t('dashboard.whatsappOptional')}
         </p>
