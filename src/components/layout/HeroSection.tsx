@@ -35,10 +35,11 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
-import { Search, MapPin, Calendar, Users } from 'lucide-react';
+import { Search, MapPin, Calendar, Users, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import OptimizedImage from '@/components/common/OptimizedImage';
+import CollegesModal from '@/components/common/CollegesModal';
 
 /**
  * Hero Section Component
@@ -55,6 +56,7 @@ const HeroSection = () => {
   // Usimamizi wa hali ya fomu ya utafutaji
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState(''); // Single search input
+  const [isCollegesModalOpen, setIsCollegesModalOpen] = useState(false); // Colleges modal
   
   // Detect screen size for responsive image
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -102,29 +104,48 @@ const HeroSection = () => {
           </h1>
         </div>
 
-        {/* Simple Single Search Bar - Airbnb Style - Search bar moja rahisi */}
+        {/* Search Bar with Location Button (Left) + Search Button (Right) */}
         <div className="max-w-2xl mb-6 sm:mb-8 px-0">
-          {/* Single Search Bar with Airbnb-style design */}
-          <div className="relative border-2 border-gray-300 rounded-full hover:border-primary/50 transition-colors duration-200 focus-within:border-primary shadow-2xl bg-white">
+          {/* Search Bar Container */}
+          <div className="relative border-2 border-gray-300 rounded-full hover:border-primary/50 transition-colors duration-200 focus-within:border-primary shadow-2xl bg-white flex items-center">
+            {/* Location/College Button (Left Side) */}
+            <button
+              type="button"
+              className="flex-shrink-0 flex items-center gap-2 pl-4 sm:pl-5 lg:pl-6 pr-3 sm:pr-4 py-3 sm:py-3.5 lg:py-4 border-r border-gray-200 hover:bg-gray-50 rounded-l-full transition-colors"
+              onClick={() => setIsCollegesModalOpen(true)}
+            >
+              <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-gray-700" />
+              <span className="hidden sm:inline text-sm sm:text-base font-medium text-gray-700">
+                All Colleges
+              </span>
+              <span className="sm:hidden text-xs font-medium text-gray-700">
+                College
+              </span>
+              <ChevronDown className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500" />
+            </button>
+            
+            {/* Search Input */}
             <Input
-              placeholder="Search for housing near your university (UDSM, UDOM, DIT...)"
+              placeholder="Search by property name, location..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-5 sm:pl-6 lg:pl-7 pr-16 sm:pr-20 lg:pr-24 h-12 sm:h-14 lg:h-16 text-sm sm:text-base lg:text-lg border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 rounded-full"
+              className="flex-1 pl-3 sm:pl-4 pr-14 sm:pr-16 h-12 sm:h-14 lg:h-16 text-sm sm:text-base border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
               onKeyPress={(e) => {
                 if (e.key === 'Enter') {
                   window.location.href = `/browse${searchQuery ? `?location=${encodeURIComponent(searchQuery)}` : ''}`;
                 }
               }}
             />
+            
+            {/* Search Button (Right Side) */}
             <Link 
               to={`/browse${searchQuery ? `?location=${encodeURIComponent(searchQuery)}` : ''}`}
             >
               <button
                 type="button"
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black text-white rounded-full p-3 sm:p-3.5 lg:p-4 transition-all duration-200 shadow-lg hover:shadow-xl"
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-primary to-serengeti-600 hover:from-primary/90 hover:to-serengeti-700 text-white rounded-full p-2.5 sm:p-3 lg:p-3.5 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105"
               >
-                <Search className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7" />
+                <Search className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />
               </button>
             </Link>
           </div>
@@ -192,6 +213,12 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
+      
+      {/* Colleges Modal */}
+      <CollegesModal 
+        open={isCollegesModalOpen} 
+        onClose={() => setIsCollegesModalOpen(false)} 
+      />
     </div>
   );
 };
