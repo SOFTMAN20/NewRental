@@ -179,7 +179,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
   };
   
   // PropertyForm component rendered
-  const totalSteps = 4;
+  const totalSteps = 5;
 
   if (!isOpen) return null;
 
@@ -369,10 +369,10 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
   );
 
   /**
-   * STEP 2: PROPERTY DETAILS
+   * STEP 2: PROPERTY DETAILS (PART 1)
    * =======================
    * 
-   * Enhanced property details step with interactive elements.
+   * Property type, gender, beds, and description.
    */
   const renderStep2 = () => (
     <div className="space-y-6 animate-fade-in">
@@ -496,7 +496,36 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         </div>
       </div>
 
-      {/* Student Housing Amenities - Simplified */}
+      {/* Progress indicator */}
+      <div className="mt-6 pt-4 border-t border-gray-100">
+        <div className="flex items-center justify-between text-sm text-gray-600">
+          <span>Step 3: Property Details</span>
+          <Badge variant={isStepValid(3) ? "default" : "secondary"}>
+            {isStepValid(3) ? "Complete" : "Required"}
+          </Badge>
+        </div>
+      </div>
+    </div>
+  );
+
+  /**
+   * STEP 2B: AMENITIES & LOCATION
+   * ==============================
+   * 
+   * Amenities and university location.
+   */
+  const renderStep2b = () => (
+    <div className="space-y-6 animate-fade-in">
+      {/* Header */}
+      <div className="text-center mb-6">
+        <div className="w-16 h-16 bg-gradient-to-br from-serengeti-500 to-kilimanjaro-500 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Award className="h-8 w-8 text-white" />
+        </div>
+        <h3 className="text-xl font-semibold text-gray-900 mb-2">Amenities & Location</h3>
+        <p className="text-gray-600">What makes your property special?</p>
+      </div>
+
+      {/* Student Housing Amenities */}
       <div className="space-y-3">
         <Label className="flex items-center gap-2 text-sm font-medium">
           <Award className="h-4 w-4 text-primary" />
@@ -603,9 +632,9 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
       {/* Progress indicator */}
       <div className="mt-6 pt-4 border-t border-gray-100">
         <div className="flex items-center justify-between text-sm text-gray-600">
-          <span>Step 2: Property Details</span>
-          <Badge variant={isStepValid(2) ? "default" : "secondary"}>
-            {isStepValid(2) ? "Complete" : "Required"}
+          <span>Step 4: Amenities & Location</span>
+          <Badge variant={isStepValid(4) ? "default" : "secondary"}>
+            {isStepValid(4) ? "Complete" : "Required"}
           </Badge>
         </div>
       </div>
@@ -693,9 +722,9 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
       {/* Progress indicator */}
       <div className="mt-6 pt-4 border-t border-gray-100">
         <div className="flex items-center justify-between text-sm text-gray-600">
-          <span>Hatua ya 4: Maelezo ya Mawasiliano</span>
+          <span>Hatua ya 5: Maelezo ya Mawasiliano</span>
           <div className="flex items-center gap-2">
-            <Badge variant={isStepValid(4) ? "default" : "destructive"}>
+            <Badge variant={isStepValid(5) ? "default" : "destructive"}>
               {isStepValid(4) ? "Kamili ✓" : "Namba ya simu inahitajika"}
             </Badge>
           </div>
@@ -815,7 +844,9 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
       case 3:
         return renderStep2(); // Property Details - Step 3
       case 4:
-        return renderStep3(); // Contact - Step 4
+        return renderStep2b(); // Amenities & Location - Step 4
+      case 5:
+        return renderStep3(); // Contact - Step 5
       default:
         return renderStep4(); // Photos as default
     }
