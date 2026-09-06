@@ -211,6 +211,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
       case 3:
         return !!(formData.description?.trim() && formData.property_type?.trim());
       case 4:
+        return true; // Amenities & location are optional
+      case 5:
         return !!formData.contact_phone?.trim();
       default:
         return false;
@@ -232,8 +234,9 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
   const steps = [
     { id: 1, title: 'Photos', icon: Camera, description: 'Property photos (at least 1 required)' },
     { id: 2, title: 'Basic Info', icon: Home, description: 'Title, price and location' },
-    { id: 3, title: 'Property Details', icon: Building, description: 'Room type and amenities' },
-    { id: 4, title: 'Contact', icon: Phone, description: 'Phone numbers' }
+    { id: 3, title: 'Property Details', icon: Building, description: 'Room type and description' },
+    { id: 4, title: 'Amenities', icon: Award, description: 'Features and university' },
+    { id: 5, title: 'Contact', icon: Phone, description: 'Phone numbers' }
   ];
 
   /**
