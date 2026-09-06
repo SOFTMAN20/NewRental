@@ -511,7 +511,15 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             { key: 'Quiet_Hours', label: 'Wakati wa Utulivu', icon: Volume2, desc: 'Masaa ya kimya', color: 'text-gray-600' },
             { key: 'Backup_Generator', label: 'Jenereta', icon: Zap, desc: 'Umeme wa ziada', color: 'text-yellow-600' },
             { key: 'Laundry_Facilities', label: 'Mashine ya Kufulia', icon: Waves, desc: 'Huduma ya dobi', color: 'text-cyan-600' },
-            { key: 'Study_Desk_In_Room', label: 'Meza ya Kusomea', icon: Laptop, desc: 'Meza na kiti', color: 'text-indigo-600' }
+            { key: 'Study_Desk_In_Room', label: 'Meza ya Kusomea', icon: Laptop, desc: 'Meza na kiti', color: 'text-indigo-600' },
+            { key: 'Furnished', label: 'Samani/Furniture', icon: Sofa, desc: 'Vitanda, meza, kabati', color: 'text-amber-600' },
+            { key: 'Parking', label: 'Maegesho', icon: Car, desc: 'Parking ya gari/pikipiki', color: 'text-slate-600' },
+            { key: 'Water_Supply', label: 'Maji ya Uhakika', icon: Droplets, desc: 'Maji 24/7', color: 'text-blue-400' },
+            { key: 'Kitchen', label: 'Jiko', icon: Utensils, desc: 'Jiko la kupikia', color: 'text-red-600' },
+            { key: 'Private_Bathroom', label: 'Bafuni Binafsi', icon: Bath, desc: 'Bafu la kibinafsi', color: 'text-teal-600' },
+            { key: 'CCTV', label: 'Kamera za CCTV', icon: Shield, desc: 'Ufuatiliaji wa kamera', color: 'text-red-700' },
+            { key: 'Balcony', label: 'Balcony/Baraza', icon: Home, desc: 'Nafasi ya nje', color: 'text-green-500' },
+            { key: 'Hot_Shower', label: 'Maji ya Moto', icon: Waves, desc: 'Shower ya maji moto', color: 'text-orange-500' }
           ].map(({ key, label, icon: Icon, desc, color }) => {
             const isSelected = formData.amenities?.[key];
             return (
