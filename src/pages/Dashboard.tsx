@@ -64,6 +64,7 @@ interface PropertyFormData {
   gender_restrictions: string;
   university_id: string;
   distance_from_campus: string;
+  transport_mode: string;
   amenities: any; // JSONB object
   images: string[];
   nearby_services: string[];
@@ -158,6 +159,7 @@ const Dashboard = () => {
     gender_restrictions: 'mixed',
     university_id: '',
     distance_from_campus: '',
+    transport_mode: 'walking',
     amenities: {},
     images: [],
     nearby_services: [],
@@ -573,6 +575,7 @@ const Dashboard = () => {
       gender_restrictions: formData.gender_restrictions || 'mixed',
       university_id: cleanUniversityId, // Use validated UUID or null
       distance_from_campus: formData.distance_from_campus ? parseFloat(formData.distance_from_campus) : null,
+      transport_mode: formData.transport_mode || 'walking',
       amenities: formData.amenities || {},
       images: formData.images || [],
       // Contact information
@@ -729,6 +732,7 @@ const Dashboard = () => {
       gender_restrictions: property.gender_restrictions || 'mixed',
       university_id: property.university_id || '',
       distance_from_campus: property.distance_from_campus?.toString() || '',
+      transport_mode: (property as any).transport_mode || 'walking',
       amenities: property.amenities || {},
       images: property.images || [],
       // Contact fields

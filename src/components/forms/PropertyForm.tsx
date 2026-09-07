@@ -29,7 +29,8 @@ import {
   Building, Bed, Bath, Ruler, Zap, Droplets, Car, 
   Shield, Sofa, ChevronRight, ChevronLeft, CheckCircle,
   Star, Info, Heart, Users, Award, Briefcase,
-  Wifi, Utensils, BookOpen, Volume2, Waves, Laptop
+  Wifi, Utensils, BookOpen, Volume2, Waves, Laptop,
+  Footprints, Bike
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { Tables } from '@/lib/integrations/supabase/types';
@@ -55,6 +56,7 @@ interface PropertyFormData {
   gender_restrictions: string;
   university_id: string;
   distance_from_campus: string;
+  transport_mode: string;
   amenities: any;
   bedrooms: string;
   bathrooms: string;
@@ -633,6 +635,36 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             <MapPin className="h-4 w-4 text-primary" />
             Muda kutoka Chuo (dakika)
           </Label>
+          
+          {/* Transport Mode Selection */}
+          <div className="grid grid-cols-3 gap-2 mb-3">
+            {[
+              { value: 'walking', label: 'Kwa Mguu', icon: Footprints, emoji: '🚶', desc: 'Walking' },
+              { value: 'bike', label: 'Pikipiki', icon: Bike, emoji: '🏍️', desc: 'Motorbike' },
+              { value: 'car', label: 'Gari', icon: Car, emoji: '🚗', desc: 'Car' }
+            ].map(({ value, label, icon: Icon, emoji, desc }) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() => onInputChange('transport_mode', value)}
+                className={`p-3 border-2 rounded-lg transition-all duration-200 ${
+                  formData.transport_mode === value 
+                    ? 'border-primary bg-primary/5 shadow-md' 
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <div className="text-center">
+                  <div className="text-2xl mb-1">{emoji}</div>
+                  <Icon className={`h-5 w-5 mx-auto mb-1 ${formData.transport_mode === value ? 'text-primary' : 'text-gray-400'}`} />
+                  <div className={`text-xs font-medium ${formData.transport_mode === value ? 'text-primary' : 'text-gray-700'}`}>
+                    {label}
+                  </div>
+                  <div className="text-xs text-gray-500">{desc}</div>
+                </div>
+              </button>
+            ))}
+          </div>
+
           <Input
             type="number"
             step="1"
@@ -641,7 +673,12 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             placeholder="15"
             className="text-center text-lg"
           />
-          <p className="text-xs text-gray-500">Mfano: 0.5 km = 500 mita</p>
+          <p className="text-xs text-gray-500">
+            {formData.transport_mode === 'walking' && '🚶 Dakika za kutembea kwa mguu'}
+            {formData.transport_mode === 'bike' && '🏍️ Dakika za kusafiri kwa pikipiki'}
+            {formData.transport_mode === 'car' && '🚗 Dakika za kusafiri kwa gari'}
+            {!formData.transport_mode && 'Chagua aina ya usafiri hapo juu'}
+          </p>
         </div>
       </div>
 

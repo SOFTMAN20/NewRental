@@ -28,6 +28,7 @@ interface PropertyFormData {
   gender_restrictions: string;
   university_id: string;
   distance_from_campus: string;
+  transport_mode: string;
   amenities: any;
   images: string[];
   nearby_services: string[];
@@ -61,6 +62,7 @@ const AddProperty = () => {
     gender_restrictions: 'mixed',
     university_id: '',
     distance_from_campus: '',
+    transport_mode: 'walking',
     amenities: {},
     images: [],
     nearby_services: [],
@@ -224,6 +226,7 @@ const AddProperty = () => {
         gender_restrictions: formData.gender_restrictions || 'mixed',
         university_id: cleanUniversityId,
         distance_from_campus: formData.distance_from_campus ? parseFloat(formData.distance_from_campus) : null,
+        transport_mode: formData.transport_mode || 'walking',
         amenities: formData.amenities || {},
         images: formData.images || [],
         contact_phone: formData.contact_phone?.trim() || null,
