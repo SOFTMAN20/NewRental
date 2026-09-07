@@ -37,7 +37,12 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import LoadingSpinner from '@/components/ui/loading-spinner';
 import { PropertyGridSkeleton } from '@/components/common/PropertyCardSkeleton';
-import { Search, MapPin, SlidersHorizontal, X } from 'lucide-react';
+import CollegesModal from '@/components/common/CollegesModal';
+import { 
+  Search, MapPin, SlidersHorizontal, X, 
+  Home, Users, Award, Building, Bed, Wifi, Shield, 
+  Utensils, Car, Zap, Waves, Sofa, GraduationCap, Bath
+} from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { useProperties } from '@/hooks/useProperties';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -59,6 +64,13 @@ interface FilterState {
   utilities: string[];
   nearbyServices: string[];
   sortBy: string;
+  // New comprehensive filters
+  propertyType: string[];  // Single, Shared, Master, Self-contained, Apartment, Studio
+  region: string;          // Dar es Salaam, Mbeya, Dodoma, Morogoro
+  amenities: string[];     // WiFi, Security, Kitchen, Parking, Generator, etc.
+  gender: string;          // male_only, female_only, mixed
+  beds: string;            // 1, 2, 3+
+  university: string;      // MUST, UDSM, DIT, etc.
 }
 
 /**
@@ -88,7 +100,14 @@ const getInitialFilterState = (searchParams: URLSearchParams): FilterState => ({
   maxPrice: searchParams.get('maxPrice') || '',
   utilities: [],
   nearbyServices: [],
-  sortBy: 'newest'
+  sortBy: 'newest',
+  // New filters
+  propertyType: searchParams.get('room_type') ? [searchParams.get('room_type')!] : [],
+  region: searchParams.get('region') || '',
+  amenities: [],
+  gender: searchParams.get('gender') || 'all',
+  beds: searchParams.get('beds') || 'all',
+  university: searchParams.get('university') || ''
 });
 
 /**
@@ -254,6 +273,7 @@ const Browse = () => {
   // State management - separated into logical groups
   const [filters, setFilters] = useState<FilterState>(() => getInitialFilterState(searchParams));
   const [uiState, setUIState] = useState<UIState>(() => getInitialUIState());
+  const [isCollegesModalOpen, setIsCollegesModalOpen] = useState(false);
 
   // Data fetching from Supabase
   const { data: properties = [], isLoading, error } = useProperties();
