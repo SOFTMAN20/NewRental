@@ -10,6 +10,7 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import DirectionsWalk from '@/components/icons/DirectionsWalk';
 import { Car } from 'lucide-react';
+import { TwoWheeler } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import OptimizedImage from '@/components/common/OptimizedImage';
 
@@ -72,7 +73,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   const getTransportIconComponent = () => {
     switch(transport_mode) {
       case 'bike':
-        return <span className="text-base mr-1">🏍️</span>;
+        return <TwoWheeler className="h-4 w-4 mr-1.5 flex-shrink-0" style={{ fontSize: '1rem' }} />;
       case 'car':
         return <Car className="h-4 w-4 mr-1.5 flex-shrink-0" />;
       case 'walking':

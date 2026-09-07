@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Star, Wifi, Car, Utensils, Zap, Eye } from 'lucide-react';
 import DirectionsWalk from '@/components/icons/DirectionsWalk';
+import { TwoWheeler } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { useProperties, type Property } from '@/hooks/useProperties';
 import LoadingSpinner from '@/components/ui/loading-spinner';
@@ -39,7 +40,7 @@ const FeaturedPropertyCard = ({ property, index, t }: { property: any, index: nu
   const getTransportIconComponent = () => {
     switch(property.transport_mode) {
       case 'bike':
-        return <span className="text-base mr-1">🏍️</span>;
+        return <TwoWheeler className="h-4 w-4 mr-1.5 flex-shrink-0" style={{ fontSize: '1rem' }} />;
       case 'car':
         return <Car className="h-4 w-4 mr-1.5 flex-shrink-0" />;
       case 'walking':
