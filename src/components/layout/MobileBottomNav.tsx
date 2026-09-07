@@ -81,10 +81,11 @@ const MobileBottomNav = () => {
   // Determine profile path based on user type
   const getProfilePath = () => {
     if (!user) return '/signin';
-    // If user is landlord/host, go to dashboard; otherwise go to profile
+    // Only landlords go to dashboard; students and professionals go to profile
     if (profile?.user_type === 'landlord') {
       return '/dashboard';
     }
+    // Students and professionals go to profile page
     return '/profile';
   };
 
