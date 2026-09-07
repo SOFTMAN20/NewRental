@@ -9,6 +9,7 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import DirectionsWalk from '@/components/icons/DirectionsWalk';
+import { Car } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import OptimizedImage from '@/components/common/OptimizedImage';
 
@@ -67,6 +68,19 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
     }
   };
 
+  // Get transport mode icon component
+  const getTransportIconComponent = () => {
+    switch(transport_mode) {
+      case 'bike':
+        return <span className="text-base mr-1">🏍️</span>;
+      case 'car':
+        return <Car className="h-4 w-4 mr-1.5 flex-shrink-0" />;
+      case 'walking':
+      default:
+        return <DirectionsWalk className="h-4 w-4 mr-1.5 flex-shrink-0" />;
+    }
+  };
+
   return (
     <Link to={`/property/${id}`}>
       <Card className="group overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-300 bg-white rounded-2xl">
@@ -101,9 +115,9 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
           {/* Location/Distance Info - Always show if available */}
           {university && distance_from_campus && (
             <div className="flex items-center text-gray-500 mb-3">
-              <DirectionsWalk className="h-4 w-4 mr-1.5 flex-shrink-0" />
+              {getTransportIconComponent()}
               <span className="text-sm">
-                {distance_from_campus} mins {getTransportIcon()} from {university.name}
+                {distance_from_campus} mins from {university.name}
               </span>
             </div>
           )}

@@ -35,6 +35,19 @@ const FeaturedPropertyCard = ({ property, index, t }: { property: any, index: nu
     }
   };
 
+  // Get transport mode icon component
+  const getTransportIconComponent = () => {
+    switch(property.transport_mode) {
+      case 'bike':
+        return <span className="text-base mr-1">🏍️</span>;
+      case 'car':
+        return <Car className="h-4 w-4 mr-1.5 flex-shrink-0" />;
+      case 'walking':
+      default:
+        return <DirectionsWalk className="h-4 w-4 mr-1.5 flex-shrink-0" />;
+    }
+  };
+
   /**
    * MOBILE TOUCH HANDLER
    * ===================
@@ -118,15 +131,15 @@ const FeaturedPropertyCard = ({ property, index, t }: { property: any, index: nu
           {/* Location/Distance */}
           {property.university && property.distance_from_campus && (
             <div className="flex items-center text-gray-500 mb-3">
-              <DirectionsWalk className="h-4 w-4 mr-1.5 flex-shrink-0" />
+              {getTransportIconComponent()}
               <span className="text-sm line-clamp-1">
                 {/* Mobile: Show abbreviation */}
                 <span className="sm:hidden">
-                  {property.distance_from_campus} mins {getTransportIcon()} from {property.university.abbreviation || property.university.name}
+                  {property.distance_from_campus} mins from {property.university.abbreviation || property.university.name}
                 </span>
                 {/* Desktop: Show full name */}
                 <span className="hidden sm:inline">
-                  {property.distance_from_campus} mins {getTransportIcon()} from {property.university.name}
+                  {property.distance_from_campus} mins from {property.university.name}
                 </span>
               </span>
             </div>
