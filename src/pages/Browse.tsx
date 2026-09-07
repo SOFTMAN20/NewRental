@@ -38,6 +38,7 @@ import { Badge } from '@/components/ui/badge';
 import LoadingSpinner from '@/components/ui/loading-spinner';
 import { PropertyGridSkeleton } from '@/components/common/PropertyCardSkeleton';
 import CollegesModal from '@/components/common/CollegesModal';
+import BrowseFilters from '@/components/common/BrowseFilters';
 import { 
   Search, MapPin, SlidersHorizontal, X, 
   Home, Users, Award, Building, Bed, Wifi, Shield, 
@@ -101,7 +102,7 @@ const getInitialFilterState = (searchParams: URLSearchParams): FilterState => ({
   utilities: [],
   nearbyServices: [],
   sortBy: 'newest',
-  // New filters
+  // New comprehensive filters
   propertyType: searchParams.get('room_type') ? [searchParams.get('room_type')!] : [],
   region: searchParams.get('region') || '',
   amenities: [],
@@ -166,7 +167,68 @@ const filterProperties = (properties: Property[], filters: FilterState): Propert
       }
     }
 
-    // Amenities filtering (replaces utilities)
+    // Property Type filtering (NEW)
+    if (filters.propertyType.length > 0) {
+      if (!filters.propertyType.includes(property.room_type)) {
+        return false;
+      }
+    }
+
+    // Region/City filtering (NEW)
+    if (filters.region && filters.region !== '') {
+      if (property.city?.toLowerCase() !== filters.region.toLowerCase()) {
+        return false;
+      }
+    }
+
+    // Amenities filtering (NEW - comprehensive)
+    if (filters.amenities.length > 0) {
+      const amenities = typeof property.amenities === 'string' ? JSON.parse(property.amenities) : property.amenities || {};
+      
+      // Check if ALL selected amenities are present
+      const hasAllAmenities = filters.amenities.every(requiredAmenity => {
+        return amenities[requiredAmenity] === true;
+      });
+
+      if (!hasAllAmenities) {
+        return false;
+      }
+    }
+
+    // Gender filtering (NEW)
+    if (filters.gender && filters.gender !== 'all') {
+      if (property.gender_restrictions !== filters.gender) {
+        return false;
+      }
+    }
+
+    // Beds filtering (NEW)
+    if (filters.beds && filters.beds !== 'all') {
+      const availableBeds = property.available_beds || 0;
+      
+      if (filters.beds === '1' && availableBeds !== 1) {
+        return false;
+      }
+      if (filters.beds === '2' && availableBeds !== 2) {
+        return false;
+      }
+      if (filters.beds === '3+' && availableBeds < 3) {
+        return false;
+      }
+    }
+
+    // University filtering (NEW)
+    if (filters.university && filters.university !== '') {
+      const universityName = property.university?.name?.toLowerCase() || '';
+      const universityAbbr = property.university?.abbreviation?.toLowerCase() || '';
+      const filterUniversity = filters.university.toLowerCase();
+
+      if (!universityName.includes(filterUniversity) && !universityAbbr.includes(filterUniversity)) {
+        return false;
+      }
+    }
+
+    // Old utilities filtering (keeping for backwards compatibility)
     if (filters.utilities.length > 0) {
       const amenities = typeof property.amenities === 'string' ? JSON.parse(property.amenities) : property.amenities || {};
       if (filters.utilities.includes('electricity') && !amenities.WiFi) return false;
@@ -222,7 +284,13 @@ const FilterUtils = {
     maxPrice: '',
     utilities: [],
     nearbyServices: [],
-    sortBy: 'newest'
+    sortBy: 'newest',
+    propertyType: [],
+    region: '',
+    amenities: [],
+    gender: 'all',
+    beds: 'all',
+    university: ''
   }),
 
   /**
@@ -235,7 +303,13 @@ const FilterUtils = {
       filters.minPrice ||
       filters.maxPrice ||
       filters.utilities.length > 0 ||
-      filters.nearbyServices.length > 0
+      filters.nearbyServices.length > 0 ||
+      filters.propertyType.length > 0 ||
+      filters.region ||
+      filters.amenities.length > 0 ||
+      (filters.gender && filters.gender !== 'all') ||
+      (filters.beds && filters.beds !== 'all') ||
+      filters.university
     );
   },
 
@@ -459,103 +533,70 @@ const Browse = () => {
             {/* Advanced Filters Panel */}
             {uiState.showFilters && (
               <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border-0 mt-4 sm:mt-6 p-4 sm:p-6">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                  {/* Custom Price Range */}
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-3">{t('browse.customPrice')}</h4>
-                    <div className="space-y-3">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          {t('browse.minPriceLabel')}
-                        </label>
-                        <Input
-                          type="number"
-                          placeholder="30,000"
-                          value={filters.minPrice}
-                          onChange={(e) => updateFilter('minPrice', e.target.value)}
-                          className="w-full"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          {t('browse.maxPriceLabel')}
-                        </label>
-                        <Input
-                          type="number"
-                          placeholder="500,000"
-                          value={filters.maxPrice}
-                          onChange={(e) => updateFilter('maxPrice', e.target.value)}
-                          className="w-full"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Utilities Filter */}
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-3">{t('browse.basicUtilities')}</h4>
-                    <div className="space-y-3">
-                      {[
-                        { key: 'electricity', label: t('browse.electricity') },
-                        { key: 'water', label: t('browse.water') }
-                      ].map(({ key, label }) => (
-                        <label key={key} className="flex items-center">
-                          <input
-                            type="checkbox"
-                            checked={filters.utilities.includes(key)}
-                            onChange={() => handleUtilityToggle(key)}
-                            className="mr-3 w-4 h-4 text-primary"
+                <BrowseFilters
+                  filters={{
+                    propertyType: filters.propertyType,
+                    region: filters.region,
+                    amenities: filters.amenities,
+                    gender: filters.gender,
+                    beds: filters.beds,
+                    university: filters.university
+                  }}
+                  onFilterChange={updateFilter}
+                  onClearAll={handleClearAllFilters}
+                  onOpenCollegesModal={() => setIsCollegesModalOpen(true)}
+                />
+                
+                {/* Legacy Filters Section (keep for backwards compatibility) */}
+                <div className="mt-8 pt-6 border-t">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-4">Additional Filters</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {/* Custom Price Range */}
+                    <div>
+                      <h4 className="font-medium text-gray-900 mb-3">{t('browse.customPrice')}</h4>
+                      <div className="space-y-3">
+                        <div>
+                          <label className="block text-sm text-gray-700 mb-1">
+                            {t('browse.minPriceLabel')}
+                          </label>
+                          <Input
+                            type="number"
+                            placeholder="30,000"
+                            value={filters.minPrice}
+                            onChange={(e) => updateFilter('minPrice', e.target.value)}
+                            className="w-full"
                           />
-                          <span className="text-gray-700">{label}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Nearby Services Filter */}
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-3">{t('browse.nearbyServices')}</h4>
-                    <div className="space-y-3">
-                      {[
-                        { key: 'school', label: t('browse.school') },
-                        { key: 'hospital', label: t('browse.hospital') },
-                        { key: 'market', label: t('browse.market') }
-                      ].map(({ key, label }) => (
-                        <label key={key} className="flex items-center">
-                          <input
-                            type="checkbox"
-                            checked={filters.nearbyServices.includes(key)}
-                            onChange={() => handleNearbyServiceToggle(key)}
-                            className="mr-3 w-4 h-4 text-primary"
+                        </div>
+                        <div>
+                          <label className="block text-sm text-gray-700 mb-1">
+                            {t('browse.maxPriceLabel')}
+                          </label>
+                          <Input
+                            type="number"
+                            placeholder="500,000"
+                            value={filters.maxPrice}
+                            onChange={(e) => updateFilter('maxPrice', e.target.value)}
+                            className="w-full"
                           />
-                          <span className="text-gray-700">{label}</span>
-                        </label>
-                      ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Sort Options */}
+                    <div>
+                      <h4 className="font-medium text-gray-900 mb-3">{t('browse.sortBy')}</h4>
+                      <Select value={filters.sortBy} onValueChange={(value) => updateFilter('sortBy', value)}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="newest">{t('browse.newest')}</SelectItem>
+                          <SelectItem value="price-low">{t('browse.priceLow')}</SelectItem>
+                          <SelectItem value="price-high">{t('browse.priceHigh')}</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
-
-                  {/* Sort Options */}
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-3">{t('browse.sortBy')}</h4>
-                    <Select value={filters.sortBy} onValueChange={(value) => updateFilter('sortBy', value)}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="newest">{t('browse.newest')}</SelectItem>
-                        <SelectItem value="price-low">{t('browse.priceLow')}</SelectItem>
-                        <SelectItem value="price-high">{t('browse.priceHigh')}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                {/* Clear Filters Button */}
-                <div className="flex justify-between items-center mt-6 pt-6 border-t">
-                  <Button variant="ghost" onClick={handleClearAllFilters} className="text-gray-600">
-                    <X className="h-4 w-4 mr-2" />
-                    {t('browse.clearFilters')}
-                  </Button>
                 </div>
               </div>
             )}
@@ -589,7 +630,7 @@ const Browse = () => {
                 {/* Search Query Badge */}
                 {filters.searchQuery && (
                   <Badge variant="secondary" className="px-3 py-1">
-                    {filters.searchQuery}
+                    📍 {filters.searchQuery}
                     <button
                       onClick={() => updateFilter('searchQuery', '')}
                       className="ml-2 hover:text-red-500"
@@ -602,7 +643,7 @@ const Browse = () => {
                 {/* Price Range Badge */}
                 {filters.priceRange && filters.priceRange !== 'all' && (
                   <Badge variant="secondary" className="px-3 py-1">
-                    TZS {filters.priceRange}
+                    💰 TZS {filters.priceRange}
                     <button
                       onClick={() => updateFilter('priceRange', 'all')}
                       className="ml-2 hover:text-red-500"
@@ -638,11 +679,88 @@ const Browse = () => {
                   </Badge>
                 )}
 
-                {/* Utility Badges */}
+                {/* Property Type Badges */}
+                {filters.propertyType.map(type => (
+                  <Badge key={type} variant="secondary" className="px-3 py-1">
+                    🏠 {type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                    <button
+                      onClick={() => updateFilter('propertyType', filters.propertyType.filter(t => t !== type))}
+                      className="ml-2 hover:text-red-500"
+                    >
+                      ×
+                    </button>
+                  </Badge>
+                ))}
+
+                {/* Region Badge */}
+                {filters.region && (
+                  <Badge variant="secondary" className="px-3 py-1">
+                    🗺️ {filters.region}
+                    <button
+                      onClick={() => updateFilter('region', '')}
+                      className="ml-2 hover:text-red-500"
+                    >
+                      ×
+                    </button>
+                  </Badge>
+                )}
+
+                {/* Amenities Badges */}
+                {filters.amenities.map(amenity => (
+                  <Badge key={amenity} variant="secondary" className="px-3 py-1">
+                    ✨ {amenity.replace(/_/g, ' ')}
+                    <button
+                      onClick={() => updateFilter('amenities', filters.amenities.filter(a => a !== amenity))}
+                      className="ml-2 hover:text-red-500"
+                    >
+                      ×
+                    </button>
+                  </Badge>
+                ))}
+
+                {/* Gender Badge */}
+                {filters.gender && filters.gender !== 'all' && (
+                  <Badge variant="secondary" className="px-3 py-1">
+                    👥 {filters.gender === 'male_only' ? 'Male Only' : 'Female Only'}
+                    <button
+                      onClick={() => updateFilter('gender', 'all')}
+                      className="ml-2 hover:text-red-500"
+                    >
+                      ×
+                    </button>
+                  </Badge>
+                )}
+
+                {/* Beds Badge */}
+                {filters.beds && filters.beds !== 'all' && (
+                  <Badge variant="secondary" className="px-3 py-1">
+                    🛏️ {filters.beds} {filters.beds === '1' ? 'Bed' : 'Beds'}
+                    <button
+                      onClick={() => updateFilter('beds', 'all')}
+                      className="ml-2 hover:text-red-500"
+                    >
+                      ×
+                    </button>
+                  </Badge>
+                )}
+
+                {/* University Badge */}
+                {filters.university && (
+                  <Badge variant="secondary" className="px-3 py-1">
+                    🎓 {filters.university}
+                    <button
+                      onClick={() => updateFilter('university', '')}
+                      className="ml-2 hover:text-red-500"
+                    >
+                      ×
+                    </button>
+                  </Badge>
+                )}
+
+                {/* Utility Badges (legacy) */}
                 {filters.utilities.map(utility => (
                   <Badge key={utility} variant="secondary" className="px-3 py-1">
-                    {utility === 'electricity' ? 'Umeme' : 'Maji'}
-                    {utility === 'electricity' ? t('browse.electricity') : t('browse.water')}
+                    {utility === 'electricity' ? '⚡' : '💧'} {utility === 'electricity' ? t('browse.electricity') : t('browse.water')}
                     <button
                       onClick={() => handleUtilityToggle(utility)}
                       className="ml-2 hover:text-red-500"
@@ -652,10 +770,10 @@ const Browse = () => {
                   </Badge>
                 ))}
 
-                {/* Nearby Service Badges */}
+                {/* Nearby Service Badges (legacy) */}
                 {filters.nearbyServices.map(service => (
                   <Badge key={service} variant="secondary" className="px-3 py-1">
-                    {service === 'school' ? t('browse.school') : service === 'hospital' ? t('browse.hospital') : t('browse.market')}
+                    {service === 'school' ? '🏫' : service === 'hospital' ? '🏥' : '🏪'} {service === 'school' ? t('browse.school') : service === 'hospital' ? t('browse.hospital') : t('browse.market')}
                     <button
                       onClick={() => handleNearbyServiceToggle(service)}
                       className="ml-2 hover:text-red-500"
@@ -734,6 +852,16 @@ const Browse = () => {
           )
         }
       </div >
+
+      {/* Colleges Modal */}
+      <CollegesModal
+        isOpen={isCollegesModalOpen}
+        onClose={() => setIsCollegesModalOpen(false)}
+        onSelectCollege={(college) => {
+          updateFilter('university', college.name);
+          setIsCollegesModalOpen(false);
+        }}
+      />
 
       <Footer />
     </div >
