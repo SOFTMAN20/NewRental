@@ -21,6 +21,20 @@ import OptimizedImage from '@/components/common/OptimizedImage';
 const FeaturedPropertyCard = ({ property, index, t }: { property: any, index: number, t: any }) => {
   const [showMobileActions, setShowMobileActions] = useState(false);
 
+  // Get transport mode icon/emoji
+  const getTransportIcon = () => {
+    switch(property.transport_mode) {
+      case 'walking':
+        return '🚶';
+      case 'bike':
+        return '🏍️';
+      case 'car':
+        return '🚗';
+      default:
+        return '🚶';
+    }
+  };
+
   /**
    * MOBILE TOUCH HANDLER
    * ===================
@@ -108,11 +122,11 @@ const FeaturedPropertyCard = ({ property, index, t }: { property: any, index: nu
               <span className="text-sm line-clamp-1">
                 {/* Mobile: Show abbreviation */}
                 <span className="sm:hidden">
-                  {property.distance_from_campus} mins from {property.university.abbreviation || property.university.name}
+                  {property.distance_from_campus} mins {getTransportIcon()} from {property.university.abbreviation || property.university.name}
                 </span>
                 {/* Desktop: Show full name */}
                 <span className="hidden sm:inline">
-                  {property.distance_from_campus} mins from {property.university.name}
+                  {property.distance_from_campus} mins {getTransportIcon()} from {property.university.name}
                 </span>
               </span>
             </div>

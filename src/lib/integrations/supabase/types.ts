@@ -323,6 +323,7 @@ export type Database = {
           room_type: string
           status: string | null
           title: string
+          transport_mode: string | null
           university_id: string | null
           updated_at: string | null
           utilities_included: boolean | null
@@ -358,6 +359,7 @@ export type Database = {
           room_type: string
           status?: string | null
           title: string
+          transport_mode?: string | null
           university_id?: string | null
           updated_at?: string | null
           utilities_included?: boolean | null
@@ -393,6 +395,7 @@ export type Database = {
           room_type?: string
           status?: string | null
           title?: string
+          transport_mode?: string | null
           university_id?: string | null
           updated_at?: string | null
           utilities_included?: boolean | null

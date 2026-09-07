@@ -21,6 +21,7 @@ interface PropertyCardProps {
   images: string[];
   room_type?: string;
   distance_from_campus?: number;
+  transport_mode?: string;
   university?: {
     name: string;
     abbreviation: string;
@@ -43,6 +44,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   city,
   images,
   distance_from_campus,
+  transport_mode,
   university,
   is_available = true,
   gender_restrictions,
@@ -50,6 +52,20 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   const imageUrl = images && images.length > 0
     ? images[0]
     : 'https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=500&h=400&fit=crop';
+
+  // Get transport mode icon/emoji
+  const getTransportIcon = () => {
+    switch(transport_mode) {
+      case 'walking':
+        return '🚶';
+      case 'bike':
+        return '🏍️';
+      case 'car':
+        return '🚗';
+      default:
+        return '🚶';
+    }
+  };
 
   return (
     <Link to={`/property/${id}`}>
@@ -87,7 +103,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             <div className="flex items-center text-gray-500 mb-3">
               <DirectionsWalk className="h-4 w-4 mr-1.5 flex-shrink-0" />
               <span className="text-sm">
-                {distance_from_campus} mins from {university.name}
+                {distance_from_campus} mins {getTransportIcon()} from {university.name}
               </span>
             </div>
           )}

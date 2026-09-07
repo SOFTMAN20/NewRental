@@ -822,6 +822,7 @@ const Browse = () => {
                   room_type={property.room_type}
                   gender_restrictions={property.gender_restrictions || undefined}
                   distance_from_campus={property.distance_from_campus || undefined}
+                  transport_mode={(property as any).transport_mode || 'walking'}
                   amenities={property.amenities}
                   university={property.university}
                   landlord={property.landlord}
