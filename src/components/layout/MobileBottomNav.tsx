@@ -35,6 +35,36 @@ const MobileBottomNav = () => {
   const location = useLocation();
   const { user } = useAuth();
   const { t } = useTranslation();
+  const [profile, setProfile] = React.useState<any>(null);
+  
+  // Fetch user profile to check if they're a host
+  React.useEffect(() => {
+    const fetchProfile = async () => {
+      if (!user) {
+        setProfile(null);
+        return;
+      }
+
+      try {
+        const { createClient } = await import('@/lib/integrations/supabase/client');
+        const supabase = createClient();
+        
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('user_type')
+          .eq('id', user.id)
+          .single();
+
+        if (!error && data) {
+          setProfile(data);
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    };
+
+    fetchProfile();
+  }, [user]);
   
   // Check if we're on homepage
   const isHomePage = location.pathname === '/';
@@ -47,6 +77,16 @@ const MobileBottomNav = () => {
 
   // Always show on homepage, otherwise use scroll-based visibility
   const shouldShowNav = isHomePage || isVisible;
+
+  // Determine profile path based on user type
+  const getProfilePath = () => {
+    if (!user) return '/signin';
+    // If user is landlord/host, go to dashboard; otherwise go to profile
+    if (profile?.user_type === 'landlord') {
+      return '/dashboard';
+    }
+    return '/profile';
+  };
 
   // Define navigation items similar to Airbnb
   const navItems: NavItem[] = [
@@ -73,7 +113,7 @@ const MobileBottomNav = () => {
       id: 'profile',
       icon: <User className="h-5 w-5" />,
       label: user ? t('bottomNav.profile') : t('bottomNav.login'),
-      path: user ? '/dashboard' : '/signin'
+      path: getProfilePath()
     }
   ];
 
@@ -88,8 +128,8 @@ const MobileBottomNav = () => {
     if (path === '/add-property') {
       return location.pathname === '/add-property';
     }
-    if (path === '/dashboard') {
-      return location.pathname === '/dashboard';
+    if (path === '/dashboard' || path === '/profile') {
+      return location.pathname === '/dashboard' || location.pathname === '/profile';
     }
     if (path === '/signin') {
       return location.pathname === '/signin' || location.pathname === '/signup';
