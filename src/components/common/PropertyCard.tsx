@@ -9,8 +9,8 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import DirectionsWalk from '@/components/icons/DirectionsWalk';
-import { Car } from 'lucide-react';
 import { TwoWheeler } from '@mui/icons-material';
+import { Car } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import OptimizedImage from '@/components/common/OptimizedImage';
 
@@ -73,12 +73,12 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   const getTransportIconComponent = () => {
     switch(transport_mode) {
       case 'bike':
-        return <TwoWheeler className="h-4 w-4 mr-1.5 flex-shrink-0" style={{ fontSize: '1rem' }} />;
+        return <TwoWheeler className="h-4 w-4 mr-1 flex-shrink-0" style={{ fontSize: '1rem' }} />;
       case 'car':
-        return <Car className="h-4 w-4 mr-1.5 flex-shrink-0" />;
+        return <Car className="h-4 w-4 mr-1 flex-shrink-0" />;
       case 'walking':
       default:
-        return <DirectionsWalk className="h-4 w-4 mr-1.5 flex-shrink-0" />;
+        return <DirectionsWalk className="h-4 w-4 mr-1 flex-shrink-0" />;
     }
   };
 
@@ -117,8 +117,12 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
           {university && distance_from_campus && (
             <div className="flex items-center text-gray-500 mb-3">
               {getTransportIconComponent()}
+              <span className="text-sm mr-1">
+                {distance_from_campus} min
+              </span>
+              <span className="text-base mr-1">{getTransportIcon()}</span>
               <span className="text-sm">
-                {distance_from_campus} mins from {university.name}
+                from {university.name}
               </span>
             </div>
           )}

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Star, Wifi, Car, Utensils, Zap, Eye } from 'lucide-react';
+import { Star, Wifi, Utensils, Zap, Eye, Car } from 'lucide-react';
 import DirectionsWalk from '@/components/icons/DirectionsWalk';
 import { TwoWheeler } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
@@ -40,12 +40,12 @@ const FeaturedPropertyCard = ({ property, index, t }: { property: any, index: nu
   const getTransportIconComponent = () => {
     switch(property.transport_mode) {
       case 'bike':
-        return <TwoWheeler className="h-4 w-4 mr-1.5 flex-shrink-0" style={{ fontSize: '1rem' }} />;
+        return <TwoWheeler className="h-4 w-4 mr-1 flex-shrink-0" style={{ fontSize: '1rem' }} />;
       case 'car':
-        return <Car className="h-4 w-4 mr-1.5 flex-shrink-0" />;
+        return <Car className="h-4 w-4 mr-1 flex-shrink-0" />;
       case 'walking':
       default:
-        return <DirectionsWalk className="h-4 w-4 mr-1.5 flex-shrink-0" />;
+        return <DirectionsWalk className="h-4 w-4 mr-1 flex-shrink-0" />;
     }
   };
 
@@ -133,14 +133,18 @@ const FeaturedPropertyCard = ({ property, index, t }: { property: any, index: nu
           {property.university && property.distance_from_campus && (
             <div className="flex items-center text-gray-500 mb-3">
               {getTransportIconComponent()}
+              <span className="text-sm mr-1">
+                {property.distance_from_campus} min
+              </span>
+              <span className="text-base mr-1">{getTransportIcon()}</span>
               <span className="text-sm line-clamp-1">
                 {/* Mobile: Show abbreviation */}
                 <span className="sm:hidden">
-                  {property.distance_from_campus} mins from {property.university.abbreviation || property.university.name}
+                  from {property.university.abbreviation || property.university.name}
                 </span>
                 {/* Desktop: Show full name */}
                 <span className="hidden sm:inline">
-                  {property.distance_from_campus} mins from {property.university.name}
+                  from {property.university.name}
                 </span>
               </span>
             </div>
@@ -172,7 +176,6 @@ const FeaturedProperties = () => {
   const getAmenityIcon = (amenity: string) => {
     switch (amenity) {
       case 'Zap': return <Zap className="h-3 w-3" />;
-      case 'Parking': return <Car className="h-3 w-3" />;
       case 'Kitchen': return <Utensils className="h-3 w-3" />;
       default: return null;
     }
