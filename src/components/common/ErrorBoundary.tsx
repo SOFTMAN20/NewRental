@@ -122,8 +122,8 @@ class ErrorBoundary extends Component<Props, State> {
             <p className="mt-6 text-sm text-gray-500">
               Kama tatizo linaendelea, wasiliana nasi:
               <br />
-              <a href="tel:+255750929317" className="text-primary hover:underline">
-                0750 929 317
+              <a href="tel:+255750939217" className="text-primary hover:underline">
+                0750 939 217
               </a>
             </p>
           </div>
