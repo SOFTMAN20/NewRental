@@ -134,19 +134,17 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             </div>
           )}
 
-          {/* Price with Eye Icon */}
-          <div className="flex items-center justify-between">
+          {/* Price with Details Button */}
+          <div className="flex items-center justify-between gap-2">
             <div className="flex items-baseline flex-wrap">
               <span className="text-lg sm:text-xl md:text-2xl font-bold text-teal-600">
                 TZS {Number(monthly_rent).toLocaleString()}
               </span>
               <span className="text-xs sm:text-sm text-gray-600 ml-1">/month</span>
             </div>
-            <div className="flex-shrink-0">
-              <div className="bg-primary/10 hover:bg-primary/20 rounded-full p-2 transition-all duration-300 cursor-pointer group-hover:scale-110">
-                <Eye className="w-4 h-4 text-primary" />
-              </div>
-            </div>
+            <button className="flex-shrink-0 bg-primary hover:bg-primary/90 text-white text-xs sm:text-sm font-medium px-3 py-1.5 rounded-full transition-all duration-300 group-hover:scale-105 whitespace-nowrap">
+              Details
+            </button>
           </div>
         </div>
       </Card>
