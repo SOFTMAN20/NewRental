@@ -32,7 +32,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
    * CLIENT-SIDE COMPRESSION (First Stage)
    * =====================================
    * 
-   * Smart compression that maintains quality while reducing size significantly
+   * Smart compression that converts to WebP format for optimal size and quality
+   * WebP provides 25-35% better compression than JPEG/PNG while maintaining quality
    * - Small files (< 500KB): Minimal compression, maintain quality
    * - Medium files (500KB - 2MB): Moderate compression
    * - Large files (> 2MB): Aggressive compression
@@ -47,30 +48,30 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     if (fileSizeMB < 0.5) {
       // Small files: Light compression, preserve quality
       compressionOptions = {
-        maxSizeMB: 0.4, // Target 400KB
+        maxSizeMB: 0.3, // Target 300KB (WebP is more efficient)
         maxWidthOrHeight: 2048, // Keep high resolution
         useWebWorker: true,
-        fileType: file.type,
+        fileType: 'image/webp', // Convert to WebP
         initialQuality: 0.95, // Very high quality (95%)
         alwaysKeepResolution: false,
       };
     } else if (fileSizeMB < 2) {
       // Medium files: Moderate compression
       compressionOptions = {
-        maxSizeMB: 0.8, // Target 800KB
+        maxSizeMB: 0.6, // Target 600KB (WebP is smaller)
         maxWidthOrHeight: 1920, // Good quality resolution
         useWebWorker: true,
-        fileType: file.type,
+        fileType: 'image/webp', // Convert to WebP
         initialQuality: 0.92, // High quality (92%)
         alwaysKeepResolution: false,
       };
     } else {
       // Large files: Aggressive but quality-preserving compression
       compressionOptions = {
-        maxSizeMB: 1.5, // Target 1.5MB
+        maxSizeMB: 1.0, // Target 1MB (WebP compression is superior)
         maxWidthOrHeight: 1920, // Standard HD resolution
         useWebWorker: true,
-        fileType: file.type,
+        fileType: 'image/webp', // Convert to WebP
         initialQuality: 0.90, // Excellent quality (90%)
         alwaysKeepResolution: false,
       };
@@ -80,14 +81,14 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       let compressedFile = await imageCompression(file, compressionOptions);
       
       // If still larger than desired, apply one more pass with slightly lower quality
-      const targetMaxMB = 1.8; // Absolute maximum: 1.8MB
+      const targetMaxMB = 1.5; // Absolute maximum: 1.5MB
       if (compressedFile.size > targetMaxMB * 1024 * 1024) {
-        console.log('⚠️ Applying final optimization pass...');
+        console.log('⚠️ Applying final WebP optimization pass...');
         const finalOptions = {
-          maxSizeMB: 1.6, // Strict target
+          maxSizeMB: 1.2, // Strict target
           maxWidthOrHeight: 1800,
           useWebWorker: true,
-          fileType: file.type,
+          fileType: 'image/webp', // Keep as WebP
           initialQuality: 0.88, // Still high quality (88%)
         };
         compressedFile = await imageCompression(compressedFile, finalOptions);
@@ -99,17 +100,18 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       const compressedSizeKB = (compressedFile.size / 1024).toFixed(0);
       const compressionRatio = ((1 - compressedFile.size / file.size) * 100).toFixed(1);
       
-      console.log('🖼️ Smart Compression Results:');
+      console.log('🖼️ Smart WebP Compression Results:');
       console.log(`📁 File: ${file.name}`);
-      console.log(`📏 Original: ${originalSizeMB} MB`);
-      console.log(`📏 Compressed: ${compressedSizeMB} MB (${compressedSizeKB} KB)`);
+      console.log(`📏 Original: ${originalSizeMB} MB (${file.type})`);
+      console.log(`📏 Compressed: ${compressedSizeMB} MB (${compressedSizeKB} KB) - WebP`);
       console.log(`📊 Saved: ${compressionRatio}% smaller`);
       console.log(`✨ Quality: High (maintained)`);
+      console.log(`🚀 Format: WebP (modern, efficient)`);
       console.log('---');
       
       return compressedFile;
     } catch (error) {
-      console.error('Error in smart compression:', error);
+      console.error('Error in smart WebP compression:', error);
       throw error;
     }
   };
@@ -200,7 +202,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
    * VALIDATE IMAGE FILE
    * ==================
    * 
-   * Validates file type and size before processing
+   * Validates file type before compression
+   * No strict size limit - compression will handle large files
    */
   const validateImageFile = (file: File): { isValid: boolean; error?: string } => {
     // Check file type with enhanced validation
@@ -223,12 +226,13 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       };
     }
 
-    // Check file size (max 5MB)
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    // Check reasonable max size (20MB before compression)
+    // This prevents extremely large files that would take too long to compress
+    const maxSize = 20 * 1024 * 1024; // 20MB
     if (file.size > maxSize) {
       return {
         isValid: false,
-        error: 'Image size must be less than 5MB'
+        error: 'Image is too large. Please use an image smaller than 20MB.'
       };
     }
 
