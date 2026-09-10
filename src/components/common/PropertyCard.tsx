@@ -117,11 +117,11 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
           {university && distance_from_campus && (
             <div className="flex items-center text-gray-500 mb-3">
               {getTransportIconComponent()}
-              <span className="text-sm mr-1">
+              <span className="text-xs sm:text-sm mr-1">
                 {distance_from_campus} min
               </span>
-              <span className="text-base mr-1">{getTransportIcon()}</span>
-              <span className="text-sm line-clamp-1">
+              <span className="text-sm sm:text-base mr-1">{getTransportIcon()}</span>
+              <span className="text-xs sm:text-sm line-clamp-1">
                 {/* Mobile: Show abbreviation */}
                 <span className="sm:hidden">
                   from {university.abbreviation || university.name}

@@ -83,7 +83,7 @@ const FeaturedPropertyCard = ({ property, index, t }: { property: any, index: nu
                 : 'https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=500&h=400&fit=crop'
               }
               alt={property.title}
-              className={`w-full h-32 sm:h-48 object-cover group-hover:scale-110 transition-transform duration-700 rounded-2xl ${!property.is_available ? 'opacity-60' : ''}`}
+              className={`w-full h-48 sm:h-56 object-cover group-hover:scale-110 transition-transform duration-700 rounded-2xl ${!property.is_available ? 'opacity-60' : ''}`}
               width={500}
               height={400}
               priority={index < 4}
@@ -133,11 +133,11 @@ const FeaturedPropertyCard = ({ property, index, t }: { property: any, index: nu
           {property.university && property.distance_from_campus && (
             <div className="flex items-center text-gray-500 mb-3">
               {getTransportIconComponent()}
-              <span className="text-sm mr-1">
+              <span className="text-xs sm:text-sm mr-1">
                 {property.distance_from_campus} min
               </span>
-              <span className="text-base mr-1">{getTransportIcon()}</span>
-              <span className="text-sm line-clamp-1">
+              <span className="text-sm sm:text-base mr-1">{getTransportIcon()}</span>
+              <span className="text-xs sm:text-sm line-clamp-1">
                 {/* Mobile: Show abbreviation */}
                 <span className="sm:hidden">
                   from {property.university.abbreviation || property.university.name}
