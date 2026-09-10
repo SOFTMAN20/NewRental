@@ -215,6 +215,14 @@ const HeroSection = () => {
         <div className="max-w-2xl px-0">
           <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
             <Link 
+              to="/browse?room_type=hostel"
+              className="flex-shrink-0 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20 
+                         hover:bg-white/20 hover:border-white/40 transition-all duration-300 text-white text-sm font-medium
+                         whitespace-nowrap"
+            >
+              Hostel
+            </Link>
+            <Link 
               to="/browse?room_type=single_room"
               className="flex-shrink-0 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20 
                          hover:bg-white/20 hover:border-white/40 transition-all duration-300 text-white text-sm font-medium
@@ -261,14 +269,6 @@ const HeroSection = () => {
                          whitespace-nowrap"
             >
               Studio
-            </Link>
-            <Link 
-              to="/browse?room_type=dormitory"
-              className="flex-shrink-0 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20 
-                         hover:bg-white/20 hover:border-white/40 transition-all duration-300 text-white text-sm font-medium
-                         whitespace-nowrap"
-            >
-              Dormitory
             </Link>
           </div>
         </div>
