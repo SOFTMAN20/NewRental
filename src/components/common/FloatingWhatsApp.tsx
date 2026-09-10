@@ -25,6 +25,9 @@ const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({
     const cleanPhone = phoneNumber.replace(/[^0-9]/g, '');
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+    console.log('WhatsApp URL:', whatsappUrl);
+    console.log('Phone Number:', phoneNumber);
+    console.log('Clean Phone:', cleanPhone);
     window.open(whatsappUrl, '_blank');
   };
 

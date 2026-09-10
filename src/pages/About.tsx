@@ -619,11 +619,11 @@ const About = () => {
                   {t('about.callDescription')}
                 </p>
                 <a 
-                  href="tel:+255750929317"
+                  href="tel:+255750939217"
                   className="inline-flex items-center text-blue-600 font-bold text-lg sm:text-xl hover:text-blue-700 transition-colors duration-300 group-hover:scale-110 transform"
                 >
                   <Phone className="h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3" />
-                  +255 750 929 317
+                  +255 750 939 217
                 </a>
                 
                 {/* Pulse Effect */}
