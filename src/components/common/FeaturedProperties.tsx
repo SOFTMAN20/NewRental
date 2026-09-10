@@ -109,18 +109,6 @@ const FeaturedPropertyCard = ({ property, index, t }: { property: any, index: nu
             <Star className="h-3 w-3 text-yellow-500 fill-current mr-1" />
             <span className="text-xs font-bold text-gray-800">4.8</span>
           </div> */}
-
-          {/* Enhanced hover overlay with quick view icon - shows on hover OR mobile touch */}
-          <div className={`absolute inset-0 transition-all duration-500 z-10 ${showMobileActions
-            ? 'opacity-100'
-            : 'opacity-0 group-hover:opacity-100'
-            }`}>
-            <div className="absolute bottom-3 right-3">
-              <div className="bg-white/95 rounded-full p-1.5 transform hover:scale-110 transition-all duration-300 shadow-lg">
-                <Eye className="w-4 h-4 text-gray-900" />
-              </div>
-            </div>
-          </div>
         </div>
 
         <CardContent className="p-3 sm:p-4">
@@ -150,12 +138,19 @@ const FeaturedPropertyCard = ({ property, index, t }: { property: any, index: nu
             </div>
           )}
 
-          {/* Price */}
-          <div className="flex items-baseline flex-wrap">
-            <span className="text-lg sm:text-xl md:text-2xl font-bold text-teal-600">
-              TZS {Number(property.monthly_rent || property.price).toLocaleString()}
-            </span>
-            <span className="text-xs sm:text-sm text-gray-600 ml-1">/month</span>
+          {/* Price with Eye Icon */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-baseline flex-wrap">
+              <span className="text-lg sm:text-xl md:text-2xl font-bold text-teal-600">
+                TZS {Number(property.monthly_rent || property.price).toLocaleString()}
+              </span>
+              <span className="text-xs sm:text-sm text-gray-600 ml-1">/month</span>
+            </div>
+            <div className="flex-shrink-0">
+              <div className="bg-primary/10 hover:bg-primary/20 rounded-full p-2 transition-all duration-300 cursor-pointer group-hover:scale-110">
+                <Eye className="w-4 h-4 text-primary" />
+              </div>
+            </div>
           </div>
         </CardContent>
       </Link>

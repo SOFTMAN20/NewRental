@@ -10,7 +10,7 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import DirectionsWalk from '@/components/icons/DirectionsWalk';
 import { TwoWheeler } from '@mui/icons-material';
-import { Car } from 'lucide-react';
+import { Car, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import OptimizedImage from '@/components/common/OptimizedImage';
 
@@ -134,12 +134,19 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             </div>
           )}
 
-          {/* Price */}
-          <div className="flex items-baseline flex-wrap">
-            <span className="text-lg sm:text-xl md:text-2xl font-bold text-teal-600">
-              TZS {Number(monthly_rent).toLocaleString()}
-            </span>
-            <span className="text-xs sm:text-sm text-gray-600 ml-1">/month</span>
+          {/* Price with Eye Icon */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-baseline flex-wrap">
+              <span className="text-lg sm:text-xl md:text-2xl font-bold text-teal-600">
+                TZS {Number(monthly_rent).toLocaleString()}
+              </span>
+              <span className="text-xs sm:text-sm text-gray-600 ml-1">/month</span>
+            </div>
+            <div className="flex-shrink-0">
+              <div className="bg-primary/10 hover:bg-primary/20 rounded-full p-2 transition-all duration-300 cursor-pointer group-hover:scale-110">
+                <Eye className="w-4 h-4 text-primary" />
+              </div>
+            </div>
           </div>
         </div>
       </Card>
