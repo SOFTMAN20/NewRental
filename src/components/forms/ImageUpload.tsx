@@ -32,31 +32,84 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
    * CLIENT-SIDE COMPRESSION (First Stage)
    * =====================================
    * 
-   * Performs initial compression on the client to reduce upload size.
-   * Target: 2MB max size, 1200px max dimensions
+   * Smart compression that maintains quality while reducing size significantly
+   * - Small files (< 500KB): Minimal compression, maintain quality
+   * - Medium files (500KB - 2MB): Moderate compression
+   * - Large files (> 2MB): Aggressive compression
+   * Target: Optimal size without losing visible quality
    */
   const clientSideCompress = async (file: File): Promise<File> => {
-    const options = {
-      maxSizeMB: 2, // Target max size: 2MB (before server-side compression)
-      maxWidthOrHeight: 1200, // Max width/height: 1200px
-      useWebWorker: true,
-      fileType: file.type,
-    };
+    const fileSizeMB = file.size / 1024 / 1024;
+    
+    // Determine compression strategy based on file size
+    let compressionOptions;
+    
+    if (fileSizeMB < 0.5) {
+      // Small files: Light compression, preserve quality
+      compressionOptions = {
+        maxSizeMB: 0.4, // Target 400KB
+        maxWidthOrHeight: 2048, // Keep high resolution
+        useWebWorker: true,
+        fileType: file.type,
+        initialQuality: 0.95, // Very high quality (95%)
+        alwaysKeepResolution: false,
+      };
+    } else if (fileSizeMB < 2) {
+      // Medium files: Moderate compression
+      compressionOptions = {
+        maxSizeMB: 0.8, // Target 800KB
+        maxWidthOrHeight: 1920, // Good quality resolution
+        useWebWorker: true,
+        fileType: file.type,
+        initialQuality: 0.92, // High quality (92%)
+        alwaysKeepResolution: false,
+      };
+    } else {
+      // Large files: Aggressive but quality-preserving compression
+      compressionOptions = {
+        maxSizeMB: 1.5, // Target 1.5MB
+        maxWidthOrHeight: 1920, // Standard HD resolution
+        useWebWorker: true,
+        fileType: file.type,
+        initialQuality: 0.90, // Excellent quality (90%)
+        alwaysKeepResolution: false,
+      };
+    }
 
     try {
-      const compressedFile = await imageCompression(file, options);
+      let compressedFile = await imageCompression(file, compressionOptions);
       
-      // Log client-side compression results
-      console.log('🖼️ Client-Side Compression Results:');
-      console.log(`📁 Original: ${file.name}`);
-      console.log(`📏 Original size: ${(file.size / 1024 / 1024).toFixed(2)} MB`);
-      console.log(`📏 Client compressed size: ${(compressedFile.size / 1024 / 1024).toFixed(2)} MB`);
-      console.log(`📊 Client compression ratio: ${((1 - compressedFile.size / file.size) * 100).toFixed(1)}%`);
+      // If still larger than desired, apply one more pass with slightly lower quality
+      const targetMaxMB = 1.8; // Absolute maximum: 1.8MB
+      if (compressedFile.size > targetMaxMB * 1024 * 1024) {
+        console.log('⚠️ Applying final optimization pass...');
+        const finalOptions = {
+          maxSizeMB: 1.6, // Strict target
+          maxWidthOrHeight: 1800,
+          useWebWorker: true,
+          fileType: file.type,
+          initialQuality: 0.88, // Still high quality (88%)
+        };
+        compressedFile = await imageCompression(compressedFile, finalOptions);
+      }
+      
+      // Log compression results
+      const originalSizeMB = (file.size / 1024 / 1024).toFixed(2);
+      const compressedSizeMB = (compressedFile.size / 1024 / 1024).toFixed(2);
+      const compressedSizeKB = (compressedFile.size / 1024).toFixed(0);
+      const compressionRatio = ((1 - compressedFile.size / file.size) * 100).toFixed(1);
+      
+      console.log('🖼️ Smart Compression Results:');
+      console.log(`📁 File: ${file.name}`);
+      console.log(`📏 Original: ${originalSizeMB} MB`);
+      console.log(`📏 Compressed: ${compressedSizeMB} MB (${compressedSizeKB} KB)`);
+      console.log(`📊 Saved: ${compressionRatio}% smaller`);
+      console.log(`✨ Quality: High (maintained)`);
       console.log('---');
       
       return compressedFile;
     } catch (error) {
-      console.error('Error in client-side compression:', error);
+      console.error('Error in smart compression:', error);
       throw error;
     }
   };
@@ -278,8 +331,14 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       for (let i = 0; i < validFiles.length; i++) {
         const file = validFiles[i];
         
-        // Step 1: Client-side compression
+        // Show compression progress
+        setCompressionStatus(`🔄 Optimizing image ${i + 1}/${validFiles.length}... (High quality, small size)`);
+        
+        // Step 1: Client-side smart compression
         const clientCompressedFile = await clientSideCompress(file);
+        
+        // Show upload progress
+        setCompressionStatus(`📤 Uploading image ${i + 1}/${validFiles.length}...`);
 
         // Step 2: Send to Edge Function for final compression and upload (with fallback)
         const publicUrl = await uploadToEdgeFunction(clientCompressedFile);
