@@ -15,7 +15,7 @@ interface FloatingWhatsAppProps {
 }
 
 const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({
-  phoneNumber = '+255750929317', // Wanachuo.com Company Support Number
+  phoneNumber = '+255750939217', // Wanachuo.com Company Support Number
   message = 'Habari! Nahitaji msaada kutafuta nyumba. (Hello! I need help finding accommodation.)'
 }) => {
   const [isVisible, setIsVisible] = useState(true);
@@ -42,7 +42,7 @@ const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({
             Wasiliana nasi WhatsApp kwa huduma haraka! Customer support available 24/7.
           </p>
           <p className="text-xs text-green-600 font-medium mt-1">
-            📞 0750 929 317
+            📞 0750 939 217
           </p>
           <button
             onClick={() => setShowTooltip(false)}
