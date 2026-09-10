@@ -121,19 +121,25 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
                 {distance_from_campus} min
               </span>
               <span className="text-base mr-1">{getTransportIcon()}</span>
-              <span className="text-sm">
-                from {university.name}
+              <span className="text-sm line-clamp-1">
+                {/* Mobile: Show abbreviation */}
+                <span className="sm:hidden">
+                  from {university.abbreviation || university.name}
+                </span>
+                {/* Desktop: Show full name */}
+                <span className="hidden sm:inline">
+                  from {university.name}
+                </span>
               </span>
             </div>
           )}
 
           {/* Price */}
-          <div className="flex items-baseline">
-            <span className="text-sm text-gray-600 mr-2">From</span>
-            <span className="text-2xl font-bold text-teal-600">
+          <div className="flex items-baseline flex-wrap">
+            <span className="text-lg sm:text-xl md:text-2xl font-bold text-teal-600">
               TZS {Number(monthly_rent).toLocaleString()}
             </span>
-            <span className="text-sm text-gray-600 ml-1">/month</span>
+            <span className="text-xs sm:text-sm text-gray-600 ml-1">/month</span>
           </div>
         </div>
       </Card>
