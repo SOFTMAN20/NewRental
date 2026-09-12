@@ -77,7 +77,9 @@ const AddProperty = () => {
     furnished: false,
     parking: false,
     security: false,
-    contract_months: '3'
+    contract_months: '3',
+    service_fee_type: '',
+    service_fee_value: ''
   });
 
   useEffect(() => {
@@ -233,6 +235,8 @@ const AddProperty = () => {
         contact_whatsapp_phone: formData.contact_whatsapp_phone?.trim() || null,
         full_address: formData.full_address?.trim() || null,
         contract_months: formData.contract_months ? parseInt(formData.contract_months) : 3,
+        service_fee_type: formData.service_fee_type || null,
+        service_fee_value: formData.service_fee_value ? parseFloat(formData.service_fee_value) : null,
         status: 'active'
       };
       

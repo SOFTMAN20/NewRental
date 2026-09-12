@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Star, Wifi, Utensils, Zap, Eye, Car } from 'lucide-react';
+import { Star, Wifi, Utensils, Zap, Eye, Car, MapPin } from 'lucide-react';
 import DirectionsWalk from '@/components/icons/DirectionsWalk';
 import { TwoWheeler } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
@@ -117,8 +117,8 @@ const FeaturedPropertyCard = ({ property, index, t }: { property: any, index: nu
             {property.title}
           </h3>
 
-          {/* Location/Distance */}
-          {property.university && property.distance_from_campus && (
+          {/* Location/Distance - Show distance if available, otherwise show location */}
+          {property.university && property.distance_from_campus ? (
             <div className="flex items-center text-gray-500 mb-3">
               {getTransportIconComponent()}
               <span className="text-xs sm:text-sm mr-1">
@@ -134,6 +134,13 @@ const FeaturedPropertyCard = ({ property, index, t }: { property: any, index: nu
                 <span className="hidden sm:inline">
                   from {property.university.name}
                 </span>
+              </span>
+            </div>
+          ) : (
+            <div className="flex items-center text-gray-500 mb-3">
+              <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
+              <span className="text-xs sm:text-sm line-clamp-1">
+                {property.address || property.location || property.city || 'Location not specified'}
               </span>
             </div>
           )}

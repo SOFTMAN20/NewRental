@@ -71,6 +71,8 @@ interface PropertyFormData {
   nearby_services: string[];
   images: string[];
   contract_months: string;
+  service_fee_type: string;
+  service_fee_value: string;
 }
 
 interface PropertyFormProps {
@@ -194,7 +196,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
   }, [profile, editingProperty]); // Only run when profile changes or when opening form
   
   // PropertyForm component rendered
-  const totalSteps = 5;
+  const totalSteps = 7;
 
   if (!isOpen) return null;
 
@@ -226,8 +228,12 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
       case 3:
         return !!(formData.description?.trim() && formData.property_type?.trim());
       case 4:
-        return true; // Amenities & location are optional
+        return true; // Amenities are optional
       case 5:
+        return true; // Location is optional
+      case 6:
+        return true; // Service fee is optional
+      case 7:
         return !!formData.contact_phone?.trim();
       default:
         return false;
@@ -250,8 +256,10 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
     { id: 1, title: 'Photos', icon: Camera, description: 'Property photos (at least 1 required)' },
     { id: 2, title: 'Basic Info', icon: Home, description: 'Title, price and location' },
     { id: 3, title: 'Property Details', icon: Building, description: 'Room type and description' },
-    { id: 4, title: 'Amenities', icon: Award, description: 'Features and university' },
-    { id: 5, title: 'Contact', icon: Phone, description: 'Phone numbers' }
+    { id: 4, title: 'Amenities', icon: Award, description: 'Features and facilities' },
+    { id: 5, title: 'Location', icon: MapPin, description: 'University and distance' },
+    { id: 6, title: 'Service Fee', icon: Star, description: 'Optional service charge' },
+    { id: 7, title: 'Contact', icon: Phone, description: 'Phone numbers' }
   ];
 
   /**
@@ -417,7 +425,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             { value: 'self_contained', label: 'Self Contained', icon: Home, desc: 'Room with bathroom and toilet inside' },
             { value: 'apartment', label: 'Apartment/Flat', icon: Building, desc: 'Multi-room property' },
             { value: 'studio', label: 'Studio/Bedsitter', icon: Home, desc: 'Room with kitchenette and bathroom' },
-            { value: 'dormitory', label: 'Dormitory', icon: Building, desc: 'Multiple rooms for hostel' }
+            { value: 'whole_house', label: 'Whole House', icon: Building, desc: 'Entire house for rent' },
+            { value: 'dormitory', label: 'Hostel', icon: Building, desc: 'Multiple rooms for hostel' }
           ].map(({ value, label, icon: Icon, desc }) => (
             <button
               key={value}
@@ -527,19 +536,19 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
   );
 
   /**
-   * STEP 2B: AMENITIES & LOCATION
-   * ==============================
+   * STEP 4: AMENITIES
+   * ==================
    * 
-   * Amenities and university location.
+   * Property amenities and facilities
    */
-  const renderStep2b = () => (
+  const renderStep4 = () => (
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
       <div className="text-center mb-6">
         <div className="w-16 h-16 bg-gradient-to-br from-serengeti-500 to-kilimanjaro-500 rounded-full flex items-center justify-center mx-auto mb-4">
           <Award className="h-8 w-8 text-white" />
         </div>
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">Amenities & Location</h3>
+        <h3 className="text-xl font-semibold text-gray-900 mb-2">Amenities</h3>
         <p className="text-gray-600">What makes your property special?</p>
       </div>
 
@@ -601,6 +610,33 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         </div>
       </div>
 
+      {/* Progress indicator */}
+      <div className="mt-6 pt-4 border-t border-gray-100">
+        <div className="flex items-center justify-between text-sm text-gray-600">
+          <span>Step 4: Amenities</span>
+          <Badge variant="secondary">Optional</Badge>
+        </div>
+      </div>
+    </div>
+  );
+
+  /**
+   * STEP 5: LOCATION
+   * =================
+   * 
+   * University and distance information
+   */
+  const renderStep5 = () => (
+    <div className="space-y-6 animate-fade-in">
+      {/* Header */}
+      <div className="text-center mb-6">
+        <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-4">
+          <MapPin className="h-8 w-8 text-white" />
+        </div>
+        <h3 className="text-xl font-semibold text-gray-900 mb-2">Location</h3>
+        <p className="text-gray-600">How far from university?</p>
+      </div>
+
       {/* University and Distance */}
       <div className="space-y-4">
         <div className="space-y-2">
@@ -615,7 +651,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Chagua chuo kikuu..." />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="max-h-[300px] overflow-y-auto">
               <SelectItem value="9c0445e4-5492-46ad-87d8-7aa19564a0d1">UDSM - University of Dar es Salaam</SelectItem>
               <SelectItem value="3a66a06e-0dde-402c-9c85-69c992085f39">DIT - Dar es Salaam Institute of Technology</SelectItem>
               <SelectItem value="4f57b203-d56d-4f7d-8685-79c5752ae658">OUT - Open University of Tanzania</SelectItem>
@@ -631,6 +667,9 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
               <SelectItem value="9a0b1c7d-4e5f-6a7b-0c1d-3e4f5a6b7c8d">MU Mbeya - Mzumbe University Mbeya Campus</SelectItem>
             </SelectContent>
           </Select>
+          <p className="text-xs text-gray-500">
+            💡 Tip: Bonyeza dropdown ili kuona vyuo vyote au type kufilter
+          </p>
         </div>
 
         <div className="space-y-2">
@@ -685,25 +724,198 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         </div>
       </div>
 
+      {/* Full Address (Optional) */}
+      <div className="space-y-2">
+        <Label htmlFor="full_address" className="flex items-center gap-2 text-sm font-medium">
+          <MapPin className="h-4 w-4 text-primary" />
+          Anwani Kamili
+          <Badge variant="secondary" className="ml-2 text-xs">Si lazima</Badge>
+        </Label>
+        <Input
+          id="full_address"
+          value={formData.full_address}
+          onChange={(e) => onInputChange('full_address', e.target.value)}
+          placeholder="Mfano: Barabara ya Uhuru, Jengo la ABC, Ghorofa ya 3"
+          className="transition-all duration-200"
+        />
+        <p className="text-xs text-gray-500">
+          Weka anwani kamili ili kuwa rahisi kwa wapangaji kukupata
+        </p>
+      </div>
+
       {/* Progress indicator */}
       <div className="mt-6 pt-4 border-t border-gray-100">
         <div className="flex items-center justify-between text-sm text-gray-600">
-          <span>Step 4: Amenities & Location</span>
-          <Badge variant={isStepValid(4) ? "default" : "secondary"}>
-            {isStepValid(4) ? "Complete" : "Required"}
-          </Badge>
+          <span>Step 5: Location</span>
+          <Badge variant="secondary">Optional</Badge>
         </div>
       </div>
     </div>
   );
 
   /**
-   * STEP 3: CONTACT INFORMATION
+   * STEP 6: SERVICE FEE (OPTIONAL)
+   * ===============================
+   * 
+   * Property owner service fee configuration
+   */
+  const renderStepServiceFee = () => (
+    <div className="space-y-6 animate-fade-in">
+      {/* Header */}
+      <div className="text-center mb-6">
+        <div className="w-16 h-16 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Star className="h-8 w-8 text-white" />
+        </div>
+        <h3 className="text-xl font-semibold text-gray-900 mb-2">Service Fee</h3>
+        <p className="text-gray-600">Weka ada yako ya huduma (Si lazima)</p>
+      </div>
+
+      {/* Service Fee Configuration */}
+      <div className="space-y-4 p-5 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl border-2 border-blue-200">
+        <div className="flex items-start gap-3">
+          <Info className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+          <div className="text-sm text-blue-900">
+            <p className="font-medium mb-1">Ada ya Huduma (Service Fee)</p>
+            <p className="text-blue-700">
+              Unaweza kuweka kiasi cha pesa au asilimia ambayo utachukua kama service fee kutoka kwa mpangaji. 
+              Hii ni optional - ukiacha wazi, hakuna service fee itaonyeshwa.
+            </p>
+          </div>
+        </div>
+        
+        {/* Service Fee Type Selection */}
+        <div className="space-y-3">
+          <Label className="flex items-center gap-2 text-sm font-medium text-gray-900">
+            Chagua Aina ya Service Fee
+          </Label>
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={() => {
+                onInputChange('service_fee_type', 'percentage');
+                if (!formData.service_fee_value) onInputChange('service_fee_value', '10');
+              }}
+              className={`p-4 border-2 rounded-xl transition-all duration-200 ${
+                formData.service_fee_type === 'percentage'
+                  ? 'border-blue-600 bg-blue-100 shadow-md'
+                  : 'border-gray-300 bg-white hover:border-blue-400'
+              }`}
+            >
+              <div className="text-center">
+                <div className="text-3xl mb-2">%</div>
+                <div className="text-sm font-semibold text-gray-900">Asilimia</div>
+                <div className="text-xs text-gray-600 mt-1">Mfano: 10% ya rent</div>
+              </div>
+            </button>
+            
+            <button
+              type="button"
+              onClick={() => {
+                onInputChange('service_fee_type', 'fixed');
+                if (!formData.service_fee_value) onInputChange('service_fee_value', '50000');
+              }}
+              className={`p-4 border-2 rounded-xl transition-all duration-200 ${
+                formData.service_fee_type === 'fixed'
+                  ? 'border-blue-600 bg-blue-100 shadow-md'
+                  : 'border-gray-300 bg-white hover:border-blue-400'
+              }`}
+            >
+              <div className="text-center">
+                <div className="text-3xl mb-2">TZS</div>
+                <div className="text-sm font-semibold text-gray-900">Kiasi Maalum</div>
+                <div className="text-xs text-gray-600 mt-1">Mfano: TZS 50,000</div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        {/* Service Fee Value Input */}
+        {formData.service_fee_type && (
+          <div className="space-y-2 animate-fade-in">
+            <Label htmlFor="service_fee_value" className="text-sm font-medium text-gray-900">
+              {formData.service_fee_type === 'percentage' ? 'Weka Asilimia (%)' : 'Weka Kiasi (TZS)'}
+            </Label>
+            <div className="relative">
+              <Input
+                id="service_fee_value"
+                type="number"
+                step={formData.service_fee_type === 'percentage' ? '0.5' : '5000'}
+                min="0"
+                max={formData.service_fee_type === 'percentage' ? '100' : undefined}
+                value={formData.service_fee_value}
+                onChange={(e) => onInputChange('service_fee_value', e.target.value)}
+                placeholder={formData.service_fee_type === 'percentage' ? '10' : '50000'}
+                className="pl-16 text-lg font-medium bg-white border-2 border-gray-300 focus:border-blue-500"
+              />
+              <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-700 font-semibold">
+                {formData.service_fee_type === 'percentage' ? '%' : 'TZS'}
+              </div>
+            </div>
+            
+            {/* Preview Calculation */}
+            {formData.service_fee_value && formData.price && (
+              <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                <div className="flex items-center gap-2 text-green-800 text-sm font-medium mb-1">
+                  <CheckCircle className="h-4 w-4" />
+                  Preview ya Service Fee
+                </div>
+                <div className="text-xs text-green-700">
+                  {formData.service_fee_type === 'percentage' ? (
+                    <>
+                      Kwa rent ya TZS {parseInt(formData.price).toLocaleString()}, service fee itakuwa: 
+                      <span className="font-bold"> TZS {Math.round((parseFloat(formData.price) * parseFloat(formData.service_fee_value)) / 100).toLocaleString()}</span>
+                    </>
+                  ) : (
+                    <>
+                      Service fee: <span className="font-bold">TZS {parseInt(formData.service_fee_value || '0').toLocaleString()}</span>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+        
+        {/* Clear Service Fee Button */}
+        {formData.service_fee_type && (
+          <button
+            type="button"
+            onClick={() => {
+              onInputChange('service_fee_type', '');
+              onInputChange('service_fee_value', '');
+            }}
+            className="w-full p-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            Ondoa Service Fee (Achana wazi)
+          </button>
+        )}
+        
+        {!formData.service_fee_type && (
+          <div className="text-center p-4 bg-gray-50 rounded-lg">
+            <p className="text-sm text-gray-600">
+              Chagua aina ya service fee hapo juu, au endelea bila service fee
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Progress indicator */}
+      <div className="mt-6 pt-4 border-t border-gray-100">
+        <div className="flex items-center justify-between text-sm text-gray-600">
+          <span>Step 6: Service Fee</span>
+          <Badge variant="secondary">Optional</Badge>
+        </div>
+      </div>
+    </div>
+  );
+
+  /**
+   * STEP 7: CONTACT INFORMATION
    * ==========================
    * 
    * Enhanced contact information step with validation.
    */
-  const renderStep3 = () => (
+  const renderStep7 = () => (
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
       <div className="text-center mb-6">
@@ -766,34 +978,13 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         </p>
       </div>
 
-
-
-      {/* Full Address (Optional) */}
-      <div className="space-y-2">
-        <Label htmlFor="full_address" className="flex items-center gap-2 text-sm font-medium">
-          <MapPin className="h-4 w-4 text-primary" />
-          Anwani Kamili
-          <Badge variant="secondary" className="ml-2 text-xs">Si lazima</Badge>
-        </Label>
-        <Input
-          id="full_address"
-          value={formData.full_address}
-          onChange={(e) => onInputChange('full_address', e.target.value)}
-          placeholder="Mfano: Barabara ya Uhuru, Jengo la ABC, Ghorofa ya 3"
-          className="transition-all duration-200"
-        />
-        <p className="text-xs text-gray-500">
-          Weka anwani kamili ili kuwa rahisi kwa wapangaji kukupata
-        </p>
-      </div>
-
       {/* Progress indicator */}
       <div className="mt-6 pt-4 border-t border-gray-100">
         <div className="flex items-center justify-between text-sm text-gray-600">
-          <span>Hatua ya 5: Maelezo ya Mawasiliano</span>
+          <span>Step 7: Contact Information</span>
           <div className="flex items-center gap-2">
-            <Badge variant={isStepValid(5) ? "default" : "destructive"}>
-              {isStepValid(4) ? "Kamili ✓" : "Namba ya simu inahitajika"}
+            <Badge variant={isStepValid(7) ? "default" : "destructive"}>
+              {isStepValid(7) ? "Kamili ✓" : "Namba ya simu inahitajika"}
             </Badge>
           </div>
         </div>
@@ -802,12 +993,12 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
   );
 
   /**
-   * STEP 4: PHOTO UPLOAD
-   * ===================
+   * STEP 1: PHOTOS
+   * ==============
    * 
    * Enhanced photo upload step with preview.
    */
-  const renderStep4 = () => (
+  const renderStep1Photos = () => (
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
       <div className="text-center mb-6">
@@ -906,17 +1097,21 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
   const renderCurrentStep = () => {
     switch (currentStep) {
       case 1:
-        return renderStep4(); // Photos - Step 1
+        return renderStep1Photos(); // Photos - Step 1
       case 2:
         return renderStep1(); // Basic Info - Step 2
       case 3:
         return renderStep2(); // Property Details - Step 3
       case 4:
-        return renderStep2b(); // Amenities & Location - Step 4
+        return renderStep4(); // Amenities - Step 4
       case 5:
-        return renderStep3(); // Contact - Step 5
+        return renderStep5(); // Location - Step 5
+      case 6:
+        return renderStepServiceFee(); // Service Fee - Step 6
+      case 7:
+        return renderStep7(); // Contact - Step 7
       default:
-        return renderStep4(); // Photos as default
+        return renderStep1Photos(); // Photos as default
     }
   };
 

@@ -113,8 +113,8 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             {title}
           </h3>
 
-          {/* Location/Distance Info - Always show if available */}
-          {university && distance_from_campus && (
+          {/* Location/Distance Info - Show distance if available, otherwise show location */}
+          {university && distance_from_campus ? (
             <div className="flex items-center text-gray-500 mb-3">
               {getTransportIconComponent()}
               <span className="text-xs sm:text-sm mr-1">
@@ -130,6 +130,13 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
                 <span className="hidden sm:inline">
                   from {university.name}
                 </span>
+              </span>
+            </div>
+          ) : (
+            <div className="flex items-center text-gray-500 mb-3">
+              <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
+              <span className="text-xs sm:text-sm line-clamp-1">
+                {address || city || 'Location not specified'}
               </span>
             </div>
           )}

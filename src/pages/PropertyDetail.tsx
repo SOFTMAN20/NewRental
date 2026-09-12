@@ -521,9 +521,14 @@ const PropertyDetail = () => {
                       </div>
                     </div>
 
-                    <div className="flex items-center text-gray-600 mb-4">
-                      <MapPin className="h-4 w-4 sm:h-5 sm:w-5 mr-2 flex-shrink-0" />
-                      <span className="text-sm sm:text-base break-words overflow-hidden">{property.full_address || property.location}</span>
+                    <div className="flex items-start text-gray-600 mb-4">
+                      <MapPin className="h-4 w-4 sm:h-5 sm:w-5 mr-2 flex-shrink-0 mt-1" />
+                      <div className="text-sm sm:text-base break-words overflow-hidden">
+                        <div>{property.location || property.address}</div>
+                        {property.full_address && (
+                          <div className="text-gray-500 text-xs sm:text-sm mt-1">{property.full_address}</div>
+                        )}
+                      </div>
                     </div>
 
                     {/* Utilities and Services Badges - Lebo za huduma na vifaa */}
@@ -792,7 +797,8 @@ const PropertyDetail = () => {
             {/* Service Fee Calculator */}
             <ServiceFeeCalculator 
               monthlyRent={Number(property.monthly_rent || 0)} 
-              serviceFeePercentage={60}
+              serviceFeeType={property.service_fee_type as 'percentage' | 'fixed' | null}
+              serviceFeeValue={property.service_fee_value ? Number(property.service_fee_value) : null}
               depositAmount={Number(property.deposit_amount || 0)}
               contractMonths={Number(property.contract_months || 3)}
             />

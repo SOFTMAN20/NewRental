@@ -321,6 +321,8 @@ export type Database = {
           property_type: string | null
           region: string
           room_type: string
+          service_fee_type: string | null
+          service_fee_value: number | null
           status: string | null
           title: string
           transport_mode: string | null
@@ -357,6 +359,8 @@ export type Database = {
           property_type?: string | null
           region: string
           room_type: string
+          service_fee_type?: string | null
+          service_fee_value?: number | null
           status?: string | null
           title: string
           transport_mode?: string | null

@@ -2,35 +2,59 @@
  * SERVICE FEE CALCULATOR COMPONENT
  * =================================
  * 
- * Calculates and displays the 50% service fee based on monthly rent
- * Kuhesabu na kuonyesha ada ya huduma ya 50% kulingana na kodi ya mwezi
+ * Calculates and displays service fee based on property settings
+ * Supports both percentage-based and fixed-amount service fees
+ * Kuhesabu na kuonyesha ada ya huduma kulingana na mipangilio ya nyumba
  */
 
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
-import { Receipt, TrendingUp, CheckCircle2, Sparkles } from 'lucide-react';
+import { Receipt, TrendingUp, CheckCircle2, Sparkles, Percent, DollarSign } from 'lucide-react';
 
 interface ServiceFeeCalculatorProps {
   monthlyRent: number;
-  serviceFeePercentage?: number; // Default 5%
+  serviceFeeType?: 'percentage' | 'fixed' | null; // From property data
+  serviceFeeValue?: number | null; // Percentage or fixed amount
   depositAmount?: number; // Optional deposit
   contractMonths?: number; // Default 3 months
 }
 
 const ServiceFeeCalculator: React.FC<ServiceFeeCalculatorProps> = ({
   monthlyRent,
-  serviceFeePercentage = 5,
+  serviceFeeType = null,
+  serviceFeeValue = null,
   depositAmount = 0,
   contractMonths = 3, // Default 3 months contract
 }) => {
+  // Calculate service fee based on type
+  let serviceFee = 0;
+  let serviceFeeLabel = 'Service Fee';
+  let serviceFeeDescription = 'Ada ya Huduma';
+  
+  if (serviceFeeType === 'percentage' && serviceFeeValue) {
+    // Percentage of monthly rent
+    serviceFee = (monthlyRent * serviceFeeValue) / 100;
+    serviceFeeLabel = `Service Fee (${serviceFeeValue}% of monthly rent)`;
+    serviceFeeDescription = `Ada ya Huduma (${serviceFeeValue}% ya kodi ya mwezi)`;
+  } else if (serviceFeeType === 'fixed' && serviceFeeValue) {
+    // Fixed amount
+    serviceFee = serviceFeeValue;
+    serviceFeeLabel = 'Service Fee (Fixed Amount)';
+    serviceFeeDescription = 'Ada ya Huduma (Kiasi Maalum)';
+  } else {
+    // No service fee set - default to 0
+    serviceFee = 0;
+    serviceFeeLabel = 'Service Fee';
+    serviceFeeDescription = 'Ada ya Huduma';
+  }
+  
   // Calculate costs
   const totalRent = monthlyRent * contractMonths; // Total rent for contract period
-  const serviceFee = (monthlyRent * serviceFeePercentage) / 100;
   const totalAmount = totalRent + serviceFee + depositAmount;
   
-  // Calculate service fee as percentage of total rent
+  // Calculate service fee as percentage of total rent for display
   const serviceFeePercentageOfTotal = totalRent > 0 ? (serviceFee / totalRent) * 100 : 0;
 
   return (
@@ -77,19 +101,27 @@ const ServiceFeeCalculator: React.FC<ServiceFeeCalculatorProps> = ({
             </span>
           </div>
 
-          {/* Service Fee */}
-          <div className="flex justify-between items-center p-3 bg-gradient-to-r from-primary/5 to-purple-50/50 rounded-lg border border-primary/20 hover:border-primary/40 transition-colors">
-            <div className="flex items-center space-x-2">
-              <TrendingUp className="h-4 w-4 text-primary" />
-              <span className="text-sm font-medium text-gray-700">
-                Service Fee ({serviceFeePercentageOfTotal.toFixed(1)}% of total)
-                <span className="block text-xs text-gray-500">Ada ya Huduma ({serviceFeePercentage}% ya mwezi 1)</span>
+          {/* Service Fee - Only show if there is a service fee */}
+          {serviceFee > 0 && (
+            <div className="flex justify-between items-center p-3 bg-gradient-to-r from-primary/5 to-purple-50/50 rounded-lg border border-primary/20 hover:border-primary/40 transition-colors">
+              <div className="flex items-center space-x-2">
+                {serviceFeeType === 'percentage' ? (
+                  <Percent className="h-4 w-4 text-primary" />
+                ) : serviceFeeType === 'fixed' ? (
+                  <DollarSign className="h-4 w-4 text-primary" />
+                ) : (
+                  <TrendingUp className="h-4 w-4 text-primary" />
+                )}
+                <span className="text-sm font-medium text-gray-700">
+                  {serviceFeeLabel}
+                  <span className="block text-xs text-gray-500">{serviceFeeDescription}</span>
+                </span>
+              </div>
+              <span className="font-bold text-primary text-lg">
+                TZS {serviceFee.toLocaleString()}
               </span>
             </div>
-            <span className="font-bold text-primary text-lg">
-              TZS {serviceFee.toLocaleString()}
-            </span>
-          </div>
+          )}
 
           {/* Deposit - if exists */}
           {depositAmount > 0 && (
