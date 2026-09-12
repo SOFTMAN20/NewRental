@@ -48,6 +48,13 @@ const colleges: College[] = [
     image: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=400&h=300&fit=crop'
   },
   {
+    id: '10',
+    name: 'Open University of Tanzania',
+    abbreviation: 'OUT',
+    city: 'Dar es Salaam',
+    image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=300&fit=crop'
+  },
+  {
     id: '3',
     name: 'Ardhi University',
     abbreviation: 'ARU',
@@ -76,6 +83,13 @@ const colleges: College[] = [
     image: 'https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=400&h=300&fit=crop'
   },
   {
+    id: '13',
+    name: 'Mzumbe University Mbeya Campus',
+    abbreviation: 'MU Mbeya',
+    city: 'Mbeya',
+    image: 'https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=400&h=300&fit=crop'
+  },
+  {
     id: '7',
     name: 'Sokoine University',
     abbreviation: 'SUA',
@@ -88,6 +102,20 @@ const colleges: College[] = [
     abbreviation: 'IFM',
     city: 'Dar es Salaam',
     image: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=400&h=300&fit=crop'
+  },
+  {
+    id: '11',
+    name: 'Taasisi ya Elimu ya Ufundi na Uhandisi',
+    abbreviation: 'TEKU',
+    city: 'Dar es Salaam',
+    image: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=400&h=300&fit=crop'
+  },
+  {
+    id: '12',
+    name: 'Catholic University of Mbeya',
+    abbreviation: 'CUOM',
+    city: 'Mbeya',
+    image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=300&fit=crop'
   }
 ];
 

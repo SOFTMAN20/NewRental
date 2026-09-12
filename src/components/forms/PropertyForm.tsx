@@ -623,9 +623,12 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
               <SelectItem value="6321d492-87f2-49a3-899f-73380410366c">UDOM - University of Dodoma</SelectItem>
               <SelectItem value="68794951-3342-4633-9970-ae19cbea45c7">SUA - Sokoine University</SelectItem>
               <SelectItem value="4b003b77-b817-4371-bb2e-e3efc2f035f4">MUHAS - Muhimbili University</SelectItem>
-              <SelectItem value="3fb45e07-d761-48c6-851c-61058ae42c17">MU - Mzumbe University</SelectItem>
+              <SelectItem value="3fb45e07-d761-48c6-851c-61058ae42c17">MU - Mzumbe University (Morogoro)</SelectItem>
               <SelectItem value="369442a2-5421-4eb3-add0-e5677f541ebe">IFM - Institute of Finance Management</SelectItem>
               <SelectItem value="b9fd4ef3-343c-4035-b3a7-13b6d085823c">MUST - Mbeya University</SelectItem>
+              <SelectItem value="7e8f9a5b-2c3d-4e6f-8a9b-1c2d3e4f5a6b">TEKU - Taasisi ya Elimu ya Ufundi na Uhandisi</SelectItem>
+              <SelectItem value="8f9a0b6c-3d4e-5f7a-9b0c-2d3e4f5a6b7c">CUOM - Catholic University of Mbeya</SelectItem>
+              <SelectItem value="9a0b1c7d-4e5f-6a7b-0c1d-3e4f5a6b7c8d">MU Mbeya - Mzumbe University Mbeya Campus</SelectItem>
             </SelectContent>
           </Select>
         </div>
