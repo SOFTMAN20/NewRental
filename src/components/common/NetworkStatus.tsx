@@ -19,8 +19,12 @@ const NetworkStatus: React.FC = () => {
       setIsOnline(true);
       if (wasOffline) {
         setShowNotification(true);
-        // Hide "back online" message after 3 seconds
-        setTimeout(() => setShowNotification(false), 3000);
+        
+        // Auto-reload page when network comes back to refresh data
+        console.log('🌐 Network restored - Auto-reloading page...');
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       }
       setWasOffline(false);
     };
@@ -64,7 +68,7 @@ const NetworkStatus: React.FC = () => {
             {isOnline ? (
               <>
                 <Wifi className="h-5 w-5" />
-                <span className="font-medium">Mtandao Umerejea! 🎉</span>
+                <span className="font-medium">Mtandao Umerejea! Inafanya refresh...</span>
               </>
             ) : (
               <>

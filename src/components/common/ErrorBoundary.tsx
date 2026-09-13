@@ -17,6 +17,8 @@ interface State {
   hasError: boolean;
   error: Error | null;
   errorInfo: ErrorInfo | null;
+  retryCount: number;
+  isOnline: boolean;
 }
 
 class ErrorBoundary extends Component<Props, State> {
@@ -26,14 +28,51 @@ class ErrorBoundary extends Component<Props, State> {
       hasError: false,
       error: null,
       errorInfo: null,
+      retryCount: 0,
+      isOnline: navigator.onLine,
     };
   }
 
-  static getDerivedStateFromError(error: Error): State {
+  componentDidMount() {
+    // Listen for online/offline events
+    window.addEventListener('online', this.handleOnline);
+    window.addEventListener('offline', this.handleOffline);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('online', this.handleOnline);
+    window.removeEventListener('offline', this.handleOffline);
+  }
+
+  handleOnline = () => {
+    this.setState({ isOnline: true });
+    
+    // Auto-retry if error occurred due to network issue
+    if (this.state.hasError && this.state.retryCount < 3) {
+      console.log('🌐 Network restored. Auto-retrying...');
+      setTimeout(() => {
+        this.handleAutoRetry();
+      }, 1000);
+    }
+  };
+
+  handleOffline = () => {
+    this.setState({ isOnline: false });
+  };
+
+  handleAutoRetry = () => {
+    this.setState((prevState) => ({
+      retryCount: prevState.retryCount + 1,
+    }));
+    
+    console.log(`🔄 Auto-retry attempt ${this.state.retryCount + 1}/3`);
+    window.location.reload();
+  };
+
+  static getDerivedStateFromError(error: Error): Partial<State> {
     return {
       hasError: true,
       error,
-      errorInfo: null,
     };
   }
 
@@ -43,6 +82,21 @@ class ErrorBoundary extends Component<Props, State> {
       error,
       errorInfo,
     });
+
+    // Check if it's a network-related error
+    const isNetworkError = 
+      error.message.includes('fetch') ||
+      error.message.includes('network') ||
+      error.message.includes('Failed to load') ||
+      !navigator.onLine;
+
+    // Auto-retry on network errors (max 3 times)
+    if (isNetworkError && this.state.retryCount < 3) {
+      console.log('🌐 Network error detected. Auto-retrying in 3 seconds...');
+      setTimeout(() => {
+        this.handleAutoRetry();
+      }, 3000);
+    }
   }
 
   handleReset = () => {
@@ -50,6 +104,7 @@ class ErrorBoundary extends Component<Props, State> {
       hasError: false,
       error: null,
       errorInfo: null,
+      retryCount: 0,
     });
     window.location.reload();
   };
@@ -72,10 +127,15 @@ class ErrorBoundary extends Component<Props, State> {
 
             {/* Title */}
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
-              Oops! Kuna Hitilafu
+              {!this.state.isOnline ? '📡 Hakuna Mtandao' : 'Oops! Kuna Hitilafu'}
             </h1>
             <p className="text-gray-600 mb-6">
-              Samahani, kuna tatizo lililotokea. Tafadhali jaribu tena.
+              {!this.state.isOnline 
+                ? 'Unganisha mtandao. Tutajaribu tena mara tu mtandao utakapopatikana.'
+                : this.state.retryCount > 0 
+                  ? `Tunajaribu tena... (${this.state.retryCount}/3)`
+                  : 'Samahani, kuna tatizo lililotokea. Tafadhali jaribu tena.'
+              }
             </p>
 
             {/* Error Details (Dev only) */}

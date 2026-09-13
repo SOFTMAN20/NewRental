@@ -9,7 +9,7 @@ initPerformanceMonitoring();
 
 createRoot(document.getElementById("root")!).render(<App />);
 
-// Register Service Worker for PWA
+// Register Service Worker for PWA with instant updates
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
@@ -17,16 +17,38 @@ if ('serviceWorker' in navigator) {
       .then((registration) => {
         console.log('✅ SW registered:', registration.scope);
         
-        // Check for updates
+        // Check for updates every 60 seconds
+        setInterval(() => {
+          registration.update();
+        }, 60 * 1000);
+        
+        // Auto-update on new version found
         registration.addEventListener('updatefound', () => {
           const newWorker = registration.installing;
           if (newWorker) {
             newWorker.addEventListener('statechange', () => {
               if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                // New content is available, show update prompt
-                console.log('🔄 New content available! Please refresh.');
+                // Auto-reload on new version (instant update)
+                console.log('🔄 New version found! Auto-updating...');
+                
+                // Tell service worker to skip waiting
+                newWorker.postMessage({ type: 'SKIP_WAITING' });
+                
+                // Reload page after 1 second
+                setTimeout(() => {
+                  window.location.reload();
+                }, 1000);
               }
             });
+          }
+        });
+        
+        // Listen for controller change (new SW activated)
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (!refreshing) {
+            refreshing = true;
+            window.location.reload();
           }
         });
       })
