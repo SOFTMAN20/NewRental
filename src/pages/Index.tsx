@@ -17,7 +17,7 @@
  * - Displays platform benefits (Inaonyesha faida za mfumo)
  */
 
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import Navigation from "@/components/layout/Navigation";
 import HeroSection from "@/components/layout/HeroSection";
 import { Link } from 'react-router-dom';
@@ -31,6 +31,11 @@ const Footer = lazy(() => import("@/components/layout/Footer"));
  * Kipengele cha ukurasa wa kwanza - Muundo kama programu ya simu
  */
 const Index = () => {
+  // Force scroll to top on mount (especially for refresh)
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       {/* Global navigation - Uongozaji wa kimataifa */}
