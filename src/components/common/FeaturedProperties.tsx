@@ -230,12 +230,9 @@ const FeaturedProperties = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="mb-6 text-left mt-8">
-          <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-gray-900 mb-1">
-            Find Your Perfect College Home in MUST
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900">
+            Quality Student Housing Near Universities
           </h2>
-          <p className="text-sm sm:text-base text-muted-foreground max-w-2xl leading-relaxed">
-            {t('featuredProperties.subtitle')}
-          </p>
         </div>
 
         {properties.length > 0 ? (

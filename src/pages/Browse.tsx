@@ -217,13 +217,20 @@ const filterProperties = (properties: Property[], filters: FilterState): Propert
       }
     }
 
-    // University filtering (NEW)
+    // University filtering (NEW) - matches university AND searches in location/address
     if (filters.university && filters.university !== '') {
       const universityName = property.university?.name?.toLowerCase() || '';
       const universityAbbr = property.university?.abbreviation?.toLowerCase() || '';
+      const location = property.location?.toLowerCase() || '';
+      const address = property.address?.toLowerCase() || '';
+      const fullAddress = property.full_address?.toLowerCase() || '';
       const filterUniversity = filters.university.toLowerCase();
 
-      if (!universityName.includes(filterUniversity) && !universityAbbr.includes(filterUniversity)) {
+      // Check if matches university OR appears in location/address fields
+      const matchesUniversity = universityName.includes(filterUniversity) || universityAbbr.includes(filterUniversity);
+      const matchesLocation = location.includes(filterUniversity) || address.includes(filterUniversity) || fullAddress.includes(filterUniversity);
+
+      if (!matchesUniversity && !matchesLocation) {
         return false;
       }
     }

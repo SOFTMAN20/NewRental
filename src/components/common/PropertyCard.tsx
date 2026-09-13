@@ -10,7 +10,7 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import DirectionsWalk from '@/components/icons/DirectionsWalk';
 import { TwoWheeler } from '@mui/icons-material';
-import { Car, Eye } from 'lucide-react';
+import { Car, Eye, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import OptimizedImage from '@/components/common/OptimizedImage';
 
