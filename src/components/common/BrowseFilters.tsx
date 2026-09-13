@@ -121,12 +121,12 @@ const BrowseFilters: React.FC<BrowseFiltersProps> = ({
           <MapPin className="h-4 w-4 text-primary" />
           Region/City
         </h3>
-        <Select value={filters.region} onValueChange={(value) => onFilterChange('region', value)}>
+        <Select value={filters.region || 'all'} onValueChange={(value) => onFilterChange('region', value === 'all' ? '' : value)}>
           <SelectTrigger className="w-full">
             <SelectValue placeholder="All Regions" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Regions</SelectItem>
+            <SelectItem value="all">All Regions</SelectItem>
             {regions.map((region) => (
               <SelectItem key={region} value={region}>
                 {region}

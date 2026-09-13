@@ -6,7 +6,7 @@
  * Provides easy access to main app sections on mobile devices
  * 
  * FEATURES:
- * - 5 main navigation items (Explore, Wishlists, Log in, Profile)
+ * - 4 main navigation items (Home, Explore, Post, Profile)
  * - Active state highlighting
  * - Smooth animations and transitions
  * - Responsive design optimized for mobile
@@ -92,21 +92,21 @@ const MobileBottomNav = () => {
   // Define navigation items similar to Airbnb
   const navItems: NavItem[] = [
     {
+      id: 'home',
+      icon: <Home className="h-5 w-5" />,
+      label: 'Home',
+      path: '/'
+    },
+    {
       id: 'explore',
       icon: <Search className="h-5 w-5" />,
       label: t('bottomNav.explore'),
       path: '/browse'
     },
     {
-      id: 'wishlists',
-      icon: <Heart className="h-5 w-5" />,
-      label: t('bottomNav.wishlists'),
-      path: '/favorites'
-    },
-    {
       id: 'post',
       icon: <Plus className="h-5 w-5" />,
-      label: user ? 'Post' : 'Post',
+      label: 'Post',
       path: user ? '/add-property' : '/signin?redirect=add-property',
       requiresAuth: true
     },
@@ -120,6 +120,9 @@ const MobileBottomNav = () => {
 
   // Check if current path matches nav item
   const isActive = (path: string) => {
+    if (path === '/') {
+      return location.pathname === '/';
+    }
     if (path === '/browse') {
       return location.pathname === '/browse';
     }
