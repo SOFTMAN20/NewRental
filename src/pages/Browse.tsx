@@ -362,6 +362,11 @@ const Browse = () => {
   const [uiState, setUIState] = useState<UIState>(() => getInitialUIState());
   const [isCollegesModalOpen, setIsCollegesModalOpen] = useState(false);
 
+  // Update filters when URL params change (e.g., from navigation)
+  useEffect(() => {
+    setFilters(getInitialFilterState(searchParams));
+  }, [searchParams]);
+
   // Data fetching from Supabase
   const { data: properties = [], isLoading, error } = useProperties();
 
@@ -434,16 +439,19 @@ const Browse = () => {
   };
 
   // Apply filtering and sorting to properties
-  const filteredProperties = filterProperties(properties as Property[], filters);
+  // Guard against undefined/null properties during loading
+  const safeProperties = Array.isArray(properties) ? properties : [];
+  const filteredProperties = filterProperties(safeProperties as Property[], filters);
   const sortedProperties = sortProperties(filteredProperties, filters.sortBy);
 
   // Debug logging
   console.log('🔍 Browse Debug:', {
-    totalProperties: properties.length,
+    totalProperties: safeProperties.length,
     filteredProperties: filteredProperties.length,
     sortedProperties: sortedProperties.length,
     filters,
-    sampleProperty: properties[0]
+    isLoading,
+    hasError: !!error
   });
 
   /**
