@@ -168,7 +168,40 @@ const PropertyDetail = () => {
 
     const phoneNumber = property.contact_whatsapp_phone || property.contact_phone;
     const cleanPhone = phoneNumber!.replace(/[^0-9]/g, '');
-    const message = `Hujambo, ninapenda kujua zaidi kuhusu nyumba hii: ${property.title}`;
+    
+    // Get current page URL
+    const propertyUrl = window.location.href;
+    
+    // Format price
+    const formattedPrice = `TZS ${Number(property.monthly_rent || 0).toLocaleString()}`;
+    
+    // Get location
+    const location = property.location || property.address || property.city || 'Location not specified';
+    
+    // Get first image URL
+    const imageUrl = property.images && property.images.length > 0 ? property.images[0] : '';
+    
+    // Determine if it's a room or property/house
+    const isRoom = property.room_type && ['single_room', 'shared_room', 'master_room'].includes(property.room_type);
+    
+    // Dynamic question based on property type
+    const questionEng = isRoom ? 'Is this room still available?' : 'Is this property still available?';
+    const questionSwa = isRoom ? 'Je, chumba hiki kipo?' : 'Je, nyumba hii ipo?';
+    
+    // Construct detailed message
+    const message = `🏠 *${property.title}*
+
+💰 *Bei/Price:* ${formattedPrice}/mwezi
+📍 *Eneo/Location:* ${location}
+🏢 *Aina/Type:* ${property.room_type?.replace(/_/g, ' ') || 'Property'}
+
+${questionSwa}
+${questionEng}
+
+🔗 *Link:* ${propertyUrl}
+
+${imageUrl ? `📸 *Picha:* ${imageUrl}` : ''}`;
+
     return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
   };
 
