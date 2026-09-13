@@ -342,7 +342,11 @@ ${imageUrl ? `📸 *Picha:* ${imageUrl}` : ''}`;
             <Card>
               <CardContent className="p-0">
                 {/* Mobile/Tablet carousel - Onyesho la simu na tablet */}
-                <div className="relative aspect-[4/5] sm:aspect-[16/10] overflow-hidden rounded-t-lg lg:hidden" style={{ height: 'calc(100% - 4px)' }}>
+                <div 
+                  className="relative aspect-[4/5] sm:aspect-[16/10] overflow-hidden rounded-t-lg lg:hidden cursor-pointer" 
+                  style={{ height: 'calc(100% - 4px)' }}
+                  onClick={() => setIsGalleryOpen(true)}
+                >
                   <img
                     src={
                       property.images && property.images.length > 0
@@ -519,16 +523,22 @@ ${imageUrl ? `📸 *Picha:* ${imageUrl}` : ''}`;
 
                 {/* Full gallery dialog */}
                 <Dialog open={isGalleryOpen} onOpenChange={setIsGalleryOpen}>
-                  <DialogContent className="max-w-6xl w-full">
+                  <DialogContent className="max-w-6xl w-full max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
                       <DialogTitle>{property.title} — Photos</DialogTitle>
                     </DialogHeader>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
                       {(property.images && property.images.length > 0
                         ? property.images
                         : ['https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=1200&h=900&fit=crop']
                       ).map((src, idx) => (
-                        <img key={idx} src={src} alt={`Photo ${idx + 1}`} className="w-full h-64 object-cover rounded-md" />
+                        <img 
+                          key={idx} 
+                          src={src} 
+                          alt={`Photo ${idx + 1}`} 
+                          className="w-full h-48 sm:h-64 object-cover rounded-md cursor-pointer hover:opacity-90 transition-opacity" 
+                          onClick={() => setCurrentImageIndex(idx)}
+                        />
                       ))}
                     </div>
                   </DialogContent>
