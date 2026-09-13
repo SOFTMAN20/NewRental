@@ -185,13 +185,10 @@ const FeaturedProperties = () => {
     return (
       <section className="pt-0 pb-8 bg-gradient-to-br from-safari-50 via-white to-kilimanjaro-50 relative overflow-hidden -mt-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="mb-12">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-4">
-              Find Your Perfect College Home in Dar es Salaam
+          <div className="mb-6 text-left mt-8">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900">
+              Quality Student Housing Near Universities
             </h2>
-            <p className="text-xl text-muted-foreground">
-              {t('featuredProperties.subtitle')}
-            </p>
           </div>
 
           {/* Skeleton Loading Grid */}
