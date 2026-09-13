@@ -29,7 +29,6 @@ interface BrowseFiltersProps {
   filters: FilterState;
   onFilterChange: <K extends keyof FilterState>(key: K, value: FilterState[K]) => void;
   onClearAll: () => void;
-  onOpenCollegesModal: () => void;
 }
 
 const propertyTypes = [
@@ -61,11 +60,26 @@ const regions = [
   'Mwanza'
 ];
 
+const universities = [
+  'MUST - Mbeya',
+  'UDSM - Dar es Salaam',
+  'DIT - Dar es Salaam',
+  'SUZA - Zanzibar',
+  'MU - Morogoro',
+  'ARU - Arusha',
+  'UDOM - Dodoma',
+  'SUA - Morogoro',
+  'MUHAS - Dar es Salaam',
+  'MUCE - Moshi',
+  'TEKU - Dar es Salaam',
+  'CUOM - Mbeya',
+  'MU - Mbeya'
+];
+
 const BrowseFilters: React.FC<BrowseFiltersProps> = ({
   filters,
   onFilterChange,
-  onClearAll,
-  onOpenCollegesModal
+  onClearAll
 }) => {
   const togglePropertyType = (type: string) => {
     const newTypes = filters.propertyType.includes(type)
@@ -225,14 +239,22 @@ const BrowseFilters: React.FC<BrowseFiltersProps> = ({
           <GraduationCap className="h-4 w-4 text-primary" />
           University/College
         </h3>
-        <Button
-          variant="outline"
-          onClick={onOpenCollegesModal}
-          className="w-full justify-between"
+        <Select 
+          value={filters.university || 'all'} 
+          onValueChange={(value) => onFilterChange('university', value === 'all' ? '' : value)}
         >
-          {filters.university || 'Select University'}
-          <MapPin className="h-4 w-4 ml-2" />
-        </Button>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="All Universities" />
+          </SelectTrigger>
+          <SelectContent className="max-h-[300px]">
+            <SelectItem value="all">All Universities</SelectItem>
+            {universities.map((uni) => (
+              <SelectItem key={uni} value={uni}>
+                {uni}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Clear All Button */}

@@ -4,9 +4,13 @@
  * 
  * Modal showing all universities/colleges we work with in Tanzania
  * Similar to Student.com city selector
+ * 
+ * Z-INDEX FIX:
+ * This modal can be opened from within BrowseFilters modal,
+ * so we need higher z-index to appear on top
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -127,6 +131,25 @@ interface CollegesModalProps {
 const CollegesModal: React.FC<CollegesModalProps> = ({ open, onClose }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Force higher z-index for overlay and content when modal opens
+  useEffect(() => {
+    if (open) {
+      // Find and update z-index of overlay and content
+      setTimeout(() => {
+        const overlays = document.querySelectorAll('[data-radix-dialog-overlay]');
+        const contents = document.querySelectorAll('[data-radix-dialog-content]');
+        
+        overlays.forEach((overlay) => {
+          (overlay as HTMLElement).style.zIndex = '60';
+        });
+        
+        contents.forEach((content) => {
+          (content as HTMLElement).style.zIndex = '60';
+        });
+      }, 0);
+    }
+  }, [open]);
+
   const filteredColleges = colleges.filter(college =>
     college.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     college.abbreviation.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -135,7 +158,10 @@ const CollegesModal: React.FC<CollegesModalProps> = ({ open, onClose }) => {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+      <DialogContent 
+        className="max-w-5xl max-h-[90vh] overflow-y-auto"
+        data-radix-dialog-content
+      >
         <DialogHeader>
           <DialogTitle className="text-2xl sm:text-3xl font-bold text-gray-900">
             Which university do you attend?

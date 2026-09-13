@@ -49,6 +49,12 @@ import { useProperties } from '@/hooks/useProperties';
 import { useFavorites } from '@/hooks/useFavorites';
 import type { Property } from '@/hooks/useProperties';
 import { useTranslation } from 'react-i18next';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 /**
  * FILTER STATE INTERFACE
@@ -529,84 +535,72 @@ const Browse = () => {
                 <Button
                   variant="outline"
                   onClick={() => updateUIState('showFilters', !uiState.showFilters)}
-                  className="flex-1 h-10 sm:h-12 lg:h-14 min-w-0 border-2 border-gray-300 rounded-full hover:border-primary/50 hover:bg-primary/5 flex items-center justify-center px-3 sm:px-4 transition-all duration-200 bg-white shadow-lg"
+                  className="relative flex-1 h-10 sm:h-12 lg:h-14 min-w-0 border-2 border-gray-300 rounded-full hover:border-primary/50 hover:bg-primary/5 flex items-center justify-center px-3 sm:px-4 transition-all duration-200 bg-white shadow-lg"
                 >
                   <SlidersHorizontal className="h-4 w-4 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                   <span className="text-sm sm:text-sm whitespace-nowrap">{t('browse.filters')}</span>
+                  {/* Active filter count badge */}
+                  {FilterUtils.hasActiveFilters(filters) && (
+                    <span className="absolute -top-1 -right-1 bg-primary text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                      {[
+                        filters.propertyType.length > 0 ? 1 : 0,
+                        filters.region ? 1 : 0,
+                        filters.amenities.length > 0 ? 1 : 0,
+                        filters.gender && filters.gender !== 'all' ? 1 : 0,
+                        filters.beds && filters.beds !== 'all' ? 1 : 0,
+                        filters.university ? 1 : 0
+                      ].reduce((a, b) => a + b, 0)}
+                    </span>
+                  )}
                 </Button>
               </div>
             </div>
 
-            {/* Advanced Filters Panel */}
-            {uiState.showFilters && (
-              <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border-0 mt-4 sm:mt-6 p-4 sm:p-6">
-                <BrowseFilters
-                  filters={{
-                    propertyType: filters.propertyType,
-                    region: filters.region,
-                    amenities: filters.amenities,
-                    gender: filters.gender,
-                    beds: filters.beds,
-                    university: filters.university
-                  }}
-                  onFilterChange={updateFilter}
-                  onClearAll={handleClearAllFilters}
-                  onOpenCollegesModal={() => setIsCollegesModalOpen(true)}
-                />
+            {/* Advanced Filters Modal */}
+            <Dialog open={uiState.showFilters} onOpenChange={(open) => updateUIState('showFilters', open)}>
+              <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle className="text-2xl font-bold">Filter Properties</DialogTitle>
+                </DialogHeader>
                 
-                {/* Legacy Filters Section (keep for backwards compatibility) */}
-                <div className="mt-8 pt-6 border-t">
-                  <h3 className="text-sm font-semibold text-gray-900 mb-4">Additional Filters</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Custom Price Range */}
-                    <div>
-                      <h4 className="font-medium text-gray-900 mb-3">{t('browse.customPrice')}</h4>
-                      <div className="space-y-3">
-                        <div>
-                          <label className="block text-sm text-gray-700 mb-1">
-                            {t('browse.minPriceLabel')}
-                          </label>
-                          <Input
-                            type="number"
-                            placeholder="30,000"
-                            value={filters.minPrice}
-                            onChange={(e) => updateFilter('minPrice', e.target.value)}
-                            className="w-full"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm text-gray-700 mb-1">
-                            {t('browse.maxPriceLabel')}
-                          </label>
-                          <Input
-                            type="number"
-                            placeholder="500,000"
-                            value={filters.maxPrice}
-                            onChange={(e) => updateFilter('maxPrice', e.target.value)}
-                            className="w-full"
-                          />
-                        </div>
-                      </div>
-                    </div>
+                <div className="space-y-6">
+                  <BrowseFilters
+                    filters={{
+                      propertyType: filters.propertyType,
+                      region: filters.region,
+                      amenities: filters.amenities,
+                      gender: filters.gender,
+                      beds: filters.beds,
+                      university: filters.university
+                    }}
+                    onFilterChange={updateFilter}
+                    onClearAll={handleClearAllFilters}
+                  />
 
-                    {/* Sort Options */}
-                    <div>
-                      <h4 className="font-medium text-gray-900 mb-3">{t('browse.sortBy')}</h4>
-                      <Select value={filters.sortBy} onValueChange={(value) => updateFilter('sortBy', value)}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="newest">{t('browse.newest')}</SelectItem>
-                          <SelectItem value="price-low">{t('browse.priceLow')}</SelectItem>
-                          <SelectItem value="price-high">{t('browse.priceHigh')}</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+                  {/* Apply Button */}
+                  <div className="flex gap-3 pt-4 border-t">
+                    <Button
+                      onClick={() => updateUIState('showFilters', false)}
+                      className="flex-1 h-12"
+                      size="lg"
+                    >
+                      Apply Filters
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        handleClearAllFilters();
+                        updateUIState('showFilters', false);
+                      }}
+                      variant="outline"
+                      className="h-12 px-6"
+                      size="lg"
+                    >
+                      Clear All
+                    </Button>
                   </div>
                 </div>
-              </div>
-            )}
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </div>
