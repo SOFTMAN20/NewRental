@@ -342,7 +342,7 @@ ${imageUrl ? `📸 *Picha:* ${imageUrl}` : ''}`;
             <Card>
               <CardContent className="p-0">
                 {/* Mobile/Tablet carousel - Onyesho la simu na tablet */}
-                <div className="relative aspect-[3/4] sm:aspect-[16/10] overflow-hidden rounded-t-lg lg:hidden">
+                <div className="relative aspect-[4/5] sm:aspect-[16/10] overflow-hidden rounded-t-lg lg:hidden" style={{ height: 'calc(100% - 4px)' }}>
                   <img
                     src={
                       property.images && property.images.length > 0
