@@ -66,6 +66,7 @@ import ErrorBoundary from "./components/common/ErrorBoundary";
 import NetworkStatus from "./components/common/NetworkStatus";
 import PageLoadingFallback from "./components/common/PageLoadingFallback";
 import UpdateNotifier from "./components/common/UpdateNotifier";
+import ScrollToTop from "./components/common/ScrollToTop";
 
 // Lazy load pages for code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -138,6 +139,9 @@ const App = () => (
 
           {/* Main routing configuration - Mipangilio ya uongozaji */}
           <BrowserRouter>
+            {/* Scroll to top on route change */}
+            <ScrollToTop />
+            
             <Suspense fallback={<PageLoadingFallback />}>
               <Routes>
                 {/* Public routes - Njia za umma */}
