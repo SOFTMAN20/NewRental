@@ -2,6 +2,17 @@
  * PWA INSTALL PROMPT
  * ==================
  * Shows "Install App" prompt for PWA installation
+ * 
+ * BEHAVIOR:
+ * - Shows prompt 5 seconds after page load
+ * - If user clicks X or dismisses: Ask again after 2 days
+ * - If user accepts and installs: Never show again
+ * - If user declines from browser prompt: Ask again after 2 days
+ * 
+ * STORAGE:
+ * - localStorage key: 'pwa-install-dismissed'
+ * - Value: ISO timestamp of dismissal
+ * - Auto-clears after 2 days
  */
 
 import React, { useState, useEffect } from 'react';
@@ -34,8 +45,15 @@ const PWAInstallPrompt: React.FC = () => {
     if (dismissed) {
       const dismissedDate = new Date(dismissed);
       const daysSince = (Date.now() - dismissedDate.getTime()) / (1000 * 60 * 60 * 24);
-      if (daysSince < 7) {
-        return; // Don't show again for 7 days
+      
+      // Show again after 2 days if dismissed
+      if (daysSince < 2) {
+        console.log(`⏳ PWA prompt dismissed ${daysSince.toFixed(1)} days ago. Will show again after 2 days.`);
+        return; // Don't show again for 2 days
+      } else {
+        // Reset dismissal after 2 days
+        console.log('🔄 2 days passed since dismissal. Showing PWA prompt again.');
+        localStorage.removeItem('pwa-install-dismissed');
       }
     }
 
@@ -75,8 +93,12 @@ const PWAInstallPrompt: React.FC = () => {
     
     if (outcome === 'accepted') {
       console.log('✅ User accepted PWA install');
+      // Remove dismissal record on successful install
+      localStorage.removeItem('pwa-install-dismissed');
     } else {
-      console.log('❌ User dismissed PWA install');
+      console.log('❌ User dismissed PWA install from prompt');
+      // Save dismissal time - ask again after 2 days
+      localStorage.setItem('pwa-install-dismissed', new Date().toISOString());
     }
     
     setDeferredPrompt(null);
@@ -84,7 +106,9 @@ const PWAInstallPrompt: React.FC = () => {
   };
 
   const handleDismiss = () => {
-    localStorage.setItem('pwa-install-dismissed', new Date().toISOString());
+    const now = new Date().toISOString();
+    localStorage.setItem('pwa-install-dismissed', now);
+    console.log('❌ PWA install dismissed. Will ask again after 2 days.');
     setShowPrompt(false);
   };
 
