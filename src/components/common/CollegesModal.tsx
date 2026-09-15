@@ -91,14 +91,14 @@ const colleges: College[] = [
     name: 'Mzumbe University',
     abbreviation: 'MU',
     city: 'Morogoro',
-    image: 'https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=400&h=300&fit=crop'
+    image: '/images/collegephotos/mzumbe.jpg'
   },
   {
     id: '13',
     name: 'Mzumbe University Mbeya Campus',
     abbreviation: 'MU Mbeya',
     city: 'Mbeya',
-    image: 'https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=400&h=300&fit=crop'
+    image: '/images/collegephotos/mzumbe.jpg'
   },
   {
     id: '7',
@@ -112,14 +112,14 @@ const colleges: College[] = [
     name: 'Institute of Finance Management',
     abbreviation: 'IFM',
     city: 'Dar es Salaam',
-    image: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=400&h=300&fit=crop'
+    image: '/images/collegephotos/ifm.jpg'
   },
   {
     id: '12',
     name: 'Catholic University of Mbeya',
     abbreviation: 'CUOM',
     city: 'Mbeya',
-    image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=300&fit=crop'
+    image: '/images/collegephotos/cuom.jpg'
   }
 ];
 
