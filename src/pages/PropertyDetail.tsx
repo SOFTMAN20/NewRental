@@ -754,6 +754,9 @@ ${imageUrl ? `📸 *Picha:* ${imageUrl}` : ''}`;
                     </div>
                   </div>
                 </div>
+
+                {/* Decorative bottom accent */}
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-yellow-400/10 to-transparent rounded-tr-full"></div>
               </CardContent>
             </Card>
           </div>
@@ -847,100 +850,77 @@ ${imageUrl ? `📸 *Picha:* ${imageUrl}` : ''}`;
             />
 
             {/* Safety Tips Card - Kadi ya vidokezo vya usalama */}
-            <Card className="border-2 border-yellow-100 bg-gradient-to-br from-yellow-50 to-orange-50 shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <CardContent className="p-4 sm:p-6">
-                {/* Header with Icon */}
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="bg-yellow-400 p-3 rounded-full">
-                    <Shield className="h-6 w-6 text-white" />
+            <Card className="relative overflow-hidden border-2 border-yellow-200/50 shadow-lg hover:shadow-xl transition-shadow duration-300">
+              {/* Decorative gradient background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-yellow-50/80 via-orange-50/50 to-red-50/30 opacity-60"></div>
+
+              {/* Decorative corner accent */}
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-yellow-400/20 to-transparent rounded-bl-full"></div>
+
+              <CardContent className="relative p-5 sm:p-6">
+                {/* Header with icon */}
+                <div className="flex items-center space-x-3 mb-5">
+                  <div className="p-2.5 bg-yellow-400/20 rounded-xl">
+                    <Shield className="h-6 w-6 text-yellow-600" />
                   </div>
                   <div>
-                    <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
+                    <h3 className="text-lg sm:text-xl font-bold text-gray-900">
                       {t('propertyDetail.safetyTips')}
                     </h3>
-                    <p className="text-sm text-gray-600">Protect yourself from scams</p>
+                    <p className="text-xs sm:text-sm text-gray-600">Protect yourself from scams</p>
                   </div>
                 </div>
 
                 {/* Safety Tips List */}
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {/* Tip 1 */}
-                  <div className="flex items-start gap-3 p-3 bg-white rounded-lg border border-yellow-200 hover:border-yellow-300 transition-colors">
-                    <div className="bg-green-100 p-2 rounded-full flex-shrink-0">
-                      <svg className="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
+                  <div className="flex items-start gap-3 p-3 bg-white/80 rounded-lg border border-gray-200 hover:border-green-300 transition-colors group">
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900">
+                      <p className="text-sm font-medium text-gray-900 group-hover:text-green-700 transition-colors">
                         {t('propertyDetail.visitBeforePaying')}
                       </p>
                     </div>
                   </div>
 
                   {/* Tip 2 */}
-                  <div className="flex items-start gap-3 p-3 bg-white rounded-lg border border-yellow-200 hover:border-yellow-300 transition-colors">
-                    <div className="bg-blue-100 p-2 rounded-full flex-shrink-0">
-                      <svg className="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                      </svg>
-                    </div>
+                  <div className="flex items-start gap-3 p-3 bg-white/80 rounded-lg border border-gray-200 hover:border-blue-300 transition-colors group">
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900">
+                      <p className="text-sm font-medium text-gray-900 group-hover:text-blue-700 transition-colors">
                         {t('propertyDetail.verifyIdentity')}
                       </p>
                     </div>
                   </div>
 
                   {/* Tip 3 */}
-                  <div className="flex items-start gap-3 p-3 bg-white rounded-lg border border-yellow-200 hover:border-yellow-300 transition-colors">
-                    <div className="bg-purple-100 p-2 rounded-full flex-shrink-0">
-                      <svg className="h-5 w-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                    </div>
+                  <div className="flex items-start gap-3 p-3 bg-white/80 rounded-lg border border-gray-200 hover:border-purple-300 transition-colors group">
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900">
+                      <p className="text-sm font-medium text-gray-900 group-hover:text-purple-700 transition-colors">
                         {t('propertyDetail.readAgreements')}
                       </p>
                     </div>
                   </div>
 
                   {/* Tip 4 */}
-                  <div className="flex items-start gap-3 p-3 bg-white rounded-lg border border-red-200 hover:border-red-300 transition-colors">
-                    <div className="bg-red-100 p-2 rounded-full flex-shrink-0">
-                      <svg className="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                      </svg>
-                    </div>
+                  <div className="flex items-start gap-3 p-3 bg-gradient-to-r from-red-50/50 to-orange-50/50 rounded-lg border border-red-200 hover:border-red-300 transition-colors group">
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900">
+                      <p className="text-sm font-bold text-red-700 group-hover:text-red-800 transition-colors">
                         {t('propertyDetail.dontSendMoney')}
                       </p>
                     </div>
                   </div>
 
                   {/* Tip 5 */}
-                  <div className="flex items-start gap-3 p-3 bg-white rounded-lg border border-yellow-200 hover:border-yellow-300 transition-colors">
-                    <div className="bg-indigo-100 p-2 rounded-full flex-shrink-0">
-                      <svg className="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                      </svg>
-                    </div>
+                  <div className="flex items-start gap-3 p-3 bg-white/80 rounded-lg border border-gray-200 hover:border-indigo-300 transition-colors group">
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900">
+                      <p className="text-sm font-medium text-gray-900 group-hover:text-indigo-700 transition-colors">
                         {t('propertyDetail.useOfficialChannels')}
                       </p>
                     </div>
                   </div>
                 </div>
 
-                {/* Footer Note */}
-                <div className="mt-4 p-3 bg-yellow-100 rounded-lg border border-yellow-300">
-                  <p className="text-xs text-center text-gray-700 font-medium">
-                    🛡️ Your safety is our priority. Report suspicious activity immediately.
-                  </p>
-                </div>
+                {/* Decorative bottom accent */}
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-yellow-400/10 to-transparent rounded-tr-full"></div>
               </CardContent>
             </Card>
           </div>

@@ -75,7 +75,7 @@ const Index = () => {
                     to="/signup?type=landlord"
                     className="w-full sm:w-auto bg-white text-blue-600 px-6 sm:px-8 py-3 sm:py-4 rounded-full font-bold text-base sm:text-lg hover:bg-blue-50 hover:scale-105 transition-all duration-300 inline-block text-center shadow-lg hover:shadow-xl transform"
                   >
-                    Jisajili Kama Mwenye Nyumba
+                    Jisajili Kama Mwenye Nyumba/Dalali
                   </Link>
                   <Link 
                     to="/browse" 
