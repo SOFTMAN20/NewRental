@@ -38,6 +38,13 @@ const colleges: College[] = [
     image: '/images/collegephotos/must.png'
   },
   {
+    id: '11',
+    name: 'Teofilo Kisanji University',
+    abbreviation: 'TEKU',
+    city: 'Mbeya',
+    image: '/images/collegephotos/teku.jpeg'
+  },
+  {
     id: '1',
     name: 'University of Dar es Salaam',
     abbreviation: 'UDSM',
@@ -106,13 +113,6 @@ const colleges: College[] = [
     abbreviation: 'IFM',
     city: 'Dar es Salaam',
     image: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=400&h=300&fit=crop'
-  },
-  {
-    id: '11',
-    name: 'Teofilo Kisanji University',
-    abbreviation: 'TEKU',
-    city: 'Mbeya',
-    image: '/images/collegephotos/teku.jpeg'
   },
   {
     id: '12',
