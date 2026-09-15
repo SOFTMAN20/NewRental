@@ -393,6 +393,23 @@ ${imageUrl ? `📸 *Picha:* ${imageUrl}` : ''}`;
                     </div>
                   )}
 
+                  {/* View All Photos Button - Mobile */}
+                  {property.images && property.images.length > 1 && (
+                    <Button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsGalleryOpen(true);
+                      }}
+                      className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 bg-white/90 hover:bg-white text-gray-900 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold shadow-lg"
+                      size="sm"
+                    >
+                      <svg className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      View All Photos
+                    </Button>
+                  )}
+
                   {/* Mobile Action Buttons - Share and Favorite */}
                   <div className="absolute top-2 sm:top-3 right-2 sm:right-3 flex space-x-2">
                     <Button
@@ -460,15 +477,17 @@ ${imageUrl ? `📸 *Picha:* ${imageUrl}` : ''}`;
                       </button>
                     ))}
 
-                    {/* Show all photos button */}
+                    {/* View All Photos button */}
                     <div className="absolute bottom-3 right-3">
                       <Button
                         variant="secondary"
                         onClick={() => setIsGalleryOpen(true)}
-                        className="bg-white/90 hover:bg-white rounded-full shadow-sm text-sm"
+                        className="bg-white/90 hover:bg-white rounded-lg shadow-lg text-sm font-semibold hover:shadow-xl transition-all"
                       >
-                        <Images className="h-4 w-4 mr-2" />
-                        Show all photos
+                        <svg className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        View All {property.images?.length || 0} Photos
                       </Button>
                     </div>
 
