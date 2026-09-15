@@ -35,49 +35,49 @@ const colleges: College[] = [
     name: 'Mbeya University of Science and Technology',
     abbreviation: 'MUST',
     city: 'Mbeya',
-    image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=300&fit=crop'
+    image: '/images/collegephotos/must.png'
   },
   {
     id: '1',
     name: 'University of Dar es Salaam',
     abbreviation: 'UDSM',
     city: 'Dar es Salaam',
-    image: 'https://images.unsplash.com/photo-1562774053-701939374585?w=400&h=300&fit=crop'
+    image: '/images/collegephotos/udsm.jpg'
   },
   {
     id: '2',
     name: 'Dar es Salaam Institute of Technology',
     abbreviation: 'DIT',
     city: 'Dar es Salaam',
-    image: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=400&h=300&fit=crop'
+    image: '/images/collegephotos/dit.jpg'
   },
   {
     id: '10',
     name: 'Open University of Tanzania',
     abbreviation: 'OUT',
     city: 'Dar es Salaam',
-    image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=300&fit=crop'
+    image: '/images/collegephotos/out.jpg'
   },
   {
     id: '3',
     name: 'Ardhi University',
     abbreviation: 'ARU',
     city: 'Dar es Salaam',
-    image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=300&fit=crop'
+    image: '/images/collegephotos/aru.jpg'
   },
   {
     id: '4',
     name: 'Muhimbili University',
     abbreviation: 'MUHAS',
     city: 'Dar es Salaam',
-    image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=300&fit=crop'
+    image: '/images/collegephotos/muhas.jpg'
   },
   {
     id: '5',
     name: 'University of Dodoma',
     abbreviation: 'UDOM',
     city: 'Dodoma',
-    image: 'https://images.unsplash.com/photo-1564981797816-1043664bf78d?w=400&h=300&fit=crop'
+    image: '/images/collegephotos/udom.jpg'
   },
   {
     id: '6',
