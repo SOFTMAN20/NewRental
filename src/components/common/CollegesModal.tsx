@@ -111,7 +111,7 @@ const colleges: College[] = [
     id: '11',
     name: 'Taasisi ya Elimu ya Ufundi na Uhandisi',
     abbreviation: 'TEKU',
-    city: 'Dar es Salaam',
+    city: 'Mbeya',
     image: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=400&h=300&fit=crop'
   },
   {

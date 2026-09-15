@@ -71,7 +71,7 @@ const universities = [
   'SUA - Morogoro',
   'MUHAS - Dar es Salaam',
   'MUCE - Moshi',
-  'TEKU - Dar es Salaam',
+  'TEKU - Mbeya',
   'CUOM - Mbeya',
   'MU - Mbeya'
 ];
