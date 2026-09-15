@@ -120,6 +120,13 @@ const colleges: College[] = [
     abbreviation: 'CUOM',
     city: 'Mbeya',
     image: '/images/collegephotos/cuom.jpg'
+  },
+  {
+    id: '14',
+    name: 'College of Business Education',
+    abbreviation: 'CBE',
+    city: 'Dar es Salaam',
+    image: '/images/collegephotos/cbe.jpg'
   }
 ];
 
