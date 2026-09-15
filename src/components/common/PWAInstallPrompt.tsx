@@ -5,14 +5,14 @@
  * 
  * BEHAVIOR:
  * - Shows prompt 5 seconds after page load
- * - If user clicks X or dismisses: Ask again after 2 days
- * - If user accepts and installs: Never show again
- * - If user declines from browser prompt: Ask again after 2 days
+ * - Shows EVERY TIME user visits if app is not installed
+ * - Only hides if user actually installs the app
+ * - User can dismiss temporarily per session, but will show again on next visit
  * 
  * STORAGE:
- * - localStorage key: 'pwa-install-dismissed'
- * - Value: ISO timestamp of dismissal
- * - Auto-clears after 2 days
+ * - localStorage key: 'pwa-installed'
+ * - Value: 'true' only if app was successfully installed
+ * - Prompt shows on every new visit until installation
  */
 
 import React, { useState, useEffect } from 'react';
@@ -37,25 +37,19 @@ const PWAInstallPrompt: React.FC = () => {
     // Check if already installed
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
     if (isStandalone) {
-      return; // Already installed
+      // Mark as installed
+      localStorage.setItem('pwa-installed', 'true');
+      return;
     }
 
-    // Check if user dismissed prompt before
-    const dismissed = localStorage.getItem('pwa-install-dismissed');
-    if (dismissed) {
-      const dismissedDate = new Date(dismissed);
-      const daysSince = (Date.now() - dismissedDate.getTime()) / (1000 * 60 * 60 * 24);
-      
-      // Show again after 2 days if dismissed
-      if (daysSince < 2) {
-        console.log(`⏳ PWA prompt dismissed ${daysSince.toFixed(1)} days ago. Will show again after 2 days.`);
-        return; // Don't show again for 2 days
-      } else {
-        // Reset dismissal after 2 days
-        console.log('🔄 2 days passed since dismissal. Showing PWA prompt again.');
-        localStorage.removeItem('pwa-install-dismissed');
-      }
+    // Check if user has installed before
+    const hasInstalled = localStorage.getItem('pwa-installed') === 'true';
+    if (hasInstalled) {
+      return; // Already installed, don't show
     }
+
+    // Show prompt to everyone who hasn't installed, every visit
+    console.log('📱 PWA not installed - showing install prompt');
 
     // Listen for beforeinstallprompt event
     const handler = (e: Event) => {
@@ -93,12 +87,11 @@ const PWAInstallPrompt: React.FC = () => {
     
     if (outcome === 'accepted') {
       console.log('✅ User accepted PWA install');
-      // Remove dismissal record on successful install
-      localStorage.removeItem('pwa-install-dismissed');
+      // Mark as installed - won't show again
+      localStorage.setItem('pwa-installed', 'true');
     } else {
-      console.log('❌ User dismissed PWA install from prompt');
-      // Save dismissal time - ask again after 2 days
-      localStorage.setItem('pwa-install-dismissed', new Date().toISOString());
+      console.log('❌ User dismissed PWA install - will show again on next visit');
+      // Don't save anything - will show again on next visit
     }
     
     setDeferredPrompt(null);
@@ -106,9 +99,8 @@ const PWAInstallPrompt: React.FC = () => {
   };
 
   const handleDismiss = () => {
-    const now = new Date().toISOString();
-    localStorage.setItem('pwa-install-dismissed', now);
-    console.log('❌ PWA install dismissed. Will ask again after 2 days.');
+    console.log('❌ PWA install dismissed for this session - will show again on next visit');
+    // Only hide for current session - will show again on next visit
     setShowPrompt(false);
   };
 
