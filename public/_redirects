@@ -1,0 +1,8 @@
+# Netlify/Vercel Redirects for SPA Routing
+# This ensures all routes go to index.html for React Router to handle
+
+# Redirect all traffic to index.html (SPA routing)
+/*    /index.html   200
+
+# Alternative syntax for Netlify
+# /* /index.html 200
