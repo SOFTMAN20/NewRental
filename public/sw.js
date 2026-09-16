@@ -2,11 +2,11 @@
  * WANACHUO.COM SERVICE WORKER
  * ===========================
  * Progressive Web App (PWA) Service Worker
- * Enables offline functionality and app installation
+ * NETWORK-FIRST STRATEGY - Always fetch fresh data
  */
 
-const CACHE_NAME = 'wanachuo-v4-2026';
-const RUNTIME_CACHE = 'wanachuo-runtime-v4';
+const CACHE_NAME = 'wanachuo-v5-2026'; // Updated version for new strategy
+const RUNTIME_CACHE = 'wanachuo-runtime-v5';
 
 // Assets to cache on install
 const STATIC_ASSETS = [
@@ -76,7 +76,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch event - network first, then cache fallback
+// Fetch event - NETWORK FIRST FOR EVERYTHING (no cached data)
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
@@ -86,48 +86,50 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Network-first strategy for API calls
-  if (url.pathname.startsWith('/api/') || url.hostname.includes('supabase')) {
-    event.respondWith(
-      fetch(request)
-        .catch(() => {
-          return new Response(
-            JSON.stringify({ error: 'Offline', message: 'You are currently offline' }),
-            { headers: { 'Content-Type': 'application/json' } }
-          );
-        })
-    );
-    return;
-  }
-
-  // Cache-first strategy for static assets
+  // NETWORK-FIRST STRATEGY FOR ALL REQUESTS
+  // This ensures fresh data is ALWAYS fetched from server
   event.respondWith(
-    caches.match(request)
-      .then((cachedResponse) => {
-        if (cachedResponse) {
-          return cachedResponse;
+    fetch(request)
+      .then((response) => {
+        // Don't cache if not successful
+        if (!response || response.status !== 200 || response.type === 'error') {
+          return response;
         }
 
-        return fetch(request)
-          .then((response) => {
-            // Don't cache if not successful
-            if (!response || response.status !== 200 || response.type === 'error') {
-              return response;
+        // Only cache static assets (images, fonts, etc.) - NOT HTML/JS/CSS
+        const shouldCache = request.destination === 'image' || 
+                           request.destination === 'font' ||
+                           url.pathname.match(/\.(png|jpg|jpeg|gif|webp|svg|woff|woff2|ttf|eot)$/);
+
+        if (shouldCache) {
+          // Clone and cache for offline fallback only
+          const responseToCache = response.clone();
+          caches.open(RUNTIME_CACHE)
+            .then((cache) => {
+              cache.put(request, responseToCache);
+            });
+        }
+
+        return response;
+      })
+      .catch(() => {
+        // Only use cache as LAST RESORT when completely offline
+        return caches.match(request)
+          .then((cachedResponse) => {
+            if (cachedResponse) {
+              console.log('[SW] Offline - serving cached version:', url.pathname);
+              return cachedResponse;
             }
-
-            // Clone the response
-            const responseToCache = response.clone();
-
-            // Cache the response for future use
-            caches.open(RUNTIME_CACHE)
-              .then((cache) => {
-                cache.put(request, responseToCache);
-              });
-
-            return response;
-          })
-          .catch(() => {
-            // Return offline page if available
+            
+            // Return offline message for API calls
+            if (url.pathname.startsWith('/api/') || url.hostname.includes('supabase')) {
+              return new Response(
+                JSON.stringify({ error: 'Offline', message: 'You are currently offline' }),
+                { headers: { 'Content-Type': 'application/json' } }
+              );
+            }
+            
+            // Return offline page for HTML requests
             return caches.match('/');
           });
       })

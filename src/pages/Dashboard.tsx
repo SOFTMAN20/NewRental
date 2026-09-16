@@ -184,6 +184,13 @@ const Dashboard = () => {
   useEffect(() => {
     if (user) {
       initializeDashboard();
+      
+      // AUTO-REFRESH: Fetch properties every 10 seconds
+      const interval = setInterval(() => {
+        fetchProperties();
+      }, 10 * 1000); // 10 seconds
+      
+      return () => clearInterval(interval);
     }
   }, [user]);
 

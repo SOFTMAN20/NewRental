@@ -7,6 +7,13 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    headers: {
+      // Prevent browser caching - always fetch fresh content
+      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0',
+      'Surrogate-Control': 'no-store'
+    },
   },
   plugins: [
     react(),
@@ -24,6 +31,11 @@ export default defineConfig(({ mode }) => ({
     sourcemap: false,
     rollupOptions: {
       output: {
+        // Add cache busting with hash in filenames
+        entryFileNames: `assets/[name].[hash].js`,
+        chunkFileNames: `assets/[name].[hash].js`,
+        assetFileNames: `assets/[name].[hash].[ext]`,
+        
         // Optimized chunking strategy for better code splitting
         manualChunks: (id) => {
           // Keep React and React-DOM together in the main vendor chunk

@@ -161,9 +161,18 @@ export const useFavorites = () => {
     return favorites.length;
   };
 
-  // Fetch favorites when user changes
+  // AUTO-REFRESH: Fetch favorites when user changes and every 10 seconds
   useEffect(() => {
     fetchFavorites();
+    
+    // Auto-refresh every 10 seconds
+    const interval = setInterval(() => {
+      if (user) {
+        fetchFavorites();
+      }
+    }, 10 * 1000); // 10 seconds
+    
+    return () => clearInterval(interval);
   }, [user]);
 
   return {

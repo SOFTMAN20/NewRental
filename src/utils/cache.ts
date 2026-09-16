@@ -57,19 +57,20 @@ class CacheManager {
 
 export const cacheManager = new CacheManager();
 
-// Enhanced Query Client with cache optimization
+// Enhanced Query Client with AGGRESSIVE auto-refresh - NO CACHE DELAYS
 export const createOptimizedQueryClient = () => {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        // Auto-refresh properties for real-time updates
-        staleTime: 30 * 1000, // 30 seconds - refetch after 30s
-        cacheTime: 5 * 60 * 1000, // 5 minutes - keep in cache
-        refetchInterval: 30 * 1000, // Auto-refetch every 30 seconds
+        // ZERO cache time - always fetch fresh data
+        staleTime: 0, // Data is ALWAYS stale - refetch immediately
+        gcTime: 0, // No cache retention - clear immediately (was cacheTime)
+        refetchInterval: 10 * 1000, // Auto-refetch every 10 seconds
         refetchIntervalInBackground: true, // Keep refetching even when tab is not focused
         retry: 2,
-        refetchOnWindowFocus: true, // Refetch when user returns to tab
-        refetchOnReconnect: true, // Refetch when internet reconnects
+        refetchOnWindowFocus: true, // ALWAYS refetch when user returns to tab
+        refetchOnReconnect: true, // ALWAYS refetch when internet reconnects
+        refetchOnMount: 'always', // ALWAYS refetch when component mounts
         
         // Custom cache behavior
         onSuccess: () => {

@@ -41,6 +41,15 @@ const Applications = () => {
 
   useEffect(() => {
     fetchApplications();
+    
+    // AUTO-REFRESH: Fetch applications every 10 seconds
+    const interval = setInterval(() => {
+      if (user) {
+        fetchApplications();
+      }
+    }, 10 * 1000); // 10 seconds
+    
+    return () => clearInterval(interval);
   }, [user]);
 
   const fetchApplications = async () => {
