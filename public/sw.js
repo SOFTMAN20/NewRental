@@ -3,11 +3,10 @@
  * ===========================
  * Progressive Web App (PWA) Service Worker
  * NETWORK-FIRST STRATEGY - Always fetch fresh data
- * SPA ROUTING - Proper index.html fallback for all routes
  */
 
-const CACHE_NAME = 'wanachuo-v7-2026'; // Updated version - fixed SPA routing
-const RUNTIME_CACHE = 'wanachuo-runtime-v7';
+const CACHE_NAME = 'wanachuo-v5-2026'; // Updated version for new strategy
+const RUNTIME_CACHE = 'wanachuo-runtime-v5';
 
 // Assets to cache on install
 const STATIC_ASSETS = [
@@ -87,48 +86,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // SPECIAL HANDLING FOR NAVIGATION REQUESTS (SPA)
-  // Force PWA to open at homepage (/) instead of cached page
-  if (request.mode === 'navigate') {
-    event.respondWith(
-      fetch(request)
-        .then((response) => {
-          // If it's a valid response, return it
-          if (response && response.ok) {
-            return response;
-          }
-          
-          // If page doesn't exist (404), serve index.html for SPA routing
-          console.log('[SW] Page not found, serving index.html for SPA routing:', url.pathname);
-          return fetch('/index.html').then(indexResponse => {
-            if (indexResponse && indexResponse.ok) {
-              return indexResponse;
-            }
-            // Fallback to cached homepage
-            return caches.match('/index.html').then(cached => cached || response);
-          });
-        })
-        .catch(() => {
-          // When offline, always serve index.html (SPA shell)
-          console.log('[SW] Offline navigation - serving index.html');
-          return caches.match('/index.html').then(cached => {
-            if (cached) return cached;
-            // Last resort: try root
-            return caches.match('/').then(root => {
-              if (root) return root;
-              // If nothing cached, return basic offline page
-              return new Response(
-                '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Offline - Wanachuo</title></head><body style="font-family:sans-serif;text-align:center;padding:50px;"><h1>📴 Offline</h1><p>Tafadhali angalia muunganisho wako wa mtandao</p><p>Please check your internet connection</p></body></html>',
-                { headers: { 'Content-Type': 'text/html' } }
-              );
-            });
-          });
-        })
-    );
-    return;
-  }
-
-  // NETWORK-FIRST STRATEGY FOR ALL OTHER REQUESTS
+  // NETWORK-FIRST STRATEGY FOR ALL REQUESTS
   // This ensures fresh data is ALWAYS fetched from server
   event.respondWith(
     fetch(request)
@@ -171,8 +129,8 @@ self.addEventListener('fetch', (event) => {
               );
             }
             
-            // Return index.html for HTML requests (SPA fallback)
-            return caches.match('/index.html');
+            // Return offline page for HTML requests
+            return caches.match('/');
           });
       })
   );
