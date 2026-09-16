@@ -1,29 +1,7 @@
 {
-  "redirects": [
-    {
-      "source": "/index.php",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/index.html",
-      "destination": "/",
-      "permanent": false
-    }
-  ],
+  "cleanUrls": true,
+  "trailingSlash": false,
   "rewrites": [
-    {
-      "source": "/assets/:path*",
-      "destination": "/assets/:path*"
-    },
-    {
-      "source": "/images/:path*",
-      "destination": "/images/:path*"
-    },
-    {
-      "source": "/:path*\\.:ext(js|css|png|jpg|jpeg|gif|webp|svg|ico|woff|woff2|ttf|eot)",
-      "destination": "/:path*.:ext"
-    },
     {
       "source": "/(.*)",
       "destination": "/index.html"
