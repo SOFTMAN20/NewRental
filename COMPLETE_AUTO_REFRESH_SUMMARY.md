@@ -9,10 +9,11 @@
 
 ## 📋 OVERVIEW / MUHTASARI
 
-Tumekamilisha maboresho makubwa **MAWILI** ya app yako:
+Tumekamilisha maboresho makubwa **MATATU** ya app yako:
 
 ### 1️⃣ **AUTO-REFRESH SYSTEM** - Data Mpya Automatic
 ### 2️⃣ **PWA HOMEPAGE FIX** - App Inafungua Homepage
+### 3️⃣ **SPA ROUTING FIX** - URL Clean Without /index.html ✨ NEW!
 
 ---
 
@@ -93,6 +94,49 @@ if (request.mode === 'navigate') {
 
 ---
 
+## 🔗 SPA ROUTING FIX ✨ NEW!
+
+### What Was Fixed / Kilichorekebishwa:
+
+**PROBLEM:**  
+App URL shows `wanachuo.com/index.html` badala ya `wanachuo.com/`
+
+**SOLUTION:**  
+Added server redirects + service worker SPA fallback
+
+### Technical Changes:
+
+**Created 4 Config Files:**
+1. **`netlify.toml`** - Netlify redirects
+2. **`vercel.json`** - Vercel rewrites
+3. **`public/.htaccess`** - Apache redirects
+4. **`public/_redirects`** - Generic catch-all
+
+**Service Worker:**
+```javascript
+// NEW: SPA fallback to index.html
+return fetch('/index.html').then(indexResponse => {
+  if (indexResponse && indexResponse.ok) {
+    return indexResponse; // Serve index.html for all routes
+  }
+});
+```
+
+### User Experience:
+
+**BEFORE:**
+- URL shows `/index.html` ❌
+- Refresh on `/browse` → 404 error ❌
+- Ugly URLs for sharing ❌
+
+**AFTER:**
+- Clean URLs (`/`, `/browse`, `/property/123`) ✅
+- Refresh works on all routes ✅
+- SEO-friendly URLs ✅
+- Professional appearance ✅
+
+---
+
 ## 📊 ALL CHANGES SUMMARY
 
 ### React Query Configuration:
@@ -109,13 +153,14 @@ if (request.mode === 'navigate') {
 
 ### Service Worker Strategy:
 
-| Feature | v4 (Old) | v6 (New) |
+| Feature | v4 (Old) | v7 (New) |
 |---------|----------|----------|
 | Strategy | Cache-first | **Network-first** |
 | HTML/JS/CSS Cache | Yes | **No (always fresh)** |
 | PWA Start Page | Last page | **Homepage** |
-| Offline Fallback | Last page | **Homepage** |
-| Cache Version | v4-2026 | **v6-2026** |
+| Offline Fallback | Last page | **index.html (SPA)** |
+| SPA Routing | Broken | **Fixed** ✨ |
+| Cache Version | v4-2026 | **v7-2026** |
 
 ### Auto-Refresh Components:
 
@@ -176,12 +221,13 @@ bun run preview
 **Option 1: Automatic (Wait)**
 - Service worker will auto-update on next visit
 - May take a few page refreshes
+- New version v7 will activate
 
 **Option 2: Manual Clear (Immediate)**
 1. Visit **`wanachuo.com/clear-cache.html`**
 2. Click "🔄 Clear Everything & Reload"
 3. Wait for automatic redirect
-4. Reinstall PWA if needed
+4. ✅ Should see clean URLs now
 
 **Option 3: Uninstall & Reinstall**
 1. Uninstall PWA from home screen
@@ -335,12 +381,17 @@ NewRental/
 │       ├── Dashboard.tsx ✅ (Auto-refresh)
 │       └── Applications.tsx ✅ (Auto-refresh)
 ├── public/
-│   ├── sw.js ✅ (Network-first + Homepage fix)
+│   ├── sw.js ✅ (Network-first + SPA routing v7)
 │   ├── manifest.json ✅ (PWA config)
+│   ├── .htaccess ✅ NEW (Apache SPA config)
+│   ├── _redirects ✅ NEW (Netlify/Render config)
 │   └── clear-cache.html ✅ (Cache clearing tool)
+├── netlify.toml ✅ NEW (Netlify deployment config)
+├── vercel.json ✅ NEW (Vercel deployment config)
 ├── vite.config.ts ✅ (No-cache headers)
 ├── AUTO_REFRESH_CONFIGURATION.md ✅ (Full docs)
 ├── PWA_HOMEPAGE_FIX.md ✅ (PWA fix docs)
+├── SPA_ROUTING_FIX.md ✅ NEW (SPA routing docs)
 └── COMPLETE_AUTO_REFRESH_SUMMARY.md ✅ (This file)
 ```
 

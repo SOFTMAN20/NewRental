@@ -67,6 +67,7 @@ import NetworkStatus from "./components/common/NetworkStatus";
 import PageLoadingFallback from "./components/common/PageLoadingFallback";
 import UpdateNotifier from "./components/common/UpdateNotifier";
 import ScrollToTop from "./components/common/ScrollToTop";
+import HomeRedirect from "./components/common/HomeRedirect";
 
 // Lazy load pages for code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -141,6 +142,9 @@ const App = () => (
           <BrowserRouter>
             {/* Scroll to top on route change */}
             <ScrollToTop />
+            
+            {/* Auto-redirect to homepage for PWA and /index.html */}
+            <HomeRedirect />
             
             <Suspense fallback={<PageLoadingFallback />}>
               <Routes>
