@@ -157,9 +157,14 @@ fetch(request)
   })
 ```
 
-**Cache Version Updated:** `v4-2026` → `v5-2026`
+**Cache Version Updated:** `v4-2026` → `v5-2026` → **`v6-2026`**
 
-**Impact:** All HTML, JavaScript, and CSS files are **always fetched fresh** from the server. Cache only used when completely offline.
+**MAJOR IMPROVEMENTS:**
+1. **Network-first for all content** - No stale HTML/JS/CSS
+2. **Homepage-first navigation** - PWA always opens at `/` (Fixed!)
+3. **Smart offline fallback** - Homepage when offline, not random pages
+
+**Impact:** All HTML, JavaScript, and CSS files are **always fetched fresh** from the server. PWA opens at homepage instead of cached pages. Cache only used when completely offline.
 
 ---
 
@@ -430,12 +435,30 @@ Before deploying, confirm:
 - [x] refetchInterval = 10 seconds
 - [x] refetchOnMount = 'always'
 - [x] Service Worker network-first implemented
-- [x] Cache version updated (v5)
+- [x] Cache version updated (v6)
+- [x] PWA homepage-first navigation added
+- [x] Favorites auto-refresh enabled
+- [x] Dashboard auto-refresh enabled
+- [x] Applications auto-refresh enabled
 - [x] Vite no-cache headers added
 - [x] Hash filenames configured
 - [x] Documentation created
+- [x] Clear cache page available
 - [ ] Tested in production build
 - [ ] Verified with real users
+
+---
+
+## 📱 PWA SPECIFIC FIXES / MABORESHO YA PWA
+
+### Issue Fixed: PWA Opens Wrong Page
+**Problem:** PWA inafungua page ya mwisho badala ya homepage  
+**Solution:** Service worker now forces navigation to homepage
+
+**See full details in:** `PWA_HOMEPAGE_FIX.md`
+
+**For users experiencing this:**
+Visit `wanachuo.com/clear-cache.html` and click "Clear Everything & Reload"
 
 ---
 

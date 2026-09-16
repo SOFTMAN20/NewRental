@@ -3,10 +3,11 @@
  * ===========================
  * Progressive Web App (PWA) Service Worker
  * NETWORK-FIRST STRATEGY - Always fetch fresh data
+ * HOMEPAGE START - Always opens at / for PWA
  */
 
-const CACHE_NAME = 'wanachuo-v5-2026'; // Updated version for new strategy
-const RUNTIME_CACHE = 'wanachuo-runtime-v5';
+const CACHE_NAME = 'wanachuo-v6-2026'; // Updated version - fixed PWA start page
+const RUNTIME_CACHE = 'wanachuo-runtime-v6';
 
 // Assets to cache on install
 const STATIC_ASSETS = [
@@ -86,7 +87,36 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // NETWORK-FIRST STRATEGY FOR ALL REQUESTS
+  // SPECIAL HANDLING FOR NAVIGATION REQUESTS
+  // Force PWA to open at homepage (/) instead of cached page
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          // If it's a valid page, return it
+          if (response && response.status === 200) {
+            return response;
+          }
+          // If page doesn't exist, redirect to homepage
+          return caches.match('/').then(cached => cached || response);
+        })
+        .catch(() => {
+          // When offline, always serve homepage
+          console.log('[SW] Offline navigation - redirecting to homepage');
+          return caches.match('/').then(cached => {
+            if (cached) return cached;
+            // If no cache, return a basic offline page
+            return new Response(
+              '<html><body><h1>Offline</h1><p>Please check your internet connection</p></body></html>',
+              { headers: { 'Content-Type': 'text/html' } }
+            );
+          });
+        })
+    );
+    return;
+  }
+
+  // NETWORK-FIRST STRATEGY FOR ALL OTHER REQUESTS
   // This ensures fresh data is ALWAYS fetched from server
   event.respondWith(
     fetch(request)
@@ -129,7 +159,7 @@ self.addEventListener('fetch', (event) => {
               );
             }
             
-            // Return offline page for HTML requests
+            // Return homepage for HTML requests
             return caches.match('/');
           });
       })
