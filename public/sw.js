@@ -5,8 +5,8 @@
  * NETWORK-FIRST STRATEGY - Always fetch fresh data
  */
 
-const CACHE_NAME = 'wanachuo-v5-2026'; // Updated version for new strategy
-const RUNTIME_CACHE = 'wanachuo-runtime-v5';
+const CACHE_NAME = 'wanachuo-v6-2026'; // UPDATED VERSION - forces cache refresh
+const RUNTIME_CACHE = 'wanachuo-runtime-v6';
 
 // Assets to cache on install
 const STATIC_ASSETS = [
