@@ -1,276 +1,471 @@
 /**
- * SECURITY UTILITIES
- * =================
+ * SECURITY UTILITIES - ULINZI WA USALAMA
+ * ======================================
  * 
- * Comprehensive security utilities for XSS protection,
- * input validation, and data sanitization
+ * Comprehensive security functions to prevent:
+ * - XSS (Cross-Site Scripting)
+ * - SQL Injection
+ * - CSRF (Cross-Site Request Forgery)
+ * - Code Injection
+ * - Open Redirects
+ * - Clickjacking
+ * 
+ * Vitendaji vya usalama kuzuia:
+ * - Mashambulizi ya XSS
+ * - SQL Injection
+ * - CSRF attacks
+ * - Kuingiza code mbaya
+ * - Redirects zenye hatari
  */
 
-// XSS Protection utilities
-export const sanitizeHtml = (input: string): string => {
-  if (!input) return '';
+/**
+ * SANITIZE USER INPUT
+ * ===================
+ * Removes potentially dangerous characters from user input
+ * Ondoa herufi zenye hatari kutoka kwa input ya mtumiaji
+ */
+export const sanitizeInput = (input: string): string => {
+  if (!input || typeof input !== 'string') return '';
   
-  // Remove script tags and their content
-  let sanitized = input.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-  
-  // Remove dangerous HTML attributes
-  sanitized = sanitized.replace(/\s*on\w+\s*=\s*["'][^"']*["']/gi, ''); // onclick, onload, etc.
-  sanitized = sanitized.replace(/\s*javascript\s*:/gi, ''); // javascript: protocol
-  sanitized = sanitized.replace(/\s*data\s*:/gi, ''); // data: protocol
-  sanitized = sanitized.replace(/\s*vbscript\s*:/gi, ''); // vbscript: protocol
-  
-  // Remove potentially dangerous tags
-  const dangerousTags = ['script', 'iframe', 'object', 'embed', 'form', 'input', 'textarea', 'select', 'button'];
-  dangerousTags.forEach(tag => {
-    const regex = new RegExp(`<\\/?${tag}\\b[^>]*>`, 'gi');
-    sanitized = sanitized.replace(regex, '');
-  });
-  
-  return sanitized.trim();
+  return input
+    .trim()
+    // Remove HTML tags
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '')
+    .replace(/<object\b[^<]*(?:(?!<\/object>)<[^<]*)*<\/object>/gi, '')
+    .replace(/<embed\b[^<]*(?:(?!<\/embed>)<[^<]*)*<\/embed>/gi, '')
+    .replace(/<img[^>]*>/gi, '')
+    // Remove javascript: and data: protocols
+    .replace(/javascript:/gi, '')
+    .replace(/data:text\/html/gi, '')
+    // Remove event handlers
+    .replace(/on\w+\s*=\s*["'][^"']*["']/gi, '')
+    .replace(/on\w+\s*=\s*[^\s>]*/gi, '');
 };
 
-// Escape HTML entities
-export const escapeHtml = (text: string): string => {
-  if (!text) return '';
+/**
+ * SANITIZE HTML
+ * =============
+ * More aggressive HTML sanitization
+ * Usafishaji mkali wa HTML
+ */
+export const sanitizeHTML = (html: string): string => {
+  if (!html || typeof html !== 'string') return '';
   
   const div = document.createElement('div');
-  div.textContent = text;
+  div.textContent = html; // This escapes ALL HTML
   return div.innerHTML;
 };
 
-// Validate and sanitize user input
-export const validateInput = {
-  // Email validation
-  email: (email: string): { isValid: boolean; sanitized: string; error?: string } => {
-    const sanitized = sanitizeHtml(email.trim().toLowerCase());
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
-    if (!emailRegex.test(sanitized)) {
-      return { isValid: false, sanitized, error: 'Invalid email format' };
-    }
-    
-    if (sanitized.length > 254) {
-      return { isValid: false, sanitized, error: 'Email too long' };
-    }
-    
-    return { isValid: true, sanitized };
-  },
-
-  // Phone number validation
-  phone: (phone: string): { isValid: boolean; sanitized: string; error?: string } => {
-    const sanitized = sanitizeHtml(phone.trim());
-    const phoneRegex = /^\+?[1-9]\d{1,14}$/; // E.164 format
-    
-    if (!phoneRegex.test(sanitized.replace(/[\s\-\(\)]/g, ''))) {
-      return { isValid: false, sanitized, error: 'Invalid phone number format' };
-    }
-    
-    return { isValid: true, sanitized };
-  },
-
-  // Text input validation (for titles, descriptions, etc.)
-  text: (text: string, maxLength: number = 1000): { isValid: boolean; sanitized: string; error?: string } => {
-    const sanitized = sanitizeHtml(text.trim());
-    
-    if (sanitized.length === 0) {
-      return { isValid: false, sanitized, error: 'Text cannot be empty' };
-    }
-    
-    if (sanitized.length > maxLength) {
-      return { isValid: false, sanitized, error: `Text too long (max ${maxLength} characters)` };
-    }
-    
-    // Check for suspicious patterns
-    const suspiciousPatterns = [
-      /<script/i,
-      /javascript:/i,
-      /on\w+\s*=/i,
-      /data:text\/html/i,
-      /vbscript:/i
-    ];
-    
-    if (suspiciousPatterns.some(pattern => pattern.test(text))) {
-      return { isValid: false, sanitized, error: 'Invalid content detected' };
-    }
-    
-    return { isValid: true, sanitized };
-  },
-
-  // Price validation
-  price: (price: string): { isValid: boolean; sanitized: number; error?: string } => {
-    const sanitized = sanitizeHtml(price.trim());
-    const numericPrice = parseFloat(sanitized);
-    
-    if (isNaN(numericPrice) || numericPrice < 0) {
-      return { isValid: false, sanitized: 0, error: 'Invalid price format' };
-    }
-    
-    if (numericPrice > 999999999) {
-      return { isValid: false, sanitized: 0, error: 'Price too high' };
-    }
-    
-    return { isValid: true, sanitized: numericPrice };
-  },
-
-  // URL validation
-  url: (url: string): { isValid: boolean; sanitized: string; error?: string } => {
-    const sanitized = sanitizeHtml(url.trim());
-    
-    try {
-      const urlObj = new URL(sanitized);
-      
-      // Only allow http and https protocols
-      if (!['http:', 'https:'].includes(urlObj.protocol)) {
-        return { isValid: false, sanitized, error: 'Invalid URL protocol' };
-      }
-      
-      return { isValid: true, sanitized: urlObj.toString() };
-    } catch {
-      return { isValid: false, sanitized, error: 'Invalid URL format' };
-    }
-  }
-};
-
-// Content Security Policy helpers
-export const cspHelpers = {
-  // Generate nonce for inline scripts
-  generateNonce: (): string => {
-    const array = new Uint8Array(16);
-    crypto.getRandomValues(array);
-    return btoa(String.fromCharCode(...array));
-  },
-
-  // Validate external URLs against whitelist
-  isAllowedDomain: (url: string): boolean => {
-    const allowedDomains = [
-      'supabase.co',
-      'unsplash.com',
-      'images.unsplash.com',
-      'fonts.googleapis.com',
-      'fonts.gstatic.com'
-    ];
-    
-    try {
-      const urlObj = new URL(url);
-      return allowedDomains.some(domain => 
-        urlObj.hostname === domain || urlObj.hostname.endsWith(`.${domain}`)
-      );
-    } catch {
-      return false;
-    }
-  }
-};
-
-// Rate limiting utilities
-export class RateLimiter {
-  private attempts: Map<string, { count: number; resetTime: number }> = new Map();
+/**
+ * VALIDATE URL
+ * ============
+ * Ensures URL is safe and not malicious
+ * Hakikisha URL ni salama na si mbaya
+ */
+export const validateURL = (url: string): boolean => {
+  if (!url || typeof url !== 'string') return false;
   
-  constructor(
-    private maxAttempts: number = 5,
-    private windowMs: number = 15 * 60 * 1000 // 15 minutes
-  ) {}
-  
-  isAllowed(identifier: string): boolean {
-    const now = Date.now();
-    const record = this.attempts.get(identifier);
+  try {
+    const parsedURL = new URL(url);
     
-    if (!record || now > record.resetTime) {
-      this.attempts.set(identifier, { count: 1, resetTime: now + this.windowMs });
-      return true;
-    }
-    
-    if (record.count >= this.maxAttempts) {
+    // Only allow http and https protocols
+    if (!['http:', 'https:'].includes(parsedURL.protocol)) {
+      console.warn('🚨 Blocked dangerous URL protocol:', parsedURL.protocol);
       return false;
     }
     
-    record.count++;
+    // Block known dangerous patterns
+    const dangerous = [
+      'javascript:',
+      'data:',
+      'vbscript:',
+      'file:',
+      'about:',
+    ];
+    
+    if (dangerous.some(pattern => url.toLowerCase().includes(pattern))) {
+      console.warn('🚨 Blocked dangerous URL pattern:', url);
+      return false;
+    }
+    
     return true;
+  } catch (error) {
+    console.warn('🚨 Invalid URL:', url);
+    return false;
   }
-  
-  getRemainingAttempts(identifier: string): number {
-    const record = this.attempts.get(identifier);
-    if (!record || Date.now() > record.resetTime) {
-      return this.maxAttempts;
-    }
-    return Math.max(0, this.maxAttempts - record.count);
-  }
-  
-  reset(identifier: string): void {
-    this.attempts.delete(identifier);
-  }
-}
-
-// Create rate limiters for different operations
-export const rateLimiters = {
-  login: new RateLimiter(5, 15 * 60 * 1000), // 5 attempts per 15 minutes
-  signup: new RateLimiter(3, 60 * 60 * 1000), // 3 attempts per hour
-  propertyCreation: new RateLimiter(10, 60 * 60 * 1000), // 10 properties per hour
-  imageUpload: new RateLimiter(20, 60 * 60 * 1000), // 20 images per hour
 };
 
-// Secure token generation
-export const generateSecureToken = (length: number = 32): string => {
-  const array = new Uint8Array(length);
+/**
+ * SAFE REDIRECT
+ * =============
+ * Only allows redirects to same origin or whitelisted domains
+ * Ruhusu redirects kwa domain zilizoidhinishwa tu
+ */
+export const safeRedirect = (url: string): void => {
+  if (!validateURL(url)) {
+    console.error('🚨 SECURITY: Blocked unsafe redirect to:', url);
+    window.location.href = '/';
+    return;
+  }
+  
+  try {
+    const targetURL = new URL(url, window.location.origin);
+    const currentOrigin = window.location.origin;
+    
+    // Whitelist of allowed domains for redirect
+    const allowedDomains = [
+      currentOrigin,
+      'https://wanachuo.com',
+      'https://www.wanachuo.com',
+    ];
+    
+    const targetOrigin = targetURL.origin;
+    
+    if (!allowedDomains.includes(targetOrigin)) {
+      console.warn('🚨 SECURITY: Blocked redirect to external domain:', targetOrigin);
+      window.location.href = '/';
+      return;
+    }
+    
+    window.location.href = targetURL.href;
+  } catch (error) {
+    console.error('🚨 SECURITY: Error in safeRedirect:', error);
+    window.location.href = '/';
+  }
+};
+
+/**
+ * VALIDATE EMAIL
+ * ==============
+ * Validates email format and prevents injection
+ * Thibitisha format ya email na zuia injection
+ */
+export const validateEmail = (email: string): boolean => {
+  if (!email || typeof email !== 'string') return false;
+  
+  // Basic email regex
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+  // Check basic format
+  if (!emailRegex.test(email)) return false;
+  
+  // Check for dangerous characters
+  const dangerous = ['<', '>', '"', "'", '\\', ';', '(', ')', '{', '}', '[', ']'];
+  if (dangerous.some(char => email.includes(char))) {
+    console.warn('🚨 Email contains dangerous characters:', email);
+    return false;
+  }
+  
+  return true;
+};
+
+/**
+ * VALIDATE PHONE NUMBER
+ * =====================
+ * Validates phone number format for Tanzania
+ * Thibitisha namba ya simu ya Tanzania
+ */
+export const validatePhone = (phone: string): boolean => {
+  if (!phone || typeof phone !== 'string') return false;
+  
+  // Remove spaces and dashes
+  const cleaned = phone.replace(/[\s-]/g, '');
+  
+  // Tanzania phone formats:
+  // +255XXXXXXXXX (13 chars)
+  // 0XXXXXXXXX (10 chars)
+  // 255XXXXXXXXX (12 chars)
+  const tanzaniaRegex = /^(\+?255|0)[67]\d{8}$/;
+  
+  if (!tanzaniaRegex.test(cleaned)) {
+    console.warn('🚨 Invalid Tanzania phone number:', phone);
+    return false;
+  }
+  
+  return true;
+};
+
+/**
+ * ESCAPE SQL SPECIAL CHARACTERS
+ * ==============================
+ * Prevents SQL injection (though Supabase handles this)
+ * Zuia SQL injection
+ */
+export const escapeSQLString = (str: string): string => {
+  if (!str || typeof str !== 'string') return '';
+  
+  return str
+    .replace(/'/g, "''")  // Escape single quotes
+    .replace(/\\/g, '\\\\') // Escape backslashes
+    .replace(/\0/g, '\\0')  // Escape null bytes
+    .replace(/\n/g, '\\n')  // Escape newlines
+    .replace(/\r/g, '\\r')  // Escape carriage returns
+    .replace(/\x1a/g, '\\Z'); // Escape Ctrl-Z
+};
+
+/**
+ * GENERATE CSRF TOKEN
+ * ===================
+ * Creates unique token for form submissions
+ * Tengeneza token ya kipekee kwa fomu
+ */
+export const generateCSRFToken = (): string => {
+  const array = new Uint8Array(32);
   crypto.getRandomValues(array);
   return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
 };
 
-// Password strength validation
-export const validatePassword = (password: string): { 
-  isValid: boolean; 
-  score: number; 
-  feedback: string[] 
-} => {
-  const feedback: string[] = [];
-  let score = 0;
+/**
+ * STORE CSRF TOKEN
+ * ================
+ * Safely stores CSRF token
+ * Hifadhi token ya CSRF kwa usalama
+ */
+export const storeCSRFToken = (): string => {
+  const token = generateCSRFToken();
+  sessionStorage.setItem('csrf_token', token);
+  return token;
+};
+
+/**
+ * VALIDATE CSRF TOKEN
+ * ===================
+ * Verifies CSRF token matches
+ * Thibitisha token ya CSRF inafanana
+ */
+export const validateCSRFToken = (token: string): boolean => {
+  const stored = sessionStorage.getItem('csrf_token');
+  return stored === token;
+};
+
+/**
+ * RATE LIMITING
+ * =============
+ * Prevents brute force and spam attacks
+ * Zuia mashambulizi ya brute force
+ */
+interface RateLimitEntry {
+  count: number;
+  firstAttempt: number;
+}
+
+const rateLimitStore = new Map<string, RateLimitEntry>();
+
+export const checkRateLimit = (
+  identifier: string,
+  maxAttempts: number = 5,
+  windowMs: number = 60000 // 1 minute
+): boolean => {
+  const now = Date.now();
+  const entry = rateLimitStore.get(identifier);
   
-  if (password.length < 8) {
-    feedback.push('Password must be at least 8 characters long');
-  } else {
-    score += 1;
+  if (!entry) {
+    rateLimitStore.set(identifier, {
+      count: 1,
+      firstAttempt: now,
+    });
+    return true;
   }
   
-  if (!/[a-z]/.test(password)) {
-    feedback.push('Password must contain lowercase letters');
-  } else {
-    score += 1;
+  // Check if window has expired
+  if (now - entry.firstAttempt > windowMs) {
+    rateLimitStore.set(identifier, {
+      count: 1,
+      firstAttempt: now,
+    });
+    return true;
   }
   
-  if (!/[A-Z]/.test(password)) {
-    feedback.push('Password must contain uppercase letters');
-  } else {
-    score += 1;
+  // Check if limit exceeded
+  if (entry.count >= maxAttempts) {
+    console.warn('🚨 SECURITY: Rate limit exceeded for:', identifier);
+    return false;
   }
   
-  if (!/\d/.test(password)) {
-    feedback.push('Password must contain numbers');
-  } else {
-    score += 1;
+  // Increment count
+  entry.count++;
+  return true;
+};
+
+/**
+ * SANITIZE FILE NAME
+ * ==================
+ * Prevents directory traversal attacks
+ * Zuia mashambulizi ya directory traversal
+ */
+export const sanitizeFileName = (fileName: string): string => {
+  if (!fileName || typeof fileName !== 'string') return '';
+  
+  return fileName
+    .replace(/\.\./g, '') // Remove parent directory references
+    .replace(/[<>:"|?*\x00-\x1F]/g, '') // Remove invalid characters
+    .replace(/^\./, '') // Remove leading dot
+    .trim();
+};
+
+/**
+ * VALIDATE FILE TYPE
+ * ==================
+ * Ensures only allowed file types are uploaded
+ * Hakikisha file types zilizoruhusiwa tu zinapakiwa
+ */
+export const validateFileType = (file: File, allowedTypes: string[]): boolean => {
+  if (!file || !file.type) {
+    console.warn('🚨 Invalid file object');
+    return false;
   }
   
-  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-    feedback.push('Password must contain special characters');
-  } else {
-    score += 1;
+  const fileType = file.type.toLowerCase();
+  const fileName = file.name.toLowerCase();
+  
+  // Check MIME type
+  if (!allowedTypes.some(type => fileType.includes(type))) {
+    console.warn('🚨 SECURITY: Blocked file type:', fileType);
+    return false;
   }
   
-  // Check for common patterns
-  const commonPatterns = [
-    /123456/,
-    /password/i,
-    /qwerty/i,
-    /abc123/i,
-    /admin/i
+  // Double-check extension
+  const dangerousExtensions = [
+    '.exe', '.bat', '.cmd', '.sh', '.php', '.asp', '.aspx',
+    '.jsp', '.js', '.jar', '.app', '.deb', '.rpm', '.dmg',
+    '.scr', '.vbs', '.dll', '.sys'
   ];
   
-  if (commonPatterns.some(pattern => pattern.test(password))) {
-    feedback.push('Password contains common patterns');
-    score = Math.max(0, score - 2);
+  if (dangerousExtensions.some(ext => fileName.endsWith(ext))) {
+    console.warn('🚨 SECURITY: Blocked dangerous file extension:', fileName);
+    return false;
   }
   
-  return {
-    isValid: score >= 4 && feedback.length === 0,
-    score,
-    feedback
+  return true;
+};
+
+/**
+ * CONTENT SECURITY POLICY NONCE
+ * ==============================
+ * Generates nonce for inline scripts
+ * Tengeneza nonce kwa scripts za inline
+ */
+export const generateNonce = (): string => {
+  const array = new Uint8Array(16);
+  crypto.getRandomValues(array);
+  return btoa(String.fromCharCode(...array));
+};
+
+/**
+ * CHECK FOR XSS PATTERNS
+ * ======================
+ * Detects common XSS attack patterns
+ * Gundua patterns za mashambulizi ya XSS
+ */
+export const detectXSS = (input: string): boolean => {
+  if (!input || typeof input !== 'string') return false;
+  
+  const xssPatterns = [
+    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+    /javascript:/gi,
+    /on\w+\s*=\s*["'][^"']*["']/gi,
+    /<iframe/gi,
+    /<object/gi,
+    /<embed/gi,
+    /eval\s*\(/gi,
+    /expression\s*\(/gi,
+  ];
+  
+  const hasXSS = xssPatterns.some(pattern => pattern.test(input));
+  
+  if (hasXSS) {
+    console.error('🚨 XSS ATTACK DETECTED:', input.substring(0, 50));
+  }
+  
+  return hasXSS;
+};
+
+/**
+ * SAFE LOCAL STORAGE
+ * ==================
+ * Safely stores and retrieves from localStorage
+ * Hifadhi na pata data kutoka localStorage kwa usalama
+ */
+export const safeLocalStorage = {
+  set: (key: string, value: any): boolean => {
+    try {
+      const sanitizedKey = sanitizeInput(key);
+      const sanitizedValue = typeof value === 'string' ? sanitizeInput(value) : value;
+      localStorage.setItem(sanitizedKey, JSON.stringify(sanitizedValue));
+      return true;
+    } catch (error) {
+      console.error('🚨 Error storing to localStorage:', error);
+      return false;
+    }
+  },
+  
+  get: (key: string): any => {
+    try {
+      const sanitizedKey = sanitizeInput(key);
+      const item = localStorage.getItem(sanitizedKey);
+      return item ? JSON.parse(item) : null;
+    } catch (error) {
+      console.error('🚨 Error reading from localStorage:', error);
+      return null;
+    }
+  },
+  
+  remove: (key: string): void => {
+    try {
+      const sanitizedKey = sanitizeInput(key);
+      localStorage.removeItem(sanitizedKey);
+    } catch (error) {
+      console.error('🚨 Error removing from localStorage:', error);
+    }
+  }
+};
+
+/**
+ * LOG SECURITY EVENT
+ * ==================
+ * Logs security-related events for monitoring
+ * Rekodi matukio ya usalama kwa ufuatiliaji
+ */
+export const logSecurityEvent = (
+  eventType: string,
+  details: any,
+  severity: 'low' | 'medium' | 'high' | 'critical' = 'medium'
+): void => {
+  const event = {
+    type: eventType,
+    severity,
+    timestamp: new Date().toISOString(),
+    userAgent: navigator.userAgent,
+    url: window.location.href,
+    details,
   };
+  
+  console.warn(`🚨 SECURITY EVENT [${severity.toUpperCase()}]:`, event);
+  
+  // In production, send to monitoring service
+  if (process.env.NODE_ENV === 'production' && severity === 'critical') {
+    // TODO: Send to security monitoring service
+    // Example: sendToSentry(event);
+  }
+};
+
+export default {
+  sanitizeInput,
+  sanitizeHTML,
+  validateURL,
+  safeRedirect,
+  validateEmail,
+  validatePhone,
+  escapeSQLString,
+  generateCSRFToken,
+  storeCSRFToken,
+  validateCSRFToken,
+  checkRateLimit,
+  sanitizeFileName,
+  validateFileType,
+  generateNonce,
+  detectXSS,
+  safeLocalStorage,
+  logSecurityEvent,
 };

@@ -67,6 +67,7 @@ import NetworkStatus from "./components/common/NetworkStatus";
 import PageLoadingFallback from "./components/common/PageLoadingFallback";
 import UpdateNotifier from "./components/common/UpdateNotifier";
 import ScrollToTop from "./components/common/ScrollToTop";
+import SecurityMonitor from "./components/security/SecurityMonitor";
 
 // Lazy load pages for code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -139,6 +140,9 @@ const App = () => (
 
           {/* Main routing configuration - Mipangilio ya uongozaji */}
           <BrowserRouter>
+            {/* Security Monitor - Real-time threat detection */}
+            <SecurityMonitor />
+            
             {/* Scroll to top on route change */}
             <ScrollToTop />
             
