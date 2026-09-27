@@ -4,15 +4,16 @@
  * Shows "Install App" prompt for PWA installation
  * 
  * BEHAVIOR:
- * - Shows prompt 5 seconds after page load
- * - Shows EVERY TIME user visits if app is not installed
- * - Only hides if user actually installs the app
- * - User can dismiss temporarily per session, but will show again on next visit
+ * - Shows prompt AUTOMATICALLY on every visit if app NOT installed
+ * - Shows after 3 seconds of page load
+ * - Works on ALL browsers (Android, Desktop, iOS)
+ * - Only hides permanently if user installs the app
+ * - User can dismiss temporarily per session, shows again on next visit
  * 
  * STORAGE:
  * - localStorage key: 'pwa-installed'
  * - Value: 'true' only if app was successfully installed
- * - Prompt shows on every new visit until installation
+ * - Prompt shows on EVERY visit until installation
  */
 
 import React, { useState, useEffect } from 'react';
@@ -30,46 +31,52 @@ const PWAInstallPrompt: React.FC = () => {
   const [isIOS, setIsIOS] = useState(false);
 
   useEffect(() => {
+    console.log('🔍 PWA Install Prompt - Starting...');
+    
     // Check if iOS
     const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
     setIsIOS(iOS);
+    console.log('📱 Device type:', iOS ? 'iOS' : 'Android/Desktop');
 
-    // Check if already installed
+    // Check if already installed (running in standalone mode)
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+    console.log('🖥️ Display mode:', isStandalone ? 'standalone (APP INSTALLED)' : 'browser (NOT INSTALLED)');
+    
     if (isStandalone) {
-      // Mark as installed
+      // App is installed - don't show prompt
       localStorage.setItem('pwa-installed', 'true');
+      console.log('✅ App is installed - not showing prompt');
       return;
     }
 
-    // Check if user has installed before
+    // Check localStorage (but this is just a backup check)
     const hasInstalled = localStorage.getItem('pwa-installed') === 'true';
+    console.log('💾 localStorage pwa-installed:', hasInstalled ? 'true' : 'false/null');
+    
     if (hasInstalled) {
-      return; // Already installed, don't show
+      console.log('✅ User has installed before - not showing prompt');
+      return;
     }
 
-    // Show prompt to everyone who hasn't installed, every visit
-    console.log('📱 PWA not installed - showing install prompt');
+    // APP NOT INSTALLED - SHOW PROMPT AUTOMATICALLY
+    console.log('📱 PWA NOT INSTALLED - Will show install prompt in 3 seconds');
 
-    // Listen for beforeinstallprompt event
+    // Listen for beforeinstallprompt event (Android/Desktop Chrome/Edge)
     const handler = (e: Event) => {
+      console.log('🎉 beforeinstallprompt event fired!');
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
-      
-      // Show prompt after 5 seconds
-      setTimeout(() => {
-        setShowPrompt(true);
-      }, 5000);
     };
 
     window.addEventListener('beforeinstallprompt', handler);
+    console.log('👂 Listening for beforeinstallprompt event...');
 
-    // Show iOS instructions after 5 seconds
-    if (iOS && !isStandalone) {
-      setTimeout(() => {
-        setShowPrompt(true);
-      }, 5000);
-    }
+    // SHOW PROMPT AFTER 3 SECONDS - REGARDLESS OF BROWSER
+    // This ensures prompt shows on ALL devices that don't have app installed
+    setTimeout(() => {
+      console.log('✅ Showing PWA install prompt NOW (app not installed)');
+      setShowPrompt(true);
+    }, 3000);
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handler);
@@ -77,7 +84,11 @@ const PWAInstallPrompt: React.FC = () => {
   }, []);
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) return;
+    if (!deferredPrompt) {
+      console.log('ℹ️ No deferred prompt - user needs to install manually');
+      // For browsers without beforeinstallprompt, keep showing instructions
+      return;
+    }
 
     // Show install prompt
     await deferredPrompt.prompt();
@@ -86,16 +97,17 @@ const PWAInstallPrompt: React.FC = () => {
     const { outcome } = await deferredPrompt.userChoice;
     
     if (outcome === 'accepted') {
-      console.log('✅ User accepted PWA install');
+      console.log('✅ User accepted PWA install - hiding prompt permanently');
       // Mark as installed - won't show again
       localStorage.setItem('pwa-installed', 'true');
+      setShowPrompt(false);
     } else {
       console.log('❌ User dismissed PWA install - will show again on next visit');
       // Don't save anything - will show again on next visit
+      setShowPrompt(false);
     }
     
     setDeferredPrompt(null);
-    setShowPrompt(false);
   };
 
   const handleDismiss = () => {
@@ -108,37 +120,68 @@ const PWAInstallPrompt: React.FC = () => {
 
   return (
     <div className="fixed bottom-24 sm:bottom-20 left-4 right-4 sm:left-auto sm:right-6 z-40 animate-in slide-in-from-bottom">
-      <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-3 max-w-xs relative">
+      <div className="bg-white rounded-lg shadow-xl border-2 border-primary/20 p-4 max-w-sm relative">
         {/* Close button */}
         <button
           onClick={handleDismiss}
-          className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
+          className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition-colors"
           aria-label="Close"
         >
           <X className="h-4 w-4" />
         </button>
 
         {/* Content */}
-        <div className="flex items-center gap-3 pr-6">
-          <Download className="h-5 w-5 text-primary flex-shrink-0" />
+        <div className="flex items-start gap-3 pr-6">
+          <div className="bg-primary/10 p-2 rounded-lg flex-shrink-0">
+            <Download className="h-6 w-6 text-primary" />
+          </div>
           
           <div className="flex-1">
             {!isIOS && deferredPrompt ? (
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-700">Install Wanachuo</span>
+              // Android/Desktop Chrome/Edge - has native install
+              <>
+                <h3 className="text-sm font-semibold text-gray-900 mb-1">
+                  Install Wanachuo App
+                </h3>
+                <p className="text-xs text-gray-600 mb-3">
+                  Pata notesi, tafuta haraka, na angalia nyumba offline
+                </p>
                 <Button
                   onClick={handleInstallClick}
                   size="sm"
-                  className="bg-primary hover:bg-primary/90 h-7 text-xs px-3"
+                  className="w-full bg-primary hover:bg-primary/90 h-9 text-sm font-medium"
                 >
-                  Install
+                  Install App
                 </Button>
-              </div>
+              </>
             ) : isIOS ? (
-              <div className="text-sm text-gray-700">
-                Install Wanachuo: Tap ⬆️ then "Add to Home Screen"
-              </div>
-            ) : null}
+              // iOS - manual install instructions
+              <>
+                <h3 className="text-sm font-semibold text-gray-900 mb-1">
+                  Install Wanachuo App
+                </h3>
+                <p className="text-xs text-gray-600 leading-relaxed">
+                  Bonyeza <span className="inline-block align-middle text-base">⬆️</span> kisha chagua <span className="font-medium">"Add to Home Screen"</span>
+                </p>
+              </>
+            ) : (
+              // Other browsers - generic instructions
+              <>
+                <h3 className="text-sm font-semibold text-gray-900 mb-1">
+                  Install Wanachuo App
+                </h3>
+                <p className="text-xs text-gray-600 mb-3">
+                  Install app ili utumie bila internet na upate notesi
+                </p>
+                <Button
+                  onClick={handleInstallClick}
+                  size="sm"
+                  className="w-full bg-primary hover:bg-primary/90 h-9 text-sm font-medium"
+                >
+                  Install App
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </div>
