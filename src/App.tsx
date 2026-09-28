@@ -185,7 +185,7 @@ const App = () => (
 
             {/* Floating WhatsApp Button - Visible on all pages */}
             <FloatingWhatsApp 
-              phoneNumber="+255750939217"
+              phoneNumber="+255722429317"
               message="Habari! Nahitaji msaada kutafuta nyumba kwenye Wanachuo.com (Hello! I need help finding accommodation on Wanachuo.com)"
             />
 

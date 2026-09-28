@@ -103,18 +103,22 @@ const Favorites = () => {
                 key={property.id}
                 id={property.id}
                 title={property.title}
-                price={Number(property.price)}
-                location={property.location}
+                monthly_rent={Number(property.monthly_rent || property.price)}
+                address={property.address}
+                city={property.city}
                 images={property.images || []}
-                phone={property.profiles?.phone || undefined}
-                contactPhone={property.contact_phone || undefined}
-                contactWhatsappPhone={property.contact_whatsapp_phone || undefined}
-                electricity={property.electricity || false}
-                water={property.water || false}
-                bedrooms={property.bedrooms || undefined}
+                room_type={property.room_type}
+                gender_restrictions={property.gender_restrictions || undefined}
+                distance_from_campus={property.distance_from_campus || undefined}
+                transport_mode={(property as any).transport_mode || 'walking'}
+                amenities={property.amenities}
+                university={property.university}
+                landlord={property.landlord}
+                available_beds={property.available_beds || undefined}
                 isFavorited={isFavorited(property.id)}
                 onToggleFavorite={toggleFavorite}
                 viewMode="grid"
+                is_available={property.is_available ?? true}
               />
             ))}
           </div>

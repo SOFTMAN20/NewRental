@@ -427,7 +427,7 @@ ${imageUrl ? `📸 *Picha:* ${imageUrl}` : ''}`;
                     </Button>
                     <ShareDropdown
                       title={property.title}
-                      description={`Angalia nyumba hii nzuri: ${property.title} - TZS ${Number(property.price).toLocaleString()}/mwezi`}
+                      description={`Angalia nyumba hii nzuri: ${property.title} - TZS ${Number(property.monthly_rent || 0).toLocaleString()}/mwezi`}
                       url={window.location.href}
                       className="bg-black/30 hover:bg-white/95 text-white hover:text-gray-600 h-8 w-8 sm:h-10 sm:w-10 p-1.5 sm:p-2 rounded-full transition-all duration-300"
                       variant="ghost"
@@ -508,7 +508,7 @@ ${imageUrl ? `📸 *Picha:* ${imageUrl}` : ''}`;
                       </Button>
                       <ShareDropdown
                         title={property.title}
-                        description={`Angalia nyumba hii nzuri: ${property.title} - TZS ${Number(property.price).toLocaleString()}/mwezi`}
+                        description={`Angalia nyumba hii nzuri: ${property.title} - TZS ${Number(property.monthly_rent || 0).toLocaleString()}/mwezi`}
                         url={window.location.href}
                         className="bg-white/80 hover:bg-white text-gray-600 h-10 w-10"
                         variant="ghost"
