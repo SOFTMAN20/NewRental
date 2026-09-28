@@ -139,13 +139,13 @@ const PropertyGrid: React.FC<PropertyGridProps> = ({
           {/* Location */}
           <div className="flex items-center gap-2 text-gray-600">
             <MapPin className="w-4 h-4" />
-            <span className="text-sm">{property.location}</span>
+            <span className="text-sm">{property.address}, {property.city}</span>
           </div>
 
           {/* Price */}
           <div className="flex items-center gap-2 text-green-600 font-semibold">
             <DollarSign className="w-4 h-4" />
-            <span>TSh {property.price?.toLocaleString()}/mwezi</span>
+            <span>TSh {property.monthly_rent?.toLocaleString()}/mwezi</span>
           </div>
 
           {/* Description Preview */}

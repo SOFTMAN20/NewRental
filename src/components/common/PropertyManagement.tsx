@@ -76,7 +76,8 @@ const PropertyManagement: React.FC<PropertyManagementProps> = ({
    */
   const filteredProperties = properties.filter(property => {
     const matchesSearch = property.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         property.location.toLowerCase().includes(searchQuery.toLowerCase());
+                         property.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         property.city.toLowerCase().includes(searchQuery.toLowerCase());
     
     const matchesStatus = filterStatus === 'all' || property.status === filterStatus;
     
