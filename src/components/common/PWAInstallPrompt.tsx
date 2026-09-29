@@ -84,9 +84,15 @@ const PWAInstallPrompt: React.FC = () => {
   }, []);
 
   const handleInstallClick = async () => {
+    // For iOS - show instructions
+    if (isIOS) {
+      alert('📱 Jinsi ya kuinstall:\n\n1. Bonyeza icon ya "Share" ⬆️ chini ya browser\n2. Scroll chini\n3. Chagua "Add to Home Screen"\n4. Bonyeza "Add"');
+      return;
+    }
+
     if (!deferredPrompt) {
-      console.log('ℹ️ No deferred prompt - user needs to install manually');
-      // For browsers without beforeinstallprompt, keep showing instructions
+      console.log('ℹ️ No deferred prompt - showing generic instructions');
+      alert('📱 Jinsi ya kuinstall:\n\nBofya menu ya browser (⋮) kisha chagua "Install app" au "Add to Home screen"');
       return;
     }
 
@@ -131,57 +137,22 @@ const PWAInstallPrompt: React.FC = () => {
         </button>
 
         {/* Content */}
-        <div className="flex items-start gap-3 pr-6">
+        <div className="flex items-center gap-3 pr-6">
           <div className="bg-primary/10 p-2 rounded-lg flex-shrink-0">
             <Download className="h-6 w-6 text-primary" />
           </div>
           
           <div className="flex-1">
-            {!isIOS && deferredPrompt ? (
-              // Android/Desktop Chrome/Edge - has native install
-              <>
-                <h3 className="text-sm font-semibold text-gray-900 mb-1">
-                  Install Wanachuo App
-                </h3>
-                <p className="text-xs text-gray-600 mb-3">
-                  Pata notesi, tafuta haraka, na angalia nyumba offline
-                </p>
-                <Button
-                  onClick={handleInstallClick}
-                  size="sm"
-                  className="w-full bg-primary hover:bg-primary/90 h-9 text-sm font-medium"
-                >
-                  Install App
-                </Button>
-              </>
-            ) : isIOS ? (
-              // iOS - manual install instructions
-              <>
-                <h3 className="text-sm font-semibold text-gray-900 mb-1">
-                  Install Wanachuo App
-                </h3>
-                <p className="text-xs text-gray-600 leading-relaxed">
-                  Bonyeza <span className="inline-block align-middle text-base">⬆️</span> kisha chagua <span className="font-medium">"Add to Home Screen"</span>
-                </p>
-              </>
-            ) : (
-              // Other browsers - generic instructions
-              <>
-                <h3 className="text-sm font-semibold text-gray-900 mb-1">
-                  Install Wanachuo App
-                </h3>
-                <p className="text-xs text-gray-600 mb-3">
-                  Install app ili utumie bila internet na upate notesi
-                </p>
-                <Button
-                  onClick={handleInstallClick}
-                  size="sm"
-                  className="w-full bg-primary hover:bg-primary/90 h-9 text-sm font-medium"
-                >
-                  Install App
-                </Button>
-              </>
-            )}
+            <h3 className="text-sm font-semibold text-gray-900 mb-2">
+              Install Wanachuo App
+            </h3>
+            <Button
+              onClick={handleInstallClick}
+              size="sm"
+              className="w-full bg-primary hover:bg-primary/90 h-9 text-sm font-medium"
+            >
+              Install
+            </Button>
           </div>
         </div>
       </div>
