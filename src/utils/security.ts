@@ -289,6 +289,143 @@ export const checkRateLimit = (
 };
 
 /**
+ * RATE LIMITERS
+ * =============
+ * Pre-configured rate limiters for common actions
+ */
+export const rateLimiters = {
+  login: {
+    isAllowed: (identifier: string) => checkRateLimit(identifier, 5, 60000), // 5 attempts per minute
+    reset: (identifier: string) => rateLimitStore.delete(identifier)
+  },
+  signup: {
+    isAllowed: (identifier: string) => checkRateLimit(identifier, 3, 300000), // 3 attempts per 5 minutes
+    reset: (identifier: string) => rateLimitStore.delete(identifier)
+  },
+  api: {
+    isAllowed: (identifier: string) => checkRateLimit(identifier, 100, 60000), // 100 requests per minute
+    reset: (identifier: string) => rateLimitStore.delete(identifier)
+  }
+};
+
+/**
+ * VALIDATE PASSWORD STRENGTH
+ * ==========================
+ * Validates password meets security requirements
+ * Thibitisha nywila inakidhi mahitaji ya usalama
+ */
+export interface PasswordValidation {
+  isValid: boolean;
+  strength: 'weak' | 'medium' | 'strong';
+  feedback: string[];
+}
+
+export const validatePassword = (password: string): PasswordValidation => {
+  const feedback: string[] = [];
+  let score = 0;
+
+  if (!password || typeof password !== 'string') {
+    return {
+      isValid: false,
+      strength: 'weak',
+      feedback: ['Nywila ni lazima']
+    };
+  }
+
+  // Check minimum length
+  if (password.length < 8) {
+    feedback.push('Nywila lazima iwe na herufi 8 au zaidi');
+  } else {
+    score++;
+  }
+
+  // Check for lowercase letters
+  if (!/[a-z]/.test(password)) {
+    feedback.push('Ongeza herufi ndogo (a-z)');
+  } else {
+    score++;
+  }
+
+  // Check for uppercase letters
+  if (!/[A-Z]/.test(password)) {
+    feedback.push('Ongeza herufi kubwa (A-Z)');
+  } else {
+    score++;
+  }
+
+  // Check for numbers
+  if (!/[0-9]/.test(password)) {
+    feedback.push('Ongeza namba (0-9)');
+  } else {
+    score++;
+  }
+
+  // Check for special characters
+  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    feedback.push('Ongeza herufi maalum (!@#$%^&*)');
+  } else {
+    score++;
+  }
+
+  // Determine strength
+  let strength: 'weak' | 'medium' | 'strong' = 'weak';
+  if (score >= 4) strength = 'strong';
+  else if (score >= 3) strength = 'medium';
+
+  const isValid = score >= 3 && password.length >= 8;
+
+  return {
+    isValid,
+    strength,
+    feedback: feedback.length > 0 ? feedback : ['Nywila ni salama']
+  };
+};
+
+/**
+ * VALIDATE INPUT
+ * ==============
+ * Comprehensive input validation with sanitization
+ */
+export const validateInput = {
+  email: (email: string) => {
+    const isValid = validateEmail(email);
+    return {
+      isValid,
+      sanitized: isValid ? email.trim().toLowerCase() : '',
+      error: isValid ? null : 'Barua pepe si sahihi'
+    };
+  },
+  
+  text: (text: string, maxLength: number = 500) => {
+    const sanitized = sanitizeInput(text);
+    const isValid = sanitized.length > 0 && sanitized.length <= maxLength;
+    return {
+      isValid,
+      sanitized,
+      error: isValid ? null : `Maandishi lazima yawe chini ya herufi ${maxLength}`
+    };
+  },
+  
+  phone: (phone: string) => {
+    const isValid = validatePhone(phone);
+    return {
+      isValid,
+      sanitized: isValid ? phone.replace(/[\s-]/g, '') : '',
+      error: isValid ? null : 'Namba ya simu si sahihi'
+    };
+  },
+  
+  url: (url: string) => {
+    const isValid = validateURL(url);
+    return {
+      isValid,
+      sanitized: isValid ? url.trim() : '',
+      error: isValid ? null : 'URL si sahihi'
+    };
+  }
+};
+
+/**
  * SANITIZE FILE NAME
  * ==================
  * Prevents directory traversal attacks
