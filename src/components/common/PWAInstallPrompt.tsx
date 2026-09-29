@@ -84,15 +84,9 @@ const PWAInstallPrompt: React.FC = () => {
   }, []);
 
   const handleInstallClick = async () => {
-    // For iOS - show instructions
-    if (isIOS) {
-      alert('📱 Jinsi ya kuinstall:\n\n1. Bonyeza icon ya "Share" ⬆️ chini ya browser\n2. Scroll chini\n3. Chagua "Add to Home Screen"\n4. Bonyeza "Add"');
-      return;
-    }
-
     if (!deferredPrompt) {
-      console.log('ℹ️ No deferred prompt - showing generic instructions');
-      alert('📱 Jinsi ya kuinstall:\n\nBofya menu ya browser (⋮) kisha chagua "Install app" au "Add to Home screen"');
+      console.log('ℹ️ No deferred prompt - user needs to install manually');
+      // For browsers without beforeinstallprompt, keep showing instructions
       return;
     }
 
@@ -146,13 +140,15 @@ const PWAInstallPrompt: React.FC = () => {
             <h3 className="text-sm font-semibold text-gray-900 mb-2">
               Install Wanachuo App
             </h3>
-            <Button
-              onClick={handleInstallClick}
-              size="sm"
-              className="w-full bg-primary hover:bg-primary/90 h-9 text-sm font-medium"
-            >
-              Install
-            </Button>
+            {deferredPrompt && (
+              <Button
+                onClick={handleInstallClick}
+                size="sm"
+                className="w-full bg-primary hover:bg-primary/90 h-9 text-sm font-medium"
+              >
+                Install
+              </Button>
+            )}
           </div>
         </div>
       </div>
