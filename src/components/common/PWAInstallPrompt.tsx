@@ -84,30 +84,37 @@ const PWAInstallPrompt: React.FC = () => {
   }, []);
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) {
-      console.log('ℹ️ No deferred prompt - user needs to install manually');
-      // For browsers without beforeinstallprompt, keep showing instructions
+    // For iOS - show step-by-step instructions
+    if (isIOS) {
+      alert('📱 Jinsi ya kuinstall Wanachuo App kwenye iPhone/iPad:\n\n1️⃣ Bonyeza kitufe cha "Share" ⬆️ chini ya Safari\n2️⃣ Scroll chini kidogo\n3️⃣ Chagua "Add to Home Screen"\n4️⃣ Bonyeza "Add"\n\n✅ App itaonekana kwenye home screen yako!');
       return;
     }
 
-    // Show install prompt
-    await deferredPrompt.prompt();
-    
-    // Wait for user choice
-    const { outcome } = await deferredPrompt.userChoice;
-    
-    if (outcome === 'accepted') {
-      console.log('✅ User accepted PWA install - hiding prompt permanently');
-      // Mark as installed - won't show again
-      localStorage.setItem('pwa-installed', 'true');
-      setShowPrompt(false);
-    } else {
-      console.log('❌ User dismissed PWA install - will show again on next visit');
-      // Don't save anything - will show again on next visit
-      setShowPrompt(false);
+    if (!deferredPrompt) {
+      // For other browsers without native install
+      alert('📱 Jinsi ya kuinstall:\n\n1️⃣ Bonyeza menu ya browser (⋮)\n2️⃣ Chagua "Install app" au "Add to Home screen"\n\n✅ App itaonekana kwenye home screen yako!');
+      return;
     }
-    
-    setDeferredPrompt(null);
+
+    // For Android/Desktop Chrome/Edge - native install
+    try {
+      await deferredPrompt.prompt();
+      
+      const { outcome } = await deferredPrompt.userChoice;
+      
+      if (outcome === 'accepted') {
+        console.log('✅ User accepted PWA install - hiding prompt permanently');
+        localStorage.setItem('pwa-installed', 'true');
+        setShowPrompt(false);
+      } else {
+        console.log('❌ User dismissed PWA install - will show again on next visit');
+        setShowPrompt(false);
+      }
+      
+      setDeferredPrompt(null);
+    } catch (error) {
+      console.error('Error during install:', error);
+    }
   };
 
   const handleDismiss = () => {
@@ -140,15 +147,13 @@ const PWAInstallPrompt: React.FC = () => {
             <h3 className="text-sm font-semibold text-gray-900 mb-2">
               Install Wanachuo App
             </h3>
-            {deferredPrompt && (
-              <Button
-                onClick={handleInstallClick}
-                size="sm"
-                className="w-full bg-primary hover:bg-primary/90 h-9 text-sm font-medium"
-              >
-                Install
-              </Button>
-            )}
+            <Button
+              onClick={handleInstallClick}
+              size="sm"
+              className="w-full bg-primary hover:bg-primary/90 h-9 text-sm font-medium"
+            >
+              Install
+            </Button>
           </div>
         </div>
       </div>
