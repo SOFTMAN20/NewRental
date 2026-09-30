@@ -95,25 +95,25 @@ const PWAInstallPrompt: React.FC = () => {
   if (!showPrompt) return null;
 
   return (
-    <div className="fixed bottom-32 sm:bottom-28 left-4 right-4 sm:left-auto sm:right-6 z-[100] animate-in slide-in-from-bottom">
-      <div className="bg-white rounded-lg shadow-xl border-2 border-primary/20 p-2.5 w-fit relative">
+    <div className="fixed bottom-32 sm:bottom-28 left-1/2 -translate-x-1/2 z-[100] animate-in slide-in-from-bottom">
+      <div className="bg-white rounded-xl shadow-2xl border-2 border-primary/30 p-4 w-fit relative">
         {/* Content - Everything in One Row */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           {/* Icon */}
-          <div className="bg-primary/10 p-1.5 rounded-lg flex-shrink-0">
-            <Download className="h-4 w-4 text-primary" />
+          <div className="bg-primary/10 p-2 rounded-lg flex-shrink-0">
+            <Download className="h-6 w-6 text-primary" />
           </div>
           
           {/* Title */}
-          <span className="text-xs font-semibold text-gray-900 whitespace-nowrap">
-            Install App
+          <span className="text-sm font-bold text-gray-900 whitespace-nowrap">
+            Install Wanachuo App
           </span>
           
           {/* Install Button */}
           <Button
             onClick={handleInstallClick}
             size="sm"
-            className="bg-primary hover:bg-primary/90 h-7 px-3 text-xs font-medium"
+            className="bg-primary hover:bg-primary/90 h-9 px-5 text-sm font-semibold"
           >
             Install
           </Button>
@@ -124,7 +124,7 @@ const PWAInstallPrompt: React.FC = () => {
             className="text-gray-400 hover:text-gray-600 transition-colors ml-1"
             aria-label="Close"
           >
-            <X className="h-3.5 w-3.5" />
+            <X className="h-4 w-4" />
           </button>
         </div>
       </div>
