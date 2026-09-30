@@ -84,37 +84,30 @@ const PWAInstallPrompt: React.FC = () => {
   }, []);
 
   const handleInstallClick = async () => {
-    // For iOS - show step-by-step instructions
-    if (isIOS) {
-      alert('📱 Jinsi ya kuinstall Wanachuo App kwenye iPhone/iPad:\n\n1️⃣ Bonyeza kitufe cha "Share" ⬆️ chini ya Safari\n2️⃣ Scroll chini kidogo\n3️⃣ Chagua "Add to Home Screen"\n4️⃣ Bonyeza "Add"\n\n✅ App itaonekana kwenye home screen yako!');
-      return;
-    }
-
     if (!deferredPrompt) {
-      // For other browsers without native install
-      alert('📱 Jinsi ya kuinstall:\n\n1️⃣ Bonyeza menu ya browser (⋮)\n2️⃣ Chagua "Install app" au "Add to Home screen"\n\n✅ App itaonekana kwenye home screen yako!');
+      console.log('ℹ️ No deferred prompt - user needs to install manually');
+      // For browsers without beforeinstallprompt, keep showing instructions
       return;
     }
 
-    // For Android/Desktop Chrome/Edge - native install
-    try {
-      await deferredPrompt.prompt();
-      
-      const { outcome } = await deferredPrompt.userChoice;
-      
-      if (outcome === 'accepted') {
-        console.log('✅ User accepted PWA install - hiding prompt permanently');
-        localStorage.setItem('pwa-installed', 'true');
-        setShowPrompt(false);
-      } else {
-        console.log('❌ User dismissed PWA install - will show again on next visit');
-        setShowPrompt(false);
-      }
-      
-      setDeferredPrompt(null);
-    } catch (error) {
-      console.error('Error during install:', error);
+    // Show install prompt
+    await deferredPrompt.prompt();
+    
+    // Wait for user choice
+    const { outcome } = await deferredPrompt.userChoice;
+    
+    if (outcome === 'accepted') {
+      console.log('✅ User accepted PWA install - hiding prompt permanently');
+      // Mark as installed - won't show again
+      localStorage.setItem('pwa-installed', 'true');
+      setShowPrompt(false);
+    } else {
+      console.log('❌ User dismissed PWA install - will show again on next visit');
+      // Don't save anything - will show again on next visit
+      setShowPrompt(false);
     }
+    
+    setDeferredPrompt(null);
   };
 
   const handleDismiss = () => {
