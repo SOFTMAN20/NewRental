@@ -15,7 +15,7 @@ interface FloatingWhatsAppProps {
 }
 
 const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({
-  phoneNumber = '+255722429317', // Wanachuo.com Company Support Number
+  phoneNumber = '+255792072561', // Wanachuo.com Company Support Number
   message = 'Habari! Nahitaji msaada kutafuta nyumba. (Hello! I need help finding accommodation.)'
 }) => {
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
