@@ -23,6 +23,7 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { supabase } from '@/lib/integrations/supabase/client';
 import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
 import LoadingSpinner from '@/components/ui/loading-spinner';
@@ -84,6 +85,11 @@ const PropertyDetail = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
+  
+  // Platform settings - Mipangilio ya jukwaa
+  const [useCompanyContact, setUseCompanyContact] = useState(false);
+  const [companyWhatsApp, setCompanyWhatsApp] = useState('+255792072561');
+  const [companyPhone, setCompanyPhone] = useState('+255 750 929 317');
 
   // Favorites functionality - Utendakazi wa vipendwa
   const { isFavorited, toggleFavorite } = useFavorites();
@@ -91,6 +97,48 @@ const PropertyDetail = () => {
   // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo(0, 0);
+  }, []);
+  
+  // Fetch platform settings
+  useEffect(() => {
+    const fetchPlatformSettings = async () => {
+      try {
+        console.log('🔧 Fetching platform settings...');
+        const { data, error } = await supabase
+          .from('platform_settings')
+          .select('key, value')
+          .in('key', ['use_company_contact', 'company_whatsapp', 'support_phone']);
+        
+        if (error) {
+          console.error('❌ Error fetching platform settings:', error);
+          throw error;
+        }
+        
+        console.log('✅ Platform settings fetched:', data);
+        
+        data?.forEach(setting => {
+          if (setting.key === 'use_company_contact') {
+            const useCompany = setting.value === 'true';
+            console.log('📱 Use Company Contact:', useCompany);
+            setUseCompanyContact(useCompany);
+          } else if (setting.key === 'company_whatsapp') {
+            const whatsapp = setting.value || '+255792072561';
+            console.log('📞 Company WhatsApp:', whatsapp);
+            setCompanyWhatsApp(whatsapp);
+          } else if (setting.key === 'support_phone') {
+            const phone = setting.value || '+255 750 929 317';
+            console.log('☎️ Support Phone:', phone);
+            setCompanyPhone(phone);
+          }
+        });
+      } catch (error) {
+        console.error('💥 Error fetching platform settings:', error);
+        // Use defaults on error
+        console.log('⚠️ Using default settings');
+      }
+    };
+    
+    fetchPlatformSettings();
   }, []);
 
   // Data fetching from database - Kupata data kutoka database
@@ -164,10 +212,18 @@ const PropertyDetail = () => {
    * kati ya wapangaji watarajiwa na wenye nyumba.
    */
   const getWhatsAppLink = () => {
-    if (!property?.contact_whatsapp_phone && !property?.contact_phone) return '#';
-
-    const phoneNumber = property.contact_whatsapp_phone || property.contact_phone;
-    const cleanPhone = phoneNumber!.replace(/[^0-9]/g, '');
+    let phoneNumber: string | null | undefined;
+    
+    // Use company contact if enabled, otherwise use landlord contact
+    if (useCompanyContact) {
+      phoneNumber = companyWhatsApp;
+    } else {
+      phoneNumber = property?.contact_whatsapp_phone || property?.contact_phone;
+    }
+    
+    if (!phoneNumber) return '#';
+    
+    const cleanPhone = phoneNumber.replace(/[^0-9]/g, '');
     
     // Get current page URL
     const propertyUrl = window.location.href;

@@ -81,6 +81,7 @@ const Leads = lazy(() => import("./pages/Leads"));
 const Messages = lazy(() => import("./pages/Messages"));
 const Settings = lazy(() => import("./pages/Settings"));
 const Profile = lazy(() => import("./pages/Profile"));
+const Admin = lazy(() => import("./pages/Admin"));
 const SignIn = lazy(() => import("./pages/SignIn"));
 const SignUp = lazy(() => import("./pages/SignUp"));
 const PropertyExample = lazy(() => import("./pages/PropertyExample"));
@@ -169,6 +170,9 @@ const App = () => (
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/property-example" element={<PropertyExample />} />
+
+                {/* Admin routes - Njia za msimamizi */}
+                <Route path="/admin" element={<Admin />} />
 
                 {/* Authentication routes - Njia za uthibitisho */}
                 <Route path="/signin" element={<SignIn />} />

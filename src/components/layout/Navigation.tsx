@@ -44,7 +44,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Home, Search, User, Menu, X, Globe, Building2, LogOut, Heart, Bell, Settings, GraduationCap, Plus } from 'lucide-react';
+import { Home, Search, User, Menu, X, Globe, Building2, LogOut, Heart, Bell, Settings, GraduationCap, Plus, Shield } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useTranslation } from 'react-i18next';
@@ -347,6 +347,23 @@ const Navigation = () => {
                       <span>{t('navigation.dashboard')}</span>
                     </Link>
                   </DropdownMenuItem>
+                  
+                  {/* Admin Dashboard Link - Only show for admin users */}
+                  {(profile?.role === 'admin' || profile?.role === 'super_admin') && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link to="/admin" className="flex items-center text-purple-600">
+                          <Shield className="mr-2 h-4 w-4" />
+                          <span>Admin Dashboard</span>
+                          <Badge className="ml-auto bg-purple-600 text-white text-xs px-1.5 py-0.5">
+                            Admin
+                          </Badge>
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                    </>
+                  )}
                   
                   <DropdownMenuItem disabled>
                     <Bell className="mr-2 h-4 w-4" />
