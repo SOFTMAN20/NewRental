@@ -270,19 +270,27 @@ const AdminSettings = () => {
           <Separator />
 
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>Tumia Mawasiliano ya Kampuni / Use Company Contact</Label>
+            <div className="flex items-center justify-between p-4 border rounded-lg bg-gray-50">
+              <div className="space-y-0.5 flex-1">
+                <Label htmlFor="useCompanyContact" className="cursor-pointer">
+                  Tumia Mawasiliano ya Kampuni / Use Company Contact
+                </Label>
                 <p className="text-sm text-muted-foreground">
                   Onyesha namba ya kampuni badala ya namba ya mwenye nyumba kwenye mali zote
                   <br />
                   Show company contact instead of landlord contact on all properties
                 </p>
               </div>
-              <Switch
-                checked={useCompanyContact}
-                onCheckedChange={setUseCompanyContact}
-              />
+              <div className="ml-4">
+                <Switch
+                  id="useCompanyContact"
+                  checked={useCompanyContact}
+                  onCheckedChange={(checked) => {
+                    console.log('🔘 Toggle clicked:', checked);
+                    setUseCompanyContact(checked);
+                  }}
+                />
+              </div>
             </div>
 
             <div className="flex items-center justify-between">

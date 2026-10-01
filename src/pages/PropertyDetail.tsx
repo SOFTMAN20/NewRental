@@ -103,7 +103,7 @@ const PropertyDetail = () => {
   useEffect(() => {
     const fetchPlatformSettings = async () => {
       try {
-        console.log('🔧 Fetching platform settings...');
+        console.log('🔄 Fetching platform settings...');
         const { data, error } = await supabase
           .from('platform_settings')
           .select('key, value')
@@ -117,28 +117,37 @@ const PropertyDetail = () => {
         console.log('✅ Platform settings fetched:', data);
         
         data?.forEach(setting => {
+          console.log(`Setting: ${setting.key} = ${setting.value}`);
           if (setting.key === 'use_company_contact') {
             const useCompany = setting.value === 'true';
-            console.log('📱 Use Company Contact:', useCompany);
             setUseCompanyContact(useCompany);
+            console.log(`📞 Use Company Contact: ${useCompany ? 'YES' : 'NO'}`);
           } else if (setting.key === 'company_whatsapp') {
-            const whatsapp = setting.value || '+255792072561';
-            console.log('📞 Company WhatsApp:', whatsapp);
-            setCompanyWhatsApp(whatsapp);
+            setCompanyWhatsApp(setting.value || '+255792072561');
+            console.log(`💬 Company WhatsApp: ${setting.value}`);
           } else if (setting.key === 'support_phone') {
-            const phone = setting.value || '+255 750 929 317';
-            console.log('☎️ Support Phone:', phone);
-            setCompanyPhone(phone);
+            setCompanyPhone(setting.value || '+255 750 929 317');
+            console.log(`📱 Company Phone: ${setting.value}`);
           }
         });
       } catch (error) {
         console.error('💥 Error fetching platform settings:', error);
-        // Use defaults on error
-        console.log('⚠️ Using default settings');
       }
     };
     
     fetchPlatformSettings();
+    
+    // Listen for focus event to refresh settings when user comes back
+    const handleFocus = () => {
+      console.log('👀 Window focused, refreshing settings...');
+      fetchPlatformSettings();
+    };
+    
+    window.addEventListener('focus', handleFocus);
+    
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+    };
   }, []);
 
   // Data fetching from database - Kupata data kutoka database
@@ -214,11 +223,18 @@ const PropertyDetail = () => {
   const getWhatsAppLink = () => {
     let phoneNumber: string | null | undefined;
     
+    console.log('📞 Getting WhatsApp link...');
+    console.log('Use Company Contact:', useCompanyContact);
+    console.log('Company WhatsApp:', companyWhatsApp);
+    console.log('Landlord Phone:', property?.contact_whatsapp_phone || property?.contact_phone);
+    
     // Use company contact if enabled, otherwise use landlord contact
     if (useCompanyContact) {
       phoneNumber = companyWhatsApp;
+      console.log('✅ Using COMPANY contact:', phoneNumber);
     } else {
       phoneNumber = property?.contact_whatsapp_phone || property?.contact_phone;
+      console.log('✅ Using LANDLORD contact:', phoneNumber);
     }
     
     if (!phoneNumber) return '#';
@@ -258,6 +274,8 @@ ${questionEng}
 
 ${imageUrl ? `📸 *Picha:* ${imageUrl}` : ''}`;
 
+    console.log('📱 Final WhatsApp number:', cleanPhone);
+    
     return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
   };
 
