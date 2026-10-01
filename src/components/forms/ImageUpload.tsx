@@ -9,7 +9,6 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
 import imageCompression from 'browser-image-compression';
-import { rateLimiters } from '@/utils/security';
 
 interface ImageUploadProps {
   images: string[];
@@ -20,7 +19,7 @@ interface ImageUploadProps {
 const ImageUpload: React.FC<ImageUploadProps> = ({ 
   images, 
   onImagesChange, 
-  maxImages = 5 
+  maxImages = 8 
 }) => {
   const { user } = useAuth();
   const { toast } = useToast();
@@ -40,44 +39,44 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
    * Target: Optimal size without losing visible quality
    */
   const clientSideCompress = async (file: File): Promise<File> => {
-    const fileSizeMB = file.size / 1024 / 1024;
-    
-    // Determine compression strategy based on file size
-    let compressionOptions;
-    
-    if (fileSizeMB < 0.5) {
-      // Small files: Light compression, preserve quality
-      compressionOptions = {
-        maxSizeMB: 0.3, // Target 300KB (WebP is more efficient)
-        maxWidthOrHeight: 2048, // Keep high resolution
-        useWebWorker: true,
-        fileType: 'image/webp', // Convert to WebP
-        initialQuality: 0.95, // Very high quality (95%)
-        alwaysKeepResolution: false,
-      };
-    } else if (fileSizeMB < 2) {
-      // Medium files: Moderate compression
-      compressionOptions = {
-        maxSizeMB: 0.6, // Target 600KB (WebP is smaller)
-        maxWidthOrHeight: 1920, // Good quality resolution
-        useWebWorker: true,
-        fileType: 'image/webp', // Convert to WebP
-        initialQuality: 0.92, // High quality (92%)
-        alwaysKeepResolution: false,
-      };
-    } else {
-      // Large files: Aggressive but quality-preserving compression
-      compressionOptions = {
-        maxSizeMB: 1.0, // Target 1MB (WebP compression is superior)
-        maxWidthOrHeight: 1920, // Standard HD resolution
-        useWebWorker: true,
-        fileType: 'image/webp', // Convert to WebP
-        initialQuality: 0.90, // Excellent quality (90%)
-        alwaysKeepResolution: false,
-      };
-    }
-
     try {
+      const fileSizeMB = file.size / 1024 / 1024;
+      
+      // Determine compression strategy based on file size
+      let compressionOptions;
+      
+      if (fileSizeMB < 0.5) {
+        // Small files: Light compression, preserve quality
+        compressionOptions = {
+          maxSizeMB: 0.3, // Target 300KB (WebP is more efficient)
+          maxWidthOrHeight: 2048, // Keep high resolution
+          useWebWorker: true,
+          fileType: 'image/webp', // Convert to WebP
+          initialQuality: 0.95, // Very high quality (95%)
+          alwaysKeepResolution: false,
+        };
+      } else if (fileSizeMB < 2) {
+        // Medium files: Moderate compression
+        compressionOptions = {
+          maxSizeMB: 0.6, // Target 600KB (WebP is smaller)
+          maxWidthOrHeight: 1920, // Good quality resolution
+          useWebWorker: true,
+          fileType: 'image/webp', // Convert to WebP
+          initialQuality: 0.92, // High quality (92%)
+          alwaysKeepResolution: false,
+        };
+      } else {
+        // Large files: Aggressive but quality-preserving compression
+        compressionOptions = {
+          maxSizeMB: 1.0, // Target 1MB (WebP compression is superior)
+          maxWidthOrHeight: 1920, // Standard HD resolution
+          useWebWorker: true,
+          fileType: 'image/webp', // Convert to WebP
+          initialQuality: 0.90, // Excellent quality (90%)
+          alwaysKeepResolution: false,
+        };
+      }
+
       let compressedFile = await imageCompression(file, compressionOptions);
       
       // If still larger than desired, apply one more pass with slightly lower quality
@@ -111,91 +110,61 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       
       return compressedFile;
     } catch (error) {
-      console.error('Error in smart WebP compression:', error);
+      console.error('Compression error:', error);
+      // If compression fails, return original file
+      console.warn('Using original file due to compression error');
+      return file;
+    }
+  };
+
+  /**
+   * DIRECT STORAGE UPLOAD (Simplified)
+   * ==================================
+   * 
+   * Direct upload to Supabase Storage - simple and reliable
+   */
+  const uploadImage = async (file: File): Promise<string> => {
+    try {
+      // First, try to compress the image
+      let fileToUpload = file;
+      try {
+        fileToUpload = await clientSideCompress(file);
+      } catch (compressError) {
+        console.warn('Compression failed, using original:', compressError);
+        fileToUpload = file;
+      }
+
+      const timestamp = Date.now();
+      const randomId = Math.random().toString(36).substring(2);
+      const fileExtension = fileToUpload.name.split('.').pop() || 'jpg';
+      const fileName = `${user!.id}/${timestamp}-${randomId}.${fileExtension}`;
+
+      console.log('Uploading to:', fileName);
+
+      const { data, error } = await supabase.storage
+        .from('property-images')
+        .upload(fileName, fileToUpload, {
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (error) {
+        console.error('Upload error:', error);
+        throw new Error(`Upload failed: ${error.message}`);
+      }
+
+      console.log('Upload successful:', data);
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('property-images')
+        .getPublicUrl(fileName);
+
+      console.log('Public URL:', publicUrl);
+      return publicUrl;
+    } catch (error) {
+      console.error('Image upload error:', error);
       throw error;
     }
-  };
-
-  /**
-   * HYBRID UPLOAD SYSTEM
-   * ====================
-   * 
-   * Sends client-compressed image to Edge Function for final server-side compression
-   * Falls back to direct Supabase Storage upload if Edge Function fails
-   */
-  const uploadToEdgeFunction = async (file: File): Promise<string> => {
-    try {
-      const formData = new FormData();
-      formData.append('image', file);
-      formData.append('userId', user!.id);
-
-      // Get the user's JWT token
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.access_token) {
-        throw new Error('No valid session found');
-      }
-
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const edgeFunctionUrl = `${supabaseUrl}/functions/v1/compress-image`;
-      
-      const response = await fetch(edgeFunctionUrl, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-        },
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.warn('Edge Function failed, falling back to direct upload:', errorText);
-        throw new Error(`Server compression failed: ${errorText}`);
-      }
-
-      const result = await response.json();
-      
-      if (!result.success) {
-        console.warn('Edge Function returned error, falling back to direct upload:', result.error);
-        throw new Error(result.error || 'Server compression failed');
-      }
-
-      // Server-side compression completed successfully
-      return result.url;
-    } catch (error) {
-      console.warn('Edge Function failed, using direct upload fallback:', error);
-      // Fallback to direct Supabase Storage upload
-      return await uploadDirectToStorage(file);
-    }
-  };
-
-  /**
-   * DIRECT STORAGE UPLOAD FALLBACK
-   * ==============================
-   * 
-   * Direct upload to Supabase Storage as fallback when Edge Function fails
-   */
-  const uploadDirectToStorage = async (file: File): Promise<string> => {
-    const timestamp = Date.now();
-    const randomId = Math.random().toString(36).substring(2);
-    const fileExtension = file.name.split('.').pop() || 'jpg';
-    const fileName = `${user!.id}/${timestamp}-${randomId}.${fileExtension}`;
-
-    const { data, error } = await supabase.storage
-      .from('property-images')
-      .upload(fileName, file, {
-        cacheControl: '3600',
-        upsert: false
-      });
-
-    if (error) {
-      throw new Error(`Direct upload failed: ${error.message}`);
-    }
-
-    const { data: { publicUrl } } = supabase.storage
-      .from('property-images')
-      .getPublicUrl(fileName);
-
-    return publicUrl;
   };
 
   /**
@@ -277,103 +246,128 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    if (!files || !user) return;
-
-    // Rate limiting check
-    const userId = user.id;
-    if (!rateLimiters.imageUpload.isAllowed(userId)) {
+    if (!files || files.length === 0) {
+      console.log('No files selected');
+      return;
+    }
+    
+    console.log('Files selected:', files.length);
+    
+    if (!user) {
+      console.error('No user found');
       toast({
         variant: "destructive",
-        title: t('common.error'),
-        description: 'Too many image uploads. Please try again later.'
+        title: 'Error',
+        description: 'Please sign in to upload images'
       });
       return;
     }
 
+    console.log('User ID:', user.id);
+
+    // Check if would exceed max
     if (images.length + files.length > maxImages) {
-      setCompressionStatus('❌ Too many images selected');
+      const remaining = maxImages - images.length;
+      console.log(`Too many images. Have ${images.length}, trying to add ${files.length}, max is ${maxImages}`);
+      setCompressionStatus(`❌ Maximum ${maxImages} images allowed (${remaining} remaining)`);
       toast({
         variant: "destructive",
-        title: t('common.error'),
-        description: t('dashboard.canAddMore', { remaining: maxImages })
+        title: 'Too many images',
+        description: `You can only upload ${maxImages} images total. You have ${images.length} already, so you can add ${remaining} more.`
       });
+      setTimeout(() => setCompressionStatus(''), 3000);
+      event.target.value = '';
       return;
     }
 
     setUploading(true);
+    setCompressionStatus('Starting upload...');
     const newImageUrls: string[] = [];
-    const validFiles: File[] = [];
-
-    // Validate all files first
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-      const validation = validateImageFile(file);
-        
-      if (!validation.isValid) {
-          toast({
-            variant: "destructive",
-            title: t('common.error'),
-          description: validation.error
-        });
-        setUploading(false);
-        event.target.value = '';
-        return;
-      }
-      
-      validFiles.push(file);
-    }
 
     try {
-      console.log('🚀 Starting hybrid image upload process...');
+      console.log('Starting upload process...');
       
-      // Verify user authentication
+      // Check authentication
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.access_token) {
-        throw new Error('No valid authentication session found. Please sign in again.');
+        throw new Error('Please sign in again');
       }
-      
-      for (let i = 0; i < validFiles.length; i++) {
-        const file = validFiles[i];
-        
-        // Show compression progress
-        setCompressionStatus(`🔄 Optimizing image ${i + 1}/${validFiles.length}... (High quality, small size)`);
-        
-        // Step 1: Client-side smart compression
-        const clientCompressedFile = await clientSideCompress(file);
-        
-        // Show upload progress
-        setCompressionStatus(`📤 Uploading image ${i + 1}/${validFiles.length}...`);
+      console.log('Session verified');
 
-        // Step 2: Send to Edge Function for final compression and upload (with fallback)
-        const publicUrl = await uploadToEdgeFunction(clientCompressedFile);
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        console.log(`Processing file ${i + 1}:`, file.name, file.size, file.type);
+        
+        // Basic validation
+        if (!file.type.startsWith('image/')) {
+          console.error('Invalid file type:', file.type);
+          toast({
+            variant: "destructive",
+            title: 'Invalid file',
+            description: `${file.name} is not an image file`
+          });
+          continue;
+        }
 
-        newImageUrls.push(publicUrl);
+        if (file.size > 20 * 1024 * 1024) {
+          console.error('File too large:', file.size);
+          toast({
+            variant: "destructive",
+            title: 'File too large',
+            description: `${file.name} is larger than 20MB`
+          });
+          continue;
+        }
+        
+        try {
+          setCompressionStatus(`📤 Uploading ${i + 1}/${files.length}: ${file.name}...`);
+          
+          const publicUrl = await uploadImage(file);
+          console.log('Upload successful:', publicUrl);
+          
+          newImageUrls.push(publicUrl);
+          setCompressionStatus(`✅ Uploaded ${i + 1}/${files.length}`);
+        } catch (imageError) {
+          console.error(`Failed to upload ${file.name}:`, imageError);
+          toast({
+            variant: "destructive",
+            title: 'Upload failed',
+            description: `Failed to upload ${file.name}: ${imageError instanceof Error ? imageError.message : 'Unknown error'}`
+          });
+        }
       }
 
-      // Update images state
+      if (newImageUrls.length === 0) {
+        throw new Error('No images were uploaded successfully');
+      }
+
+      console.log('All uploads complete. URLs:', newImageUrls);
+
+      // Update state
       onImagesChange([...images, ...newImageUrls]);
       
-      // Show final success message
       setCompressionStatus(`🎉 Successfully uploaded ${newImageUrls.length} image(s)!`);
       toast({
-        title: t('common.success'),
+        title: 'Success',
         description: `${newImageUrls.length} image(s) uploaded successfully`
       });
 
-      // Clear success message after 4 seconds
       setTimeout(() => setCompressionStatus(''), 4000);
       
     } catch (error) {
-      console.error('❌ Error in hybrid upload process:', error);
+      console.error('Upload process error:', error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to upload images";
+      setCompressionStatus(`❌ ${errorMessage}`);
       toast({
         variant: "destructive",
-        title: t('common.error'),
-        description: error instanceof Error ? error.message : "Failed to process images"
+        title: 'Upload failed',
+        description: errorMessage
       });
+      setTimeout(() => setCompressionStatus(''), 5000);
     } finally {
       setUploading(false);
-      // Reset input
       event.target.value = '';
+      console.log('Upload process finished');
     }
   };
 
@@ -426,7 +420,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             <p className="text-sm text-gray-500">
               {uploading 
                 ? 'Please wait while we process your images' 
-                : 'JPG, PNG or WebP (Max 5MB per image)'
+                : 'JPG, PNG or WebP (Max 20MB per image, up to 8 photos)'
               }
             </p>
             {images.length < maxImages && !uploading && (

@@ -135,7 +135,7 @@ const PropertyExample = () => {
         "Onyesha vyumba vyote muhimu",
         "Hakikisha picha ni wazi na za ubora"
       ],
-      example: "Angalau picha 3-5 za vyumba tofauti"
+      example: "Angalau picha 3-8 za vyumba tofauti"
     },
     {
       number: 5,
