@@ -221,15 +221,15 @@ const AdminProperties = () => {
 
   return (
     <>
-      <Card className="bg-gray-900 border-gray-800">
+      <Card className="bg-white border-gray-200">
         <CardHeader>
-          <CardTitle className="text-white">Property Management</CardTitle>
+          <CardTitle className="text-gray-900">Property Management</CardTitle>
         </CardHeader>
         <CardContent>
           {/* Search and Filter */}
           <div className="flex flex-col md:flex-row gap-4 mb-6">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600 h-4 w-4" />
               <Input
                 placeholder="Tafuta kwa jina, eneo au mwenye nyumba / Search by title, location or landlord"
                 value={searchQuery}
@@ -251,37 +251,37 @@ const AdminProperties = () => {
           </div>
 
           {/* Properties Table */}
-          <div className="rounded-md border border-gray-800 overflow-x-auto bg-gray-950">
+          <div className="rounded-md border border-gray-200 overflow-x-auto bg-gray-50">
             <Table>
               <TableHeader>
-                <TableRow className="border-gray-800 hover:bg-gray-900">
-                  <TableHead className="text-gray-400">Title</TableHead>
-                  <TableHead className="text-gray-400">Location</TableHead>
-                  <TableHead className="text-gray-400">Price</TableHead>
-                  <TableHead className="text-gray-400">Type</TableHead>
-                  <TableHead className="text-gray-400">Landlord</TableHead>
-                  <TableHead className="text-gray-400">Status</TableHead>
-                  <TableHead className="text-gray-400">Date</TableHead>
-                  <TableHead className="text-right text-gray-400">Actions</TableHead>
+                <TableRow className="border-gray-200 hover:bg-white">
+                  <TableHead className="text-gray-600">Title</TableHead>
+                  <TableHead className="text-gray-600">Location</TableHead>
+                  <TableHead className="text-gray-600">Price</TableHead>
+                  <TableHead className="text-gray-600">Type</TableHead>
+                  <TableHead className="text-gray-600">Landlord</TableHead>
+                  <TableHead className="text-gray-600">Status</TableHead>
+                  <TableHead className="text-gray-600">Date</TableHead>
+                  <TableHead className="text-right text-gray-600">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredProperties.length === 0 ? (
-                  <TableRow className="border-gray-800">
+                  <TableRow className="border-gray-200">
                     <TableCell colSpan={8} className="text-center text-gray-500">
                       No properties found
                     </TableCell>
                   </TableRow>
                 ) : (
                   filteredProperties.map((property) => (
-                    <TableRow key={property.id} className="border-gray-800 hover:bg-gray-900">
-                      <TableCell className="font-medium text-white">
+                    <TableRow key={property.id} className="border-gray-200 hover:bg-white">
+                      <TableCell className="font-medium text-gray-900">
                         {property.title}
                       </TableCell>
-                      <TableCell className="text-gray-400">{property.location}</TableCell>
-                      <TableCell className="text-white">TZS {(property.price || property.monthly_rent || 0).toLocaleString()}</TableCell>
-                      <TableCell className="capitalize text-gray-400">{property.property_type}</TableCell>
-                      <TableCell className="text-gray-400">
+                      <TableCell className="text-gray-600">{property.location}</TableCell>
+                      <TableCell className="text-gray-900">TZS {(property.price || property.monthly_rent || 0).toLocaleString()}</TableCell>
+                      <TableCell className="capitalize text-gray-600">{property.property_type}</TableCell>
+                      <TableCell className="text-gray-600">
                         {property.landlord?.full_name || 'Unknown'}
                       </TableCell>
                       <TableCell>
@@ -333,7 +333,7 @@ const AdminProperties = () => {
           </div>
 
           {/* Summary */}
-          <div className="mt-4 text-sm text-gray-400">
+          <div className="mt-4 text-sm text-gray-600">
             Showing {filteredProperties.length} of {properties.length} properties
           </div>
         </CardContent>

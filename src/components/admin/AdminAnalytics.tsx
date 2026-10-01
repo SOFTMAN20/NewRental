@@ -201,7 +201,7 @@ const AdminAnalytics = () => {
     return (
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {[...Array(6)].map((_, i) => (
-          <Card key={i} className="bg-gray-900 border-gray-800">
+          <Card key={i} className="bg-white border-gray-200">
             <CardHeader>
               <Skeleton className="h-4 w-32 bg-gray-800" />
             </CardHeader>
@@ -231,14 +231,14 @@ const AdminAnalytics = () => {
     <div className="space-y-6">
       {/* Key Metrics */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="bg-gray-900 border-gray-800 group hover:border-blue-500/50 transition-all">
+        <Card className="bg-white border-gray-200 group hover:border-blue-500/50 transition-all">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-lg" />
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-400">User Growth</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-600">User Growth</CardTitle>
             <Users className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-white">+{analytics.userGrowth.thisMonth}</div>
+            <div className="text-3xl font-bold text-gray-900">+{analytics.userGrowth.thisMonth}</div>
             <div className="flex items-center gap-1 mt-2">
               {analytics.userGrowth.percentageChange >= 0 ? (
                 <ArrowUpRight className="h-4 w-4 text-green-500" />
@@ -253,13 +253,13 @@ const AdminAnalytics = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gray-900 border-gray-800 group hover:border-purple-500/50 transition-all">
+        <Card className="bg-white border-gray-200 group hover:border-purple-500/50 transition-all">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-400">Property Growth</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-600">Property Growth</CardTitle>
             <Home className="h-4 w-4 text-purple-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-white">+{analytics.propertyGrowth.thisMonth}</div>
+            <div className="text-3xl font-bold text-gray-900">+{analytics.propertyGrowth.thisMonth}</div>
             <div className="flex items-center gap-1 mt-2">
               {analytics.propertyGrowth.percentageChange >= 0 ? (
                 <ArrowUpRight className="h-4 w-4 text-green-500" />
@@ -274,24 +274,24 @@ const AdminAnalytics = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gray-900 border-gray-800 group hover:border-green-500/50 transition-all">
+        <Card className="bg-white border-gray-200 group hover:border-green-500/50 transition-all">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-400">Monthly Inquiries</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-600">Monthly Inquiries</CardTitle>
             <MessageSquare className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-white">{analytics.monthlyInquiries}</div>
+            <div className="text-3xl font-bold text-gray-900">{analytics.monthlyInquiries}</div>
             <p className="text-xs text-gray-500 mt-2">Active this month</p>
           </CardContent>
         </Card>
 
-        <Card className="bg-gray-900 border-gray-800 group hover:border-orange-500/50 transition-all">
+        <Card className="bg-white border-gray-200 group hover:border-orange-500/50 transition-all">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-400">Conversion Rate</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-600">Conversion Rate</CardTitle>
             <Activity className="h-4 w-4 text-orange-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-white">{analytics.conversionRate.toFixed(1)}%</div>
+            <div className="text-3xl font-bold text-gray-900">{analytics.conversionRate.toFixed(1)}%</div>
             <p className="text-xs text-gray-500 mt-2">Inquiries per property</p>
           </CardContent>
         </Card>
@@ -300,9 +300,9 @@ const AdminAnalytics = () => {
       {/* Charts Row 1 */}
       <div className="grid gap-4 lg:grid-cols-2">
         {/* Monthly Trend Line Chart */}
-        <Card className="bg-gray-900 border-gray-800">
+        <Card className="bg-white border-gray-200">
           <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
+            <CardTitle className="text-gray-900 flex items-center gap-2">
               <TrendingUp className="h-5 w-5 text-blue-500" />
               6-Month Trend
             </CardTitle>
@@ -329,24 +329,24 @@ const AdminAnalytics = () => {
             <div className="flex justify-center gap-6 mt-4">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 bg-blue-500 rounded"></div>
-                <span className="text-sm text-gray-400">Users</span>
+                <span className="text-sm text-gray-600">Users</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 bg-purple-500 rounded"></div>
-                <span className="text-sm text-gray-400">Properties</span>
+                <span className="text-sm text-gray-600">Properties</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 bg-green-500 rounded"></div>
-                <span className="text-sm text-gray-400">Inquiries</span>
+                <span className="text-sm text-gray-600">Inquiries</span>
               </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Daily Activity Area Chart */}
-        <Card className="bg-gray-900 border-gray-800">
+        <Card className="bg-white border-gray-200">
           <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
+            <CardTitle className="text-gray-900 flex items-center gap-2">
               <Activity className="h-5 w-5 text-green-500" />
               7-Day Activity
             </CardTitle>
@@ -382,11 +382,11 @@ const AdminAnalytics = () => {
             <div className="flex justify-center gap-6 mt-4">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 bg-blue-500 rounded"></div>
-                <span className="text-sm text-gray-400">Views</span>
+                <span className="text-sm text-gray-600">Views</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 bg-green-500 rounded"></div>
-                <span className="text-sm text-gray-400">Inquiries</span>
+                <span className="text-sm text-gray-600">Inquiries</span>
               </div>
             </div>
           </CardContent>
@@ -396,9 +396,9 @@ const AdminAnalytics = () => {
       {/* Charts Row 2 */}
       <div className="grid gap-4 lg:grid-cols-3">
         {/* Property Types Pie Chart */}
-        <Card className="bg-gray-900 border-gray-800">
+        <Card className="bg-white border-gray-200">
           <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
+            <CardTitle className="text-gray-900 flex items-center gap-2">
               <Home className="h-5 w-5 text-orange-500" />
               Property Types
             </CardTitle>
@@ -434,9 +434,9 @@ const AdminAnalytics = () => {
         </Card>
 
         {/* Top Locations */}
-        <Card className="bg-gray-900 border-gray-800">
+        <Card className="bg-white border-gray-200">
           <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
+            <CardTitle className="text-gray-900 flex items-center gap-2">
               <MapPin className="h-5 w-5 text-red-500" />
               Top Locations
             </CardTitle>
@@ -447,9 +447,9 @@ const AdminAnalytics = () => {
                 <div key={location.location} className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
                   <div className="flex items-center gap-3">
                     <span className="text-2xl font-bold text-gray-600">#{index + 1}</span>
-                    <span className="text-white font-medium">{location.location}</span>
+                    <span className="text-gray-900 font-medium">{location.location}</span>
                   </div>
-                  <span className="text-gray-400 text-sm">{location.count} properties</span>
+                  <span className="text-gray-600 text-sm">{location.count} properties</span>
                 </div>
               ))}
             </div>
@@ -457,9 +457,9 @@ const AdminAnalytics = () => {
         </Card>
 
         {/* Price Stats */}
-        <Card className="bg-gray-900 border-gray-800">
+        <Card className="bg-white border-gray-200">
           <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
+            <CardTitle className="text-gray-900 flex items-center gap-2">
               <DollarSign className="h-5 w-5 text-yellow-500" />
               Price Statistics
             </CardTitle>
@@ -467,13 +467,13 @@ const AdminAnalytics = () => {
           <CardContent>
             <div className="space-y-4">
               <div className="p-4 bg-gray-800/50 rounded-lg">
-                <p className="text-sm text-gray-400">Average Price</p>
-                <p className="text-2xl font-bold text-white">
+                <p className="text-sm text-gray-600">Average Price</p>
+                <p className="text-2xl font-bold text-gray-900">
                   TZS {analytics.averagePrice.toLocaleString('en-US', { maximumFractionDigits: 0 })}
                 </p>
               </div>
               <div className="p-4 bg-gray-800/50 rounded-lg">
-                <p className="text-sm text-gray-400">Price Range</p>
+                <p className="text-sm text-gray-600">Price Range</p>
                 <div className="flex items-center gap-2 mt-2">
                   <div>
                     <p className="text-xs text-gray-500">Min</p>

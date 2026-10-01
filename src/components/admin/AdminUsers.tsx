@@ -310,15 +310,15 @@ const AdminUsers = () => {
 
   return (
     <>
-      <Card className="bg-gray-900 border-gray-800">
+      <Card className="bg-white border-gray-200">
         <CardHeader>
-          <CardTitle className="text-white">User Management</CardTitle>
+          <CardTitle className="text-gray-900">User Management</CardTitle>
         </CardHeader>
         <CardContent>
           {/* Search and Filter */}
           <div className="flex flex-col md:flex-row gap-4 mb-6">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600 h-4 w-4" />
               <Input
                 placeholder="Tafuta kwa jina, email au simu / Search by name, email or phone"
                 value={searchQuery}
@@ -341,35 +341,35 @@ const AdminUsers = () => {
           </div>
 
           {/* Users Table */}
-          <div className="rounded-md border border-gray-800 overflow-x-auto bg-gray-950">
+          <div className="rounded-md border border-gray-200 overflow-x-auto bg-gray-50">
             <Table>
               <TableHeader>
-                <TableRow className="border-gray-800 hover:bg-gray-900">
-                  <TableHead className="text-gray-400">Name</TableHead>
-                  <TableHead className="text-gray-400">Email</TableHead>
-                  <TableHead className="text-gray-400">Phone</TableHead>
-                  <TableHead className="text-gray-400">Type</TableHead>
-                  <TableHead className="text-gray-400">Verification</TableHead>
-                  <TableHead className="text-gray-400">Properties</TableHead>
-                  <TableHead className="text-gray-400">Date</TableHead>
-                  <TableHead className="text-right text-gray-400">Actions</TableHead>
+                <TableRow className="border-gray-200 hover:bg-white">
+                  <TableHead className="text-gray-600">Name</TableHead>
+                  <TableHead className="text-gray-600">Email</TableHead>
+                  <TableHead className="text-gray-600">Phone</TableHead>
+                  <TableHead className="text-gray-600">Type</TableHead>
+                  <TableHead className="text-gray-600">Verification</TableHead>
+                  <TableHead className="text-gray-600">Properties</TableHead>
+                  <TableHead className="text-gray-600">Date</TableHead>
+                  <TableHead className="text-right text-gray-600">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredUsers.length === 0 ? (
-                  <TableRow className="border-gray-800">
+                  <TableRow className="border-gray-200">
                     <TableCell colSpan={8} className="text-center text-gray-500">
                       No users found
                     </TableCell>
                   </TableRow>
                 ) : (
                   filteredUsers.map((user) => (
-                    <TableRow key={user.id} className="border-gray-800 hover:bg-gray-900">
-                      <TableCell className="font-medium text-white">
+                    <TableRow key={user.id} className="border-gray-200 hover:bg-white">
+                      <TableCell className="font-medium text-gray-900">
                         {user.full_name || 'N/A'}
                       </TableCell>
-                      <TableCell className="text-gray-400">{user.email}</TableCell>
-                      <TableCell className="text-gray-400">{user.phone || 'N/A'}</TableCell>
+                      <TableCell className="text-gray-600">{user.email}</TableCell>
+                      <TableCell className="text-gray-600">{user.phone || 'N/A'}</TableCell>
                       <TableCell>{getRoleBadge(user.role, user.user_type)}</TableCell>
                       <TableCell>{getVerificationBadge(user.verification_status)}</TableCell>
                       <TableCell>
@@ -395,7 +395,7 @@ const AdminUsers = () => {
           </div>
 
           {/* Summary */}
-          <div className="mt-4 text-sm text-gray-400">
+          <div className="mt-4 text-sm text-gray-600">
             Showing {filteredUsers.length} of {users.length} users
           </div>
         </CardContent>

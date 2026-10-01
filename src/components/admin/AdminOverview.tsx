@@ -44,14 +44,14 @@ const AdminOverview = () => {
       // Fetch user statistics
       const { data: users, error: usersError } = await supabase
         .from('profiles')
-        .select('role, created_at');
+        .select('role, user_type, created_at');
 
       if (usersError) throw usersError;
 
       // Fetch property statistics
       const { data: properties, error: propertiesError } = await supabase
         .from('properties')
-        .select('is_available, status, created_at');
+        .select('is_available, status, created_at, room_type');
 
       if (propertiesError) throw propertiesError;
 
@@ -60,10 +60,20 @@ const AdminOverview = () => {
         .from('property_inquiries')
         .select('*', { count: 'exact', head: true });
 
-      // Calculate statistics
+      // Calculate statistics using user_type instead of role
       const totalUsers = users?.length || 0;
-      const totalLandlords = users?.filter(u => u.role === 'landlord').length || 0;
-      const totalStudents = users?.filter(u => u.role === 'student').length || 0;
+      const totalLandlords = users?.filter(u => u.user_type === 'landlord').length || 0;
+      const totalStudents = users?.filter(u => 
+        u.user_type === 'student' || 
+        u.user_type === 'tenant' || 
+        u.user_type === 'professional'
+      ).length || 0;
+      
+      console.log('📊 Dashboard Stats:');
+      console.log('Total Users:', totalUsers);
+      console.log('Landlords (user_type):', totalLandlords);
+      console.log('Students (user_type):', totalStudents);
+      console.log('Admins:', users?.filter(u => u.role === 'admin' || u.role === 'super_admin').length || 0);
       
       const totalProperties = properties?.length || 0;
       const activeProperties = properties?.filter(p => p.is_available && p.status === 'active').length || 0;
@@ -103,15 +113,15 @@ const AdminOverview = () => {
         });
       }
 
-      // Property type distribution
+      // Property type distribution (use room_type)
       const typeCounts: { [key: string]: number } = {};
       properties?.forEach(p => {
-        const type = p.property_type || 'Unknown';
+        const type = p.room_type || 'Unknown';
         typeCounts[type] = (typeCounts[type] || 0) + 1;
       });
       
       const propertyTypeData = Object.entries(typeCounts).map(([name, value]) => ({
-        name: name.charAt(0).toUpperCase() + name.slice(1),
+        name: name.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()), // Format: single_room → Single Room
         value,
       }));
 
@@ -175,16 +185,16 @@ const AdminOverview = () => {
       {/* Main Statistics Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {/* Total Users */}
-        <Card className="bg-gray-900 border-gray-800 overflow-hidden relative group hover:border-blue-500/50 transition-all">
+        <Card className="bg-white border-gray-200 overflow-hidden relative group hover:border-blue-500/50 transition-all">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-400">
+            <CardTitle className="text-sm font-medium text-gray-600">
               Total Users
             </CardTitle>
             <Users className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-white">{stats.totalUsers}</div>
+            <div className="text-3xl font-bold text-gray-900">{stats.totalUsers}</div>
             <p className="text-xs text-green-500 flex items-center gap-1 mt-2">
               <TrendingUp className="h-3 w-3" />
               +{stats.recentUsers} this week
@@ -193,16 +203,16 @@ const AdminOverview = () => {
         </Card>
 
         {/* Landlords */}
-        <Card className="bg-gray-900 border-gray-800 overflow-hidden relative group hover:border-purple-500/50 transition-all">
+        <Card className="bg-white border-gray-200 overflow-hidden relative group hover:border-purple-500/50 transition-all">
           <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-400">
+            <CardTitle className="text-sm font-medium text-gray-600">
               Landlords
             </CardTitle>
             <Users className="h-4 w-4 text-purple-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-white">{stats.totalLandlords}</div>
+            <div className="text-3xl font-bold text-gray-900">{stats.totalLandlords}</div>
             <p className="text-xs text-gray-500 mt-2">
               {((stats.totalLandlords / stats.totalUsers) * 100).toFixed(1)}% of users
             </p>
@@ -210,16 +220,16 @@ const AdminOverview = () => {
         </Card>
 
         {/* Students */}
-        <Card className="bg-gray-900 border-gray-800 overflow-hidden relative group hover:border-green-500/50 transition-all">
+        <Card className="bg-white border-gray-200 overflow-hidden relative group hover:border-green-500/50 transition-all">
           <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-400">
+            <CardTitle className="text-sm font-medium text-gray-600">
               Students
             </CardTitle>
             <Users className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-white">{stats.totalStudents}</div>
+            <div className="text-3xl font-bold text-gray-900">{stats.totalStudents}</div>
             <p className="text-xs text-gray-500 mt-2">
               {((stats.totalStudents / stats.totalUsers) * 100).toFixed(1)}% of users
             </p>
@@ -227,16 +237,16 @@ const AdminOverview = () => {
         </Card>
 
         {/* Total Properties */}
-        <Card className="bg-gray-900 border-gray-800 overflow-hidden relative group hover:border-orange-500/50 transition-all">
+        <Card className="bg-white border-gray-200 overflow-hidden relative group hover:border-orange-500/50 transition-all">
           <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-400">
+            <CardTitle className="text-sm font-medium text-gray-600">
               Total Properties
             </CardTitle>
             <Home className="h-4 w-4 text-orange-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-white">{stats.totalProperties}</div>
+            <div className="text-3xl font-bold text-gray-900">{stats.totalProperties}</div>
             <p className="text-xs text-green-500 flex items-center gap-1 mt-2">
               <TrendingUp className="h-3 w-3" />
               +{stats.recentProperties} this week
@@ -245,16 +255,16 @@ const AdminOverview = () => {
         </Card>
 
         {/* Active Properties */}
-        <Card className="bg-gray-900 border-gray-800 overflow-hidden relative group hover:border-emerald-500/50 transition-all">
+        <Card className="bg-white border-gray-200 overflow-hidden relative group hover:border-emerald-500/50 transition-all">
           <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-400">
+            <CardTitle className="text-sm font-medium text-gray-600">
               Available Properties
             </CardTitle>
             <CheckCircle className="h-4 w-4 text-emerald-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-white">{stats.activeProperties}</div>
+            <div className="text-3xl font-bold text-gray-900">{stats.activeProperties}</div>
             <p className="text-xs text-gray-500 mt-2">
               {((stats.activeProperties / stats.totalProperties) * 100).toFixed(1)}% of total
             </p>
@@ -262,16 +272,16 @@ const AdminOverview = () => {
         </Card>
 
         {/* Rented Properties */}
-        <Card className="bg-gray-900 border-gray-800 overflow-hidden relative group hover:border-yellow-500/50 transition-all">
+        <Card className="bg-white border-gray-200 overflow-hidden relative group hover:border-yellow-500/50 transition-all">
           <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-400">
+            <CardTitle className="text-sm font-medium text-gray-600">
               Rented Properties
             </CardTitle>
             <TrendingUp className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-white">{stats.rentedProperties}</div>
+            <div className="text-3xl font-bold text-gray-900">{stats.rentedProperties}</div>
             <p className="text-xs text-gray-500 mt-2">
               {((stats.rentedProperties / stats.totalProperties) * 100).toFixed(1)}% of total
             </p>
@@ -279,16 +289,16 @@ const AdminOverview = () => {
         </Card>
 
         {/* Total Inquiries */}
-        <Card className="bg-gray-900 border-gray-800 overflow-hidden relative group hover:border-pink-500/50 transition-all">
+        <Card className="bg-white border-gray-200 overflow-hidden relative group hover:border-pink-500/50 transition-all">
           <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-400">
+            <CardTitle className="text-sm font-medium text-gray-600">
               Total Inquiries
             </CardTitle>
             <MessageSquare className="h-4 w-4 text-pink-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-white">{stats.totalInquiries}</div>
+            <div className="text-3xl font-bold text-gray-900">{stats.totalInquiries}</div>
             <p className="text-xs text-gray-500 mt-2">
               All communications
             </p>
@@ -297,12 +307,12 @@ const AdminOverview = () => {
       </div>
 
       {/* Quick Actions */}
-      <Card className="bg-gray-900 border-gray-800">
+      <Card className="bg-white border-gray-200">
         <CardHeader>
-          <CardTitle className="text-white">Quick Actions</CardTitle>
+          <CardTitle className="text-gray-900">Quick Actions</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-sm text-gray-400">
+          <div className="text-sm text-gray-600">
             Use the sidebar navigation to manage users, properties, and view detailed analytics.
           </div>
         </CardContent>
@@ -311,26 +321,26 @@ const AdminOverview = () => {
       {/* Growth Charts */}
       <div className="grid gap-4 lg:grid-cols-2">
         {/* Monthly Growth Bar Chart */}
-        <Card className="bg-gray-900 border-gray-800">
+        <Card className="bg-white border-gray-200">
           <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
+            <CardTitle className="text-gray-900 flex items-center gap-2">
               <TrendingUp className="h-5 w-5 text-blue-500" />
               Monthly Growth
             </CardTitle>
-            <p className="text-sm text-gray-400">Users and Properties (Last 6 Months)</p>
+            <p className="text-sm text-gray-600">Users and Properties (Last 6 Months)</p>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={stats.monthlyData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                <XAxis dataKey="month" stroke="#9CA3AF" />
-                <YAxis stroke="#9CA3AF" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+                <XAxis dataKey="month" stroke="#6B7280" />
+                <YAxis stroke="#6B7280" />
                 <Tooltip 
                   contentStyle={{ 
-                    backgroundColor: '#1F2937', 
-                    border: '1px solid #374151',
+                    backgroundColor: '#FFFFFF', 
+                    border: '1px solid #E5E7EB',
                     borderRadius: '8px',
-                    color: '#fff'
+                    color: '#111827'
                   }}
                 />
                 <Bar dataKey="users" fill="#3B82F6" radius={[8, 8, 0, 0]} />
@@ -340,24 +350,24 @@ const AdminOverview = () => {
             <div className="flex justify-center gap-6 mt-4">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 bg-blue-500 rounded"></div>
-                <span className="text-sm text-gray-400">Users</span>
+                <span className="text-sm text-gray-600">Users</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 bg-purple-500 rounded"></div>
-                <span className="text-sm text-gray-400">Properties</span>
+                <span className="text-sm text-gray-600">Properties</span>
               </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Property Types Pie Chart */}
-        <Card className="bg-gray-900 border-gray-800">
+        <Card className="bg-white border-gray-200">
           <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
+            <CardTitle className="text-gray-900 flex items-center gap-2">
               <Home className="h-5 w-5 text-orange-500" />
               Property Distribution
             </CardTitle>
-            <p className="text-sm text-gray-400">By Property Type</p>
+            <p className="text-sm text-gray-600">By Property Type</p>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -379,10 +389,10 @@ const AdminOverview = () => {
                 </Pie>
                 <Tooltip 
                   contentStyle={{ 
-                    backgroundColor: '#1F2937', 
-                    border: '1px solid #374151',
+                    backgroundColor: '#FFFFFF', 
+                    border: '1px solid #E5E7EB',
                     borderRadius: '8px',
-                    color: '#fff'
+                    color: '#111827'
                   }}
                 />
               </PieChart>
@@ -392,36 +402,36 @@ const AdminOverview = () => {
       </div>
 
       {/* Recent Activity */}
-      <Card className="bg-gray-900 border-gray-800">
+      <Card className="bg-white border-gray-200">
         <CardHeader>
-          <CardTitle className="text-white">Recent Activity</CardTitle>
-          <p className="text-sm text-gray-400">Latest platform updates</p>
+          <CardTitle className="text-gray-900">Recent Activity</CardTitle>
+          <p className="text-sm text-gray-600">Latest platform updates</p>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="flex items-center gap-4 p-3 bg-gray-800/50 rounded-lg">
+            <div className="flex items-center gap-4 p-3 bg-blue-50 rounded-lg">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
               <div className="flex-1">
-                <p className="text-sm text-white font-medium">New registrations</p>
-                <p className="text-xs text-gray-400">{stats.recentUsers} new users this week</p>
+                <p className="text-sm text-gray-900 font-medium">New registrations</p>
+                <p className="text-xs text-gray-600">{stats.recentUsers} new users this week</p>
               </div>
               <ArrowUpRight className="h-4 w-4 text-green-500" />
             </div>
             
-            <div className="flex items-center gap-4 p-3 bg-gray-800/50 rounded-lg">
+            <div className="flex items-center gap-4 p-3 bg-purple-50 rounded-lg">
               <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
               <div className="flex-1">
-                <p className="text-sm text-white font-medium">New properties listed</p>
-                <p className="text-xs text-gray-400">{stats.recentProperties} properties this week</p>
+                <p className="text-sm text-gray-900 font-medium">New properties listed</p>
+                <p className="text-xs text-gray-600">{stats.recentProperties} properties this week</p>
               </div>
               <ArrowUpRight className="h-4 w-4 text-blue-500" />
             </div>
             
-            <div className="flex items-center gap-4 p-3 bg-gray-800/50 rounded-lg">
+            <div className="flex items-center gap-4 p-3 bg-pink-50 rounded-lg">
               <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
               <div className="flex-1">
-                <p className="text-sm text-white font-medium">Active inquiries</p>
-                <p className="text-xs text-gray-400">{stats.totalInquiries} total communications</p>
+                <p className="text-sm text-gray-900 font-medium">Active inquiries</p>
+                <p className="text-xs text-gray-600">{stats.totalInquiries} total communications</p>
               </div>
               <MessageSquare className="h-4 w-4 text-purple-500" />
             </div>
