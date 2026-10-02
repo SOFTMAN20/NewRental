@@ -70,6 +70,66 @@ export type Database = {
           },
         ]
       }
+      applications: {
+        Row: {
+          applicant_email: string
+          applicant_id: string
+          applicant_name: string
+          applicant_phone: string
+          created_at: string | null
+          id: string
+          message: string | null
+          move_in_date: string
+          move_out_date: string | null
+          property_id: string
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          applicant_email: string
+          applicant_id: string
+          applicant_name: string
+          applicant_phone: string
+          created_at?: string | null
+          id?: string
+          message?: string | null
+          move_in_date: string
+          move_out_date?: string | null
+          property_id: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          applicant_email?: string
+          applicant_id?: string
+          applicant_name?: string
+          applicant_phone?: string
+          created_at?: string | null
+          id?: string
+          message?: string | null
+          move_in_date?: string
+          move_out_date?: string | null
+          property_id?: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "applications_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "applications_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "property_stats"
+            referencedColumns: ["property_id"]
+          },
+        ]
+      }
       bookings: {
         Row: {
           booking_date: string | null
@@ -220,6 +280,33 @@ export type Database = {
           },
         ]
       }
+      platform_settings: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          key: string
+          updated_at: string | null
+          value: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          key: string
+          updated_at?: string | null
+          value?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          key?: string
+          updated_at?: string | null
+          value?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -235,6 +322,7 @@ export type Database = {
           phone: string | null
           physical_address: string | null
           preferred_roommate_gender: string | null
+          role: string | null
           university_id: string | null
           updated_at: string | null
           user_type: string
@@ -255,6 +343,7 @@ export type Database = {
           phone?: string | null
           physical_address?: string | null
           preferred_roommate_gender?: string | null
+          role?: string | null
           university_id?: string | null
           updated_at?: string | null
           user_type: string
@@ -275,6 +364,7 @@ export type Database = {
           phone?: string | null
           physical_address?: string | null
           preferred_roommate_gender?: string | null
+          role?: string | null
           university_id?: string | null
           updated_at?: string | null
           user_type?: string
@@ -303,6 +393,7 @@ export type Database = {
           city: string
           contact_phone: string | null
           contact_whatsapp_phone: string | null
+          contract_months: number | null
           created_at: string | null
           deposit_amount: number | null
           description: string | null
@@ -311,11 +402,13 @@ export type Database = {
           gender_restrictions: string | null
           id: string
           images: string[] | null
+          is_available: boolean
           is_featured: boolean | null
           landlord_id: string
           latitude: number | null
           lease_periods: string[] | null
           longitude: number | null
+          minutes_from_campus: number | null
           monthly_rent: number
           payment_schedule: string | null
           property_type: string | null
@@ -341,6 +434,7 @@ export type Database = {
           city: string
           contact_phone?: string | null
           contact_whatsapp_phone?: string | null
+          contract_months?: number | null
           created_at?: string | null
           deposit_amount?: number | null
           description?: string | null
@@ -349,11 +443,13 @@ export type Database = {
           gender_restrictions?: string | null
           id?: string
           images?: string[] | null
+          is_available?: boolean
           is_featured?: boolean | null
           landlord_id: string
           latitude?: number | null
           lease_periods?: string[] | null
           longitude?: number | null
+          minutes_from_campus?: number | null
           monthly_rent: number
           payment_schedule?: string | null
           property_type?: string | null
@@ -379,6 +475,7 @@ export type Database = {
           city?: string
           contact_phone?: string | null
           contact_whatsapp_phone?: string | null
+          contract_months?: number | null
           created_at?: string | null
           deposit_amount?: number | null
           description?: string | null
@@ -387,16 +484,20 @@ export type Database = {
           gender_restrictions?: string | null
           id?: string
           images?: string[] | null
+          is_available?: boolean
           is_featured?: boolean | null
           landlord_id?: string
           latitude?: number | null
           lease_periods?: string[] | null
           longitude?: number | null
+          minutes_from_campus?: number | null
           monthly_rent?: number
           payment_schedule?: string | null
           property_type?: string | null
           region?: string
           room_type?: string
+          service_fee_type?: string | null
+          service_fee_value?: number | null
           status?: string | null
           title?: string
           transport_mode?: string | null
@@ -620,7 +721,20 @@ export type Database = {
       }
     }
     Functions: {
-      generate_confirmation_code: { Args: never; Returns: string }
+      generate_confirmation_code: { Args: Record<string, never>; Returns: string }
+      get_all_users_for_admin: {
+        Args: Record<string, never>
+        Returns: {
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          phone: string
+          role: string
+          user_type: string
+          verification_status: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
@@ -639,12 +753,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -668,11 +782,11 @@ export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -693,11 +807,11 @@ export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -718,11 +832,11 @@ export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -735,11 +849,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }

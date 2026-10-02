@@ -214,6 +214,7 @@ const AddProperty = () => {
         : null;
       
       // Build property data for student housing schema
+      // Database now accepts: single_room, shared_room, master_room, self_contained, apartment, studio, whole_house, dormitory
       const propertyData = {
         landlord_id: user.id,
         title: formData.title?.trim(),
@@ -222,7 +223,8 @@ const AddProperty = () => {
         address: formData.location?.trim(),
         city: formData.location?.trim()?.split(',')[1]?.trim() || formData.location?.trim(),
         region: 'Dar es Salaam',
-        room_type: formData.property_type || 'single_room',
+        room_type: formData.property_type || 'single_room', // Now supports whole_house directly
+        property_type: formData.property_type, // Keep original for filtering
         bed_count: formData.available_beds ? parseInt(formData.available_beds) : 1,
         available_beds: formData.available_beds ? parseInt(formData.available_beds) : 1,
         gender_restrictions: formData.gender_restrictions || 'mixed',
@@ -234,7 +236,6 @@ const AddProperty = () => {
         contact_phone: formData.contact_phone?.trim() || null,
         contact_whatsapp_phone: formData.contact_whatsapp_phone?.trim() || null,
         full_address: formData.full_address?.trim() || null,
-        contract_months: formData.contract_months ? parseInt(formData.contract_months) : 3,
         service_fee_type: formData.service_fee_type || null,
         service_fee_value: formData.service_fee_value ? parseFloat(formData.service_fee_value) : null,
         status: 'active'

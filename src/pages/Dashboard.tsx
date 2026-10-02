@@ -576,7 +576,8 @@ const Dashboard = () => {
       address: formData.location?.trim(), // location -> address
       city: formData.location?.trim()?.split(',')[1]?.trim() || formData.location?.trim(), // Extract city
       region: 'Dar es Salaam', // Default region
-      room_type: formData.property_type || 'single_room', // property_type -> room_type
+      room_type: formData.property_type || 'single_room', // property_type -> room_type (now supports whole_house)
+      property_type: formData.property_type, // Keep original for filtering
       bed_count: formData.available_beds ? parseInt(formData.available_beds) : 1,
       available_beds: formData.available_beds ? parseInt(formData.available_beds) : 1,
       gender_restrictions: formData.gender_restrictions || 'mixed',
