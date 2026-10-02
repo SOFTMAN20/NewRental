@@ -182,126 +182,120 @@ const AdminOverview = () => {
 
   return (
     <div className="space-y-6">
-      {/* Main Statistics Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {/* Main Statistics Grid - 4 Important Cards Only */}
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {/* Total Users */}
-        <Card className="bg-white border-gray-200 overflow-hidden relative group hover:border-blue-500/50 transition-all">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+        <Card className="bg-white border-gray-200 overflow-hidden relative group hover:shadow-lg transition-all">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-gray-600">
               Total Users
             </CardTitle>
-            <Users className="h-4 w-4 text-blue-500" />
+            <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+              <Users className="h-5 w-5 text-blue-600" />
+            </div>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-gray-900">{stats.totalUsers}</div>
-            <p className="text-xs text-green-500 flex items-center gap-1 mt-2">
+            <p className="text-xs text-green-600 flex items-center gap-1 mt-2">
               <TrendingUp className="h-3 w-3" />
               +{stats.recentUsers} this week
             </p>
-          </CardContent>
-        </Card>
-
-        {/* Landlords */}
-        <Card className="bg-white border-gray-200 overflow-hidden relative group hover:border-purple-500/50 transition-all">
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              Landlords
-            </CardTitle>
-            <Users className="h-4 w-4 text-purple-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-gray-900">{stats.totalLandlords}</div>
-            <p className="text-xs text-gray-500 mt-2">
-              {((stats.totalLandlords / stats.totalUsers) * 100).toFixed(1)}% of users
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* Students */}
-        <Card className="bg-white border-gray-200 overflow-hidden relative group hover:border-green-500/50 transition-all">
-          <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              Students
-            </CardTitle>
-            <Users className="h-4 w-4 text-green-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-gray-900">{stats.totalStudents}</div>
-            <p className="text-xs text-gray-500 mt-2">
-              {((stats.totalStudents / stats.totalUsers) * 100).toFixed(1)}% of users
-            </p>
+            <div className="mt-3 pt-3 border-t border-gray-100">
+              <div className="flex justify-between text-xs">
+                <span className="text-gray-500">Landlords</span>
+                <span className="font-semibold text-gray-900">{stats.totalLandlords}</span>
+              </div>
+              <div className="flex justify-between text-xs mt-1">
+                <span className="text-gray-500">Students</span>
+                <span className="font-semibold text-gray-900">{stats.totalStudents}</span>
+              </div>
+            </div>
           </CardContent>
         </Card>
 
         {/* Total Properties */}
-        <Card className="bg-white border-gray-200 overflow-hidden relative group hover:border-orange-500/50 transition-all">
-          <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+        <Card className="bg-white border-gray-200 overflow-hidden relative group hover:shadow-lg transition-all">
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-transparent" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-gray-600">
               Total Properties
             </CardTitle>
-            <Home className="h-4 w-4 text-orange-500" />
+            <div className="h-10 w-10 rounded-full bg-orange-100 flex items-center justify-center">
+              <Home className="h-5 w-5 text-orange-600" />
+            </div>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-gray-900">{stats.totalProperties}</div>
-            <p className="text-xs text-green-500 flex items-center gap-1 mt-2">
+            <p className="text-xs text-green-600 flex items-center gap-1 mt-2">
               <TrendingUp className="h-3 w-3" />
               +{stats.recentProperties} this week
             </p>
+            <div className="mt-3 pt-3 border-t border-gray-100">
+              <div className="flex justify-between text-xs">
+                <span className="text-gray-500">Available</span>
+                <span className="font-semibold text-emerald-600">{stats.activeProperties}</span>
+              </div>
+              <div className="flex justify-between text-xs mt-1">
+                <span className="text-gray-500">Rented</span>
+                <span className="font-semibold text-gray-900">{stats.rentedProperties}</span>
+              </div>
+            </div>
           </CardContent>
         </Card>
 
-        {/* Active Properties */}
-        <Card className="bg-white border-gray-200 overflow-hidden relative group hover:border-emerald-500/50 transition-all">
-          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+        {/* Active Properties - Highlighted */}
+        <Card className="bg-gradient-to-br from-emerald-500 to-emerald-600 border-0 overflow-hidden relative group hover:shadow-lg transition-all">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              Available Properties
+            <CardTitle className="text-sm font-medium text-white/90">
+              Available Now
             </CardTitle>
-            <CheckCircle className="h-4 w-4 text-emerald-500" />
+            <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center">
+              <CheckCircle className="h-5 w-5 text-white" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-gray-900">{stats.activeProperties}</div>
-            <p className="text-xs text-gray-500 mt-2">
-              {((stats.activeProperties / stats.totalProperties) * 100).toFixed(1)}% of total
+            <div className="text-3xl font-bold text-white">{stats.activeProperties}</div>
+            <p className="text-xs text-white/80 mt-2">
+              {((stats.activeProperties / stats.totalProperties) * 100).toFixed(0)}% of total properties
             </p>
-          </CardContent>
-        </Card>
-
-        {/* Rented Properties */}
-        <Card className="bg-white border-gray-200 overflow-hidden relative group hover:border-yellow-500/50 transition-all">
-          <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              Rented Properties
-            </CardTitle>
-            <TrendingUp className="h-4 w-4 text-yellow-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-gray-900">{stats.rentedProperties}</div>
-            <p className="text-xs text-gray-500 mt-2">
-              {((stats.rentedProperties / stats.totalProperties) * 100).toFixed(1)}% of total
-            </p>
+            <div className="mt-4">
+              <div className="w-full bg-white/20 rounded-full h-2">
+                <div 
+                  className="bg-white rounded-full h-2 transition-all" 
+                  style={{ width: `${(stats.activeProperties / stats.totalProperties) * 100}%` }}
+                />
+              </div>
+            </div>
           </CardContent>
         </Card>
 
         {/* Total Inquiries */}
-        <Card className="bg-white border-gray-200 overflow-hidden relative group hover:border-pink-500/50 transition-all">
-          <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+        <Card className="bg-white border-gray-200 overflow-hidden relative group hover:shadow-lg transition-all">
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-gray-600">
               Total Inquiries
             </CardTitle>
-            <MessageSquare className="h-4 w-4 text-pink-500" />
+            <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
+              <MessageSquare className="h-5 w-5 text-purple-600" />
+            </div>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-gray-900">{stats.totalInquiries}</div>
-            <p className="text-xs text-gray-500 mt-2">
-              All communications
+            <p className="text-xs text-gray-600 mt-2">
+              Platform communications
             </p>
+            <div className="mt-3 pt-3 border-t border-gray-100">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-500">Conversion Rate</span>
+                <span className="text-xs font-semibold text-gray-900">
+                  {stats.totalProperties > 0 
+                    ? ((stats.rentedProperties / stats.totalProperties) * 100).toFixed(1)
+                    : 0}%
+                </span>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>

@@ -152,7 +152,7 @@ const AddProperty = () => {
 
     const allowedTypes = [
       'single_room', 'shared_room', 'master_room', 
-      'self_contained', 'apartment', 'studio', 'dormitory'
+      'self_contained', 'apartment', 'studio', 'whole_house', 'dormitory'
     ];
     if (formData.property_type && !allowedTypes.includes(formData.property_type)) {
       errors.push('Aina ya chumba si sahihi. Chagua aina sahihi');

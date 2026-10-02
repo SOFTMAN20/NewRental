@@ -2,7 +2,7 @@
  * ADMINSETTINGS.TSX - ADMIN SETTINGS COMPONENT
  * ============================================
  * 
- * Platform configuration and system settings
+ * Platform configuration and system settings - Clean & Modern Design
  */
 
 import { useState, useEffect } from "react";
@@ -11,24 +11,22 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { 
   Settings, 
   Mail, 
-  Bell, 
-  Shield, 
-  Database,
-  Globe,
   Save,
+  Phone,
+  Building2,
 } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const AdminSettings = () => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
 
   // Platform Settings State
   const [platformName, setPlatformName] = useState("Nyumba Link");
@@ -60,25 +58,17 @@ const AdminSettings = () => {
 
       if (error) {
         console.error('❌ Error fetching settings:', error);
-        console.log('Error code:', error.code);
-        console.log('Error message:', error.message);
-        
-        // If table doesn't exist or no data, just use defaults
         if (error.code === 'PGRST116' || error.code === '42P01') {
-          console.warn('⚠️ platform_settings table not found or empty. Using default values.');
-          console.log('💡 Run FIX_PLATFORM_SETTINGS.sql to create the table.');
+          console.warn('⚠️ platform_settings table not found. Using defaults.');
           setIsLoading(false);
           return;
         }
-        
         throw error;
       }
 
       console.log('✅ Settings fetched:', data?.length || 0, 'settings');
 
-      // Map settings to state
       data?.forEach(setting => {
-        console.log('Setting:', setting.key, '=', setting.value);
         switch (setting.key) {
           case 'platform_name':
             setPlatformName(setting.value || 'Nyumba Link');
@@ -118,8 +108,8 @@ const AdminSettings = () => {
     } catch (error: any) {
       console.error('💥 Error fetching settings:', error);
       toast({
-        title: "Hitilafu / Error",
-        description: `Imeshindwa kupata mipangilio / Failed to fetch settings: ${error.message}`,
+        title: "Error",
+        description: `Failed to fetch settings: ${error.message}`,
         variant: "destructive",
       });
     } finally {
@@ -129,6 +119,7 @@ const AdminSettings = () => {
 
   const handleSaveSettings = async () => {
     try {
+      setIsSaving(true);
       const settings = [
         { key: 'platform_name', value: platformName },
         { key: 'support_email', value: supportEmail },
@@ -145,13 +136,12 @@ const AdminSettings = () => {
 
       console.log('💾 Saving settings...', settings);
 
-      // Use UPSERT (insert or update) for all settings
       for (const setting of settings) {
         const { error } = await supabase
           .from('platform_settings')
           .upsert(
             { key: setting.key, value: setting.value },
-            { onConflict: 'key' }  // Update if key exists, insert if not
+            { onConflict: 'key' }
           );
 
         if (error) {
@@ -162,373 +152,241 @@ const AdminSettings = () => {
       }
 
       toast({
-        title: "Mipangilio Imehifadhiwa / Settings Saved",
-        description: "Mabadiliko yako yamehifadhiwa / Your changes have been saved successfully",
+        title: "Settings Saved",
+        description: "Your changes have been saved successfully",
       });
 
-      console.log('✅ All settings saved successfully!');
+      console.log('✅ All settings saved!');
     } catch (error: any) {
       console.error('💥 Error saving settings:', error);
       toast({
-        title: "Hitilafu / Error",
-        description: `Imeshindwa kuhifadhi / Failed to save settings: ${error.message}`,
+        title: "Error",
+        description: `Failed to save: ${error.message}`,
         variant: "destructive",
       });
+    } finally {
+      setIsSaving(false);
     }
   };
 
   if (isLoading) {
     return (
       <div className="space-y-6">
-        {[...Array(3)].map((_, i) => (
-          <Card key={i}>
-            <CardHeader>
-              <Skeleton className="h-6 w-48" />
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {[...Array(3)].map((_, j) => (
-                  <Skeleton key={j} className="h-10 w-full" />
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-6 w-48" />
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[...Array(3)].map((_, i) => (
+                <Skeleton key={i} className="h-10 w-full" />
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
-      {/* Platform Settings */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Settings className="h-5 w-5" />
-            Mipangilio ya Jukwaa / Platform Settings
-          </CardTitle>
-          <CardDescription>
-            Rekebisha mipangilio ya kimsingi ya jukwaa
-            <br />
-            Configure basic platform settings
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="platformName">
-              Jina la Jukwaa / Platform Name
-            </Label>
-            <Input
-              id="platformName"
-              value={platformName}
-              onChange={(e) => setPlatformName(e.target.value)}
-            />
-          </div>
+      <Tabs defaultValue="general" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-3 lg:w-[400px]">
+          <TabsTrigger value="general">
+            <Settings className="h-4 w-4 mr-2" />
+            General
+          </TabsTrigger>
+          <TabsTrigger value="contact">
+            <Phone className="h-4 w-4 mr-2" />
+            Contact
+          </TabsTrigger>
+          <TabsTrigger value="features">
+            <Building2 className="h-4 w-4 mr-2" />
+            Features
+          </TabsTrigger>
+        </TabsList>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="supportEmail">
-                Barua Pepe ya Msaada / Support Email
-              </Label>
-              <Input
-                id="supportEmail"
-                type="email"
-                value={supportEmail}
-                onChange={(e) => setSupportEmail(e.target.value)}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="supportPhone">
-                Simu ya Msaada / Support Phone
-              </Label>
-              <Input
-                id="supportPhone"
-                value={supportPhone}
-                onChange={(e) => setSupportPhone(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="companyWhatsApp">
-              WhatsApp ya Kampuni / Company WhatsApp
-            </Label>
-            <Input
-              id="companyWhatsApp"
-              value={companyWhatsApp}
-              onChange={(e) => setCompanyWhatsApp(e.target.value)}
-              placeholder="+255 XXX XXX XXX"
-            />
-            <p className="text-xs text-muted-foreground">
-              Namba hii itaonyeshwa kwenye mali badala ya namba ya mwenye nyumba
-              <br />
-              This number will be shown on properties instead of landlord's number
-            </p>
-          </div>
-
-          <Separator />
-
-          <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 border rounded-lg bg-gray-50">
-              <div className="space-y-0.5 flex-1">
-                <Label htmlFor="useCompanyContact" className="cursor-pointer">
-                  Tumia Mawasiliano ya Kampuni / Use Company Contact
-                </Label>
-                <p className="text-sm text-muted-foreground">
-                  Onyesha namba ya kampuni badala ya namba ya mwenye nyumba kwenye mali zote
-                  <br />
-                  Show company contact instead of landlord contact on all properties
-                </p>
+        {/* General Settings Tab */}
+        <TabsContent value="general" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Platform Information</CardTitle>
+              <CardDescription>Basic platform details</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="platformName">Platform Name</Label>
+                <Input
+                  id="platformName"
+                  value={platformName}
+                  onChange={(e) => setPlatformName(e.target.value)}
+                  placeholder="Enter platform name"
+                />
               </div>
-              <div className="ml-4">
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>System Settings</CardTitle>
+              <CardDescription>Control platform access and behavior</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-base">Maintenance Mode</Label>
+                  <p className="text-sm text-gray-600">Block all user access temporarily</p>
+                </div>
                 <Switch
-                  id="useCompanyContact"
+                  checked={maintenanceMode}
+                  onCheckedChange={setMaintenanceMode}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-base">User Registration</Label>
+                  <p className="text-sm text-gray-600">Allow new users to sign up</p>
+                </div>
+                <Switch
+                  checked={registrationOpen}
+                  onCheckedChange={setRegistrationOpen}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-base">Property Approval</Label>
+                  <p className="text-sm text-gray-600">Require admin approval before listing</p>
+                </div>
+                <Switch
+                  checked={propertyApprovalRequired}
+                  onCheckedChange={setPropertyApprovalRequired}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Contact Settings Tab */}
+        <TabsContent value="contact" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Support Contact</CardTitle>
+              <CardDescription>Platform support information</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="supportEmail">Support Email</Label>
+                  <Input
+                    id="supportEmail"
+                    type="email"
+                    value={supportEmail}
+                    onChange={(e) => setSupportEmail(e.target.value)}
+                    placeholder="support@example.com"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="supportPhone">Support Phone</Label>
+                  <Input
+                    id="supportPhone"
+                    value={supportPhone}
+                    onChange={(e) => setSupportPhone(e.target.value)}
+                    placeholder="+255 XXX XXX XXX"
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Company WhatsApp</CardTitle>
+              <CardDescription>Override landlord contacts with company number</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="companyWhatsApp">WhatsApp Number</Label>
+                <Input
+                  id="companyWhatsApp"
+                  value={companyWhatsApp}
+                  onChange={(e) => setCompanyWhatsApp(e.target.value)}
+                  placeholder="+255 XXX XXX XXX"
+                />
+              </div>
+
+              <div className="flex items-center justify-between p-4 border rounded-lg bg-blue-50">
+                <div>
+                  <Label className="text-base">Use Company Contact</Label>
+                  <p className="text-sm text-gray-600">Show company number instead of landlord's</p>
+                </div>
+                <Switch
                   checked={useCompanyContact}
-                  onCheckedChange={(checked) => {
-                    console.log('🔘 Toggle clicked:', checked);
-                    setUseCompanyContact(checked);
-                  }}
+                  onCheckedChange={setUseCompanyContact}
                 />
               </div>
-            </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>Hali ya Matengenezo / Maintenance Mode</Label>
-                <p className="text-sm text-muted-foreground">
-                  Zuia watumiaji wote kuingia / Block all user access
-                </p>
-              </div>
-              <Switch
-                checked={maintenanceMode}
-                onCheckedChange={setMaintenanceMode}
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>Usajili Umefunguliwa / Registration Open</Label>
-                <p className="text-sm text-muted-foreground">
-                  Ruhusu watumiaji wapya kusajili / Allow new user registration
-                </p>
-              </div>
-              <Switch
-                checked={registrationOpen}
-                onCheckedChange={setRegistrationOpen}
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>Idhini ya Mali / Property Approval Required</Label>
-                <p className="text-sm text-muted-foreground">
-                  Mali zote zinahitaji idhini kabla ya kuchapishwa / All properties require admin approval
-                </p>
-              </div>
-              <Switch
-                checked={propertyApprovalRequired}
-                onCheckedChange={setPropertyApprovalRequired}
-              />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Email Settings */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Mail className="h-5 w-5" />
-            Mipangilio ya Barua Pepe / Email Settings
-          </CardTitle>
-          <CardDescription>
-            Dhibiti arifa za barua pepe
-            <br />
-            Manage email notifications
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label>Arifa za Barua Pepe / Email Notifications</Label>
-              <p className="text-sm text-muted-foreground">
-                Washa au zima arifa zote / Enable or disable all email notifications
-              </p>
-            </div>
-            <Switch
-              checked={emailNotifications}
-              onCheckedChange={setEmailNotifications}
-            />
-          </div>
-
-          {emailNotifications && (
-            <>
-              <Separator />
-              
+        {/* Features Tab */}
+        <TabsContent value="features" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Email Notifications</CardTitle>
+              <CardDescription>Manage automated email alerts</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
               <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>Barua Pepe ya Karibu / Welcome Email</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Tuma barua pepe kwa watumiaji wapya / Send email to new users
-                  </p>
+                <div>
+                  <Label className="text-base">Email Notifications</Label>
+                  <p className="text-sm text-gray-600">Master toggle for all emails</p>
                 </div>
                 <Switch
-                  checked={welcomeEmailEnabled}
-                  onCheckedChange={setWelcomeEmailEnabled}
+                  checked={emailNotifications}
+                  onCheckedChange={setEmailNotifications}
                 />
               </div>
 
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>Arifa za Maswali / Inquiry Notifications</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Arifu wenye nyumba kuhusu maswali mapya / Notify landlords about inquiries
-                  </p>
-                </div>
-                <Switch
-                  checked={inquiryEmailEnabled}
-                  onCheckedChange={setInquiryEmailEnabled}
-                />
-              </div>
-            </>
-          )}
-        </CardContent>
-      </Card>
+              {emailNotifications && (
+                <>
+                  <div className="border-t pt-6 space-y-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <Label className="text-base">Welcome Email</Label>
+                        <p className="text-sm text-gray-600">Send to new users on signup</p>
+                      </div>
+                      <Switch
+                        checked={welcomeEmailEnabled}
+                        onCheckedChange={setWelcomeEmailEnabled}
+                      />
+                    </div>
 
-      {/* Database Management */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Database className="h-5 w-5" />
-            Usimamizi wa Database / Database Management
-          </CardTitle>
-          <CardDescription>
-            Shughuli za database na uhifadhi / Database operations and backup
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            <Button variant="outline" className="w-full">
-              <Database className="mr-2 h-4 w-4" />
-              Fanya Backup / Create Backup
-            </Button>
-            <Button variant="outline" className="w-full">
-              <Database className="mr-2 h-4 w-4" />
-              Rejesha Backup / Restore Backup
-            </Button>
-          </div>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <Label className="text-base">Inquiry Notifications</Label>
+                        <p className="text-sm text-gray-600">Notify landlords of new inquiries</p>
+                      </div>
+                      <Switch
+                        checked={inquiryEmailEnabled}
+                        onCheckedChange={setInquiryEmailEnabled}
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
 
-          <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <p className="text-sm text-yellow-800">
-              <strong>Onyo / Warning:</strong> Shughuli za database zinaweza kuathiri utendaji wa jukwaa. Tumia kwa hadhari.
-              <br />
-              Database operations may affect platform performance. Use with caution.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Security Settings */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Shield className="h-5 w-5" />
-            Mipangilio ya Usalama / Security Settings
-          </CardTitle>
-          <CardDescription>
-            Dhibiti usalama wa jukwaa / Manage platform security
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="sessionTimeout">
-              Muda wa Session (dakika) / Session Timeout (minutes)
-            </Label>
-            <Input
-              id="sessionTimeout"
-              type="number"
-              defaultValue="60"
-              min="15"
-              max="1440"
-            />
-            <p className="text-xs text-muted-foreground">
-              Muda kabla session inatoka / Time before automatic logout
-            </p>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="maxLoginAttempts">
-              Majaribio ya Kuingia / Max Login Attempts
-            </Label>
-            <Input
-              id="maxLoginAttempts"
-              type="number"
-              defaultValue="5"
-              min="3"
-              max="10"
-            />
-            <p className="text-xs text-muted-foreground">
-              Majaribio ya kuingia kabla akaunti kuzuiwa / Attempts before account lockout
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* SEO and Localization */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Globe className="h-5 w-5" />
-            SEO na Lugha / SEO and Localization
-          </CardTitle>
-          <CardDescription>
-            Mipangilio ya injini za utafutaji na lugha / Search engine and language settings
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="siteTitle">
-              Kichwa cha Tovuti / Site Title
-            </Label>
-            <Input
-              id="siteTitle"
-              defaultValue="Nyumba Link - Tanzania Housing Platform"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="siteDescription">
-              Maelezo ya Tovuti / Site Description
-            </Label>
-            <Textarea
-              id="siteDescription"
-              rows={3}
-              defaultValue="Pata nyumba za wanafunzi karibu na chuo chako. Jukwaa la nyumba Tanzania."
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="defaultLanguage">
-              Lugha ya Msingi / Default Language
-            </Label>
-            <Input
-              id="defaultLanguage"
-              defaultValue="sw-TZ (Swahili - Tanzania)"
-              disabled
-            />
-            <p className="text-xs text-muted-foreground">
-              Lugha kuu ya jukwaa / Primary platform language
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Save Button */}
-      <div className="flex justify-end">
-        <Button onClick={handleSaveSettings} size="lg">
+      {/* Save Button - Fixed at bottom */}
+      <div className="flex justify-end sticky bottom-4">
+        <Button onClick={handleSaveSettings} size="lg" disabled={isSaving} className="shadow-lg">
           <Save className="mr-2 h-4 w-4" />
-          Hifadhi Mabadiliko / Save Changes
+          {isSaving ? 'Saving...' : 'Save Changes'}
         </Button>
       </div>
     </div>

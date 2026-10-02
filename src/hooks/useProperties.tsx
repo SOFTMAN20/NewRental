@@ -136,7 +136,7 @@ export const useProperties = () => {
         .select(`
           *,
           university:universities(id, name, abbreviation, city),
-          landlord:profiles!landlord_id(
+          landlord:profiles!properties_landlord_id_fkey(
             full_name,
             phone,
             email,

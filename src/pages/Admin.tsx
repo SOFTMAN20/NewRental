@@ -165,24 +165,24 @@ const Admin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 flex">
+    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50 flex">
       {/* Sidebar */}
       <AdminSidebar currentView={currentView} onViewChange={setCurrentView} />
 
       {/* Main Content */}
       <main className="flex-1 lg:ml-64 transition-all duration-300">
         {/* Header */}
-        <div className="bg-gray-900 border-b border-gray-800 px-4 lg:px-8 py-6 sticky top-0 z-10 backdrop-blur-lg bg-gray-900/95">
+        <div className="bg-white border-b border-gray-200 px-4 lg:px-8 py-6 sticky top-0 z-10 backdrop-blur-lg bg-white/95 shadow-sm">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
                 <Shield className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl lg:text-2xl font-bold text-white">
+                <h1 className="text-xl lg:text-2xl font-bold text-gray-900">
                   {menuItems.find(item => item.id === currentView)?.label || "Admin"} Dashboard
                 </h1>
-                <p className="text-sm text-gray-400">
+                <p className="text-sm text-gray-600">
                   {menuItems.find(item => item.id === currentView)?.description || "Manage your platform"}
                 </p>
               </div>
@@ -191,8 +191,8 @@ const Admin = () => {
             {/* Quick Stats */}
             <div className="hidden md:flex items-center gap-4">
               <div className="text-right">
-                <p className="text-xs text-gray-400">Today</p>
-                <p className="text-sm font-semibold text-white">{new Date().toLocaleDateString()}</p>
+                <p className="text-xs text-gray-500">Today</p>
+                <p className="text-sm font-semibold text-gray-900">{new Date().toLocaleDateString()}</p>
               </div>
             </div>
           </div>
