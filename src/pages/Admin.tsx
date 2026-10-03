@@ -170,26 +170,26 @@ const Admin = () => {
       <AdminSidebar currentView={currentView} onViewChange={setCurrentView} />
 
       {/* Main Content */}
-      <main className="flex-1 lg:ml-64 transition-all duration-300">
+      <main className="flex-1 lg:ml-64 transition-all duration-300 w-full">
         {/* Header */}
-        <div className="bg-white border-b border-gray-200 px-4 lg:px-8 py-6 sticky top-0 z-10 backdrop-blur-lg bg-white/95 shadow-sm">
-          <div className="flex items-center justify-between">
+        <div className="bg-white border-b border-gray-200 px-4 lg:px-8 py-4 lg:py-6 sticky top-0 z-10 backdrop-blur-lg bg-white/95 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                <Shield className="h-6 w-6 text-white" />
+              <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0">
+                <Shield className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
               </div>
-              <div>
-                <h1 className="text-xl lg:text-2xl font-bold text-gray-900">
+              <div className="min-w-0">
+                <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 truncate">
                   {menuItems.find(item => item.id === currentView)?.label || "Admin"} Dashboard
                 </h1>
-                <p className="text-sm text-gray-600">
+                <p className="text-xs sm:text-sm text-gray-600 truncate">
                   {menuItems.find(item => item.id === currentView)?.description || "Manage your platform"}
                 </p>
               </div>
             </div>
             
             {/* Quick Stats */}
-            <div className="hidden md:flex items-center gap-4">
+            <div className="hidden sm:flex items-center gap-4">
               <div className="text-right">
                 <p className="text-xs text-gray-500">Today</p>
                 <p className="text-sm font-semibold text-gray-900">{new Date().toLocaleDateString()}</p>
@@ -199,7 +199,7 @@ const Admin = () => {
         </div>
 
         {/* Content Area */}
-        <div className="p-4 lg:p-8">
+        <div className="p-3 sm:p-4 lg:p-8">
           {renderContent()}
         </div>
       </main>

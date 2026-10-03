@@ -250,8 +250,8 @@ const AdminProperties = () => {
             </Select>
           </div>
 
-          {/* Properties Table */}
-          <div className="rounded-md border border-gray-200 overflow-x-auto bg-gray-50">
+          {/* Properties Table - Desktop View */}
+          <div className="hidden lg:block rounded-md border border-gray-200 overflow-x-auto bg-gray-50">
             <Table>
               <TableHeader>
                 <TableRow className="border-gray-200 hover:bg-white">
@@ -330,6 +330,100 @@ const AdminProperties = () => {
                 )}
               </TableBody>
             </Table>
+          </div>
+
+          {/* Properties Cards - Mobile View */}
+          <div className="lg:hidden space-y-4">
+            {filteredProperties.length === 0 ? (
+              <Card className="bg-gray-50">
+                <CardContent className="flex items-center justify-center py-12">
+                  <p className="text-gray-500">No properties found</p>
+                </CardContent>
+              </Card>
+            ) : (
+              filteredProperties.map((property) => (
+                <Card key={property.id} className="bg-white border-gray-200">
+                  <CardContent className="p-4 space-y-3">
+                    {/* Title and Status */}
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="font-semibold text-gray-900 text-sm flex-1">
+                        {property.title}
+                      </h3>
+                      {getStatusBadge(property.status, property.is_available)}
+                    </div>
+
+                    {/* Location */}
+                    <p className="text-sm text-gray-600">📍 {property.location}</p>
+
+                    {/* Price and Type */}
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="font-semibold text-gray-900">
+                        TZS {(property.price || property.monthly_rent || 0).toLocaleString()}
+                      </span>
+                      <span className="text-gray-600 capitalize bg-gray-100 px-2 py-1 rounded text-xs">
+                        {property.property_type}
+                      </span>
+                    </div>
+
+                    {/* Landlord */}
+                    <div className="text-sm text-gray-600">
+                      <span className="font-medium">Landlord:</span> {property.landlord?.full_name || 'Unknown'}
+                    </div>
+
+                    {/* Date */}
+                    <div className="text-xs text-gray-500">
+                      {new Date(property.created_at).toLocaleDateString('en-GB', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric'
+                      })}
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex gap-2 pt-2 border-t border-gray-100">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => navigate(`/property/${property.id}`)}
+                        className="flex-1"
+                      >
+                        <Eye className="h-4 w-4 mr-2" />
+                        View
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleToggleAvailability(property.id, property.is_available)}
+                        className="flex-1"
+                      >
+                        {property.is_available ? (
+                          <>
+                            <XCircle className="h-4 w-4 mr-2 text-orange-600" />
+                            <span className="text-orange-600">Deactivate</span>
+                          </>
+                        ) : (
+                          <>
+                            <CheckCircle className="h-4 w-4 mr-2 text-green-600" />
+                            <span className="text-green-600">Activate</span>
+                          </>
+                        )}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setSelectedProperty(property);
+                          setIsDeleteDialogOpen(true);
+                        }}
+                        className="border-red-200 hover:bg-red-50"
+                      >
+                        <Trash2 className="h-4 w-4 text-red-600" />
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
 
           {/* Summary */}
