@@ -594,6 +594,28 @@ const Navigation = () => {
                       {t('navigation.dashboard')}
                     </div>
                   </Link>
+                  
+                  {/* Admin Panel Link - Only show for admin users */}
+                  {(profile?.role === 'admin' || profile?.role === 'super_admin') && (
+                    <Link
+                      to="/admin"
+                      className={`block px-3 sm:px-4 py-2 sm:py-3 text-purple-700 hover:bg-purple-50 hover:text-purple-900 
+                                 rounded-lg sm:rounded-xl text-sm transition-all duration-300 border border-purple-200/50 ${
+                        location.pathname === '/admin' ? 'bg-purple-100 text-purple-900 border-purple-300' : ''
+                      }`}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <Shield className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-purple-500" />
+                          Admin Dashboard
+                        </div>
+                        <Badge className="bg-purple-600 text-white text-xs px-2 py-0.5">
+                          Admin
+                        </Badge>
+                      </div>
+                    </Link>
+                  )}
                 </>
               )}
               
