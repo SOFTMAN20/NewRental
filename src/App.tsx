@@ -60,7 +60,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { lazy, Suspense } from "react";
 import MobileBottomNav from "./components/layout/MobileBottomNav";
 import PerformanceDashboard from "./components/common/PerformanceDashboard";
-import FloatingWhatsApp from "./components/common/FloatingWhatsApp";
+import DynamicFloatingWhatsApp from "./components/common/DynamicFloatingWhatsApp";
 import PWAInstallPrompt from "./components/common/PWAInstallPrompt";
 import ErrorBoundary from "./components/common/ErrorBoundary";
 import NetworkStatus from "./components/common/NetworkStatus";
@@ -197,11 +197,8 @@ const App = () => (
             {/* Mobile Bottom Navigation - Only visible on mobile screens */}
             <MobileBottomNav />
 
-            {/* Floating WhatsApp Button - Visible on all pages */}
-            <FloatingWhatsApp 
-              phoneNumber="+255792072561"
-              message="Habari! Nahitaji msaada kutafuta nyumba kwenye Wanachuo.com (Hello! I need help finding accommodation on Wanachuo.com)"
-            />
+            {/* Floating WhatsApp Button - Reads number from database settings */}
+            <DynamicFloatingWhatsApp />
 
             {/* PWA Install Prompt */}
             <PWAInstallPrompt />
