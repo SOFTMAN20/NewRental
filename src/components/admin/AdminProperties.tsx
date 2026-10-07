@@ -65,6 +65,7 @@ const AdminProperties = () => {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [selectedProperty, setSelectedProperty] = useState<PropertyWithLandlord | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
 
   useEffect(() => {
     fetchProperties();
@@ -255,11 +256,12 @@ const AdminProperties = () => {
             <Table>
               <TableHeader>
                 <TableRow className="border-gray-200 hover:bg-white">
+                  <TableHead className="text-gray-600 w-20">Image</TableHead>
                   <TableHead className="text-gray-600">Title</TableHead>
                   <TableHead className="text-gray-600">Location</TableHead>
                   <TableHead className="text-gray-600">Price</TableHead>
                   <TableHead className="text-gray-600">Type</TableHead>
-                  <TableHead className="text-gray-600">Landlord</TableHead>
+                  <TableHead className="text-gray-600">Host Info</TableHead>
                   <TableHead className="text-gray-600">Status</TableHead>
                   <TableHead className="text-gray-600">Date</TableHead>
                   <TableHead className="text-right text-gray-600">Actions</TableHead>
@@ -268,36 +270,90 @@ const AdminProperties = () => {
               <TableBody>
                 {filteredProperties.length === 0 ? (
                   <TableRow className="border-gray-200">
-                    <TableCell colSpan={8} className="text-center text-gray-500">
+                    <TableCell colSpan={9} className="text-center text-gray-500">
                       No properties found
                     </TableCell>
                   </TableRow>
                 ) : (
                   filteredProperties.map((property) => (
                     <TableRow key={property.id} className="border-gray-200 hover:bg-white">
+                      {/* Property Image */}
+                      <TableCell>
+                        <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-200">
+                          {property.images && property.images.length > 0 ? (
+                            <img 
+                              src={property.images[0]} 
+                              alt={property.title}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                e.currentTarget.src = '/placeholder-property.jpg';
+                              }}
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">
+                              No Image
+                            </div>
+                          )}
+                        </div>
+                      </TableCell>
+                      
+                      {/* Title */}
                       <TableCell className="font-medium text-gray-900">
-                        {property.title}
+                        <div className="max-w-xs truncate" title={property.title}>
+                          {property.title}
+                        </div>
                       </TableCell>
+                      
+                      {/* Location */}
                       <TableCell className="text-gray-600">{property.location}</TableCell>
+                      
+                      {/* Price */}
                       <TableCell className="text-gray-900">TZS {(property.price || property.monthly_rent || 0).toLocaleString()}</TableCell>
+                      
+                      {/* Type */}
                       <TableCell className="capitalize text-gray-600">{property.property_type}</TableCell>
+                      
+                      {/* Host/Landlord Info */}
                       <TableCell className="text-gray-600">
-                        {property.landlord?.full_name || 'Unknown'}
+                        <div className="space-y-1 min-w-[150px]">
+                          <div className="font-medium text-gray-900">
+                            {property.landlord?.full_name || 'Unknown'}
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            {property.landlord?.email}
+                          </div>
+                          {property.contact_phone && (
+                            <div className="text-xs text-blue-600 font-mono">
+                              📞 {property.contact_phone}
+                            </div>
+                          )}
+                        </div>
                       </TableCell>
+                      
+                      {/* Status */}
                       <TableCell>
                         {getStatusBadge(property.status, property.is_available)}
                       </TableCell>
+                      
+                      {/* Date */}
                       <TableCell>
                         {new Date(property.created_at).toLocaleDateString()}
                       </TableCell>
+                      
+                      {/* Actions */}
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => navigate(`/property/${property.id}`)}
+                            onClick={() => {
+                              setSelectedProperty(property);
+                              setIsViewModalOpen(true);
+                            }}
                             title="Angalia / View"
                           >
+                            <Eye className="h-4 w-4" />
+                          </Button>
                             <Eye className="h-4 w-4" />
                           </Button>
                           <Button
@@ -460,6 +516,77 @@ const AdminProperties = () => {
               Futa / Delete
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* View Property Details Modal */}
+      <Dialog open={isViewModalOpen} onOpenChange={setIsViewModalOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl">Property Details</DialogTitle>
+          </DialogHeader>
+
+          {selectedProperty && (
+            <div className="space-y-6 py-4">
+              {/* Property Images */}
+              {selectedProperty.images && selectedProperty.images.length > 0 && (
+                <div className="space-y-2">
+                  <h3 className="font-semibold">Property Images</h3>
+                  <div className="grid grid-cols-3 gap-2">
+                    {selectedProperty.images.slice(0, 6).map((image, index) => (
+                      <img 
+                        key={index}
+                        src={image} 
+                        alt={`${selectedProperty.title} ${index + 1}`}
+                        className="w-full h-32 object-cover rounded"
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Basic Info */}
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <h3 className="font-semibold text-lg">Basic Information</h3>
+                  <div className="space-y-2 text-sm">
+                    <div><span className="text-gray-600">Title:</span> <span className="font-medium">{selectedProperty.title}</span></div>
+                    <div><span className="text-gray-600">Location:</span> <span className="font-medium">{selectedProperty.location}</span></div>
+                    <div><span className="text-gray-600">Monthly Rent:</span> <span className="font-bold text-primary">TZS {(selectedProperty.monthly_rent || 0).toLocaleString()}</span></div>
+                    <div><span className="text-gray-600">Type:</span> <span className="capitalize">{selectedProperty.property_type}</span></div>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <h3 className="font-semibold text-lg">Host Information</h3>
+                  <div className="space-y-2 text-sm">
+                    <div><span className="text-gray-600">Name:</span> <span className="font-medium">{selectedProperty.landlord?.full_name || 'Unknown'}</span></div>
+                    <div><span className="text-gray-600">Email:</span> <span className="text-blue-600">{selectedProperty.landlord?.email}</span></div>
+                    <div><span className="text-gray-600">Phone:</span> <span className="text-green-600">{selectedProperty.contact_phone || 'N/A'}</span></div>
+                    <div><span className="text-gray-600">WhatsApp:</span> <span className="text-green-600">{selectedProperty.contact_whatsapp_phone || 'N/A'}</span></div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Description */}
+              {selectedProperty.description && (
+                <div className="space-y-2">
+                  <h3 className="font-semibold">Description</h3>
+                  <p className="text-sm text-gray-600">{selectedProperty.description}</p>
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="flex gap-2 pt-4">
+                <Button onClick={() => navigate(`/property/${selectedProperty.id}`)} variant="outline">
+                  View Full Page
+                </Button>
+                <Button onClick={() => setIsViewModalOpen(false)}>
+                  Close
+                </Button>
+              </div>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </>
