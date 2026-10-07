@@ -906,8 +906,8 @@ ${imageUrl ? `📸 *Picha:* ${imageUrl}` : ''}`;
                       {property.is_available ? 'Apply Now' : 'Not Available'}
                     </Button>
 
-                    {/* WhatsApp Button */}
-                    {(property.contact_whatsapp_phone || property.contact_phone) && (
+                    {/* WhatsApp Button - Shows company or landlord contact based on toggle */}
+                    {(useCompanyContact || property.contact_whatsapp_phone || property.contact_phone) && (
                       <Button
                         className="w-full bg-green-600 hover:bg-green-700 text-white text-sm sm:text-base py-2 sm:py-3 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400"
                         onClick={() => window.open(getWhatsAppLink(), '_blank')}
@@ -918,7 +918,9 @@ ${imageUrl ? `📸 *Picha:* ${imageUrl}` : ''}`;
                         </svg>
                         <span className="truncate">
                           {property.is_available
-                            ? 'Contact via WhatsApp'
+                            ? useCompanyContact 
+                              ? 'Contact via WhatsApp (Company)'
+                              : 'Contact via WhatsApp (Owner)'
                             : 'Haipatikani / Unavailable'
                           }
                         </span>
@@ -1035,8 +1037,8 @@ ${imageUrl ? `📸 *Picha:* ${imageUrl}` : ''}`;
 
               {/* Action Buttons - Right Side */}
               <div className="flex gap-2 flex-1 justify-end max-w-[280px]">
-                {/* WhatsApp Button */}
-                {(property.contact_whatsapp_phone || property.contact_phone) && (
+                {/* WhatsApp Button - Shows company or landlord contact based on toggle */}
+                {(useCompanyContact || property.contact_whatsapp_phone || property.contact_phone) && (
                   <Button
                     className="bg-green-600 hover:bg-green-700 active:bg-green-800 text-white px-4 sm:px-6 py-3 sm:py-4 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400 flex-1 transition-all duration-200 shadow-lg hover:shadow-xl font-semibold text-sm sm:text-base"
                     onClick={() => window.open(getWhatsAppLink(), '_blank')}
