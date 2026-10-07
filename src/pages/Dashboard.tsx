@@ -185,12 +185,15 @@ const Dashboard = () => {
     if (user) {
       initializeDashboard();
       
-      // AUTO-REFRESH: Fetch properties every 10 seconds
-      const interval = setInterval(() => {
-        fetchProperties();
-      }, 10 * 1000); // 10 seconds
+      // Note: Auto-refresh disabled to prevent constant page updates
+      // Properties will refresh when you manually add/edit/delete
+      // If you want auto-refresh, uncomment below and adjust interval
       
-      return () => clearInterval(interval);
+      // const interval = setInterval(() => {
+      //   fetchProperties();
+      // }, 2 * 60 * 1000); // 2 minutes
+      // 
+      // return () => clearInterval(interval);
     }
   }, [user]);
 

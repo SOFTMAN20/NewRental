@@ -93,6 +93,11 @@ const Typography = lazy(() => import("./components/common/Typography"));
 const LoadingStates = lazy(() => import("./components/common/LoadingStates"));
 const ComponentLibrary = lazy(() => import("./components/ui/ComponentLibrary"));
 
+// Marketplace pages
+const Marketplace = lazy(() => import("./pages/Marketplace"));
+const MarketplaceItemDetail = lazy(() => import("./pages/MarketplaceItemDetail"));
+const AddMarketplaceListing = lazy(() => import("./pages/AddMarketplaceListing"));
+
 /**
  * REACT QUERY CLIENT CONFIGURATION
  * ================================
@@ -159,6 +164,11 @@ const App = () => (
                 <Route path="/typography" element={<Typography />} />
                 <Route path="/loading-states" element={<LoadingStates />} />
                 <Route path="/component-library" element={<ComponentLibrary />} />
+
+                {/* Marketplace routes - Njia za soko */}
+                <Route path="/marketplace" element={<Marketplace />} />
+                <Route path="/marketplace/:id" element={<MarketplaceItemDetail />} />
+                <Route path="/marketplace/add" element={<AddMarketplaceListing />} />
 
                 {/* User-specific routes - Njia za mtumiaji */}
                 <Route path="/dashboard" element={<Dashboard />} />

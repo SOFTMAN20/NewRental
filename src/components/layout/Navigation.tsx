@@ -44,7 +44,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Home, Search, User, Menu, X, Globe, Building2, LogOut, Heart, Bell, Settings, GraduationCap, Plus, Shield } from 'lucide-react';
+import { Home, Search, User, Menu, X, Globe, Building2, LogOut, Heart, Bell, Settings, GraduationCap, Plus, Shield, Package } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useTranslation } from 'react-i18next';
@@ -159,8 +159,8 @@ const Navigation = () => {
               </div>
             </Link>
             
-            {/* Host Dashboard Link - Kiungo cha dashibodi ya mwenye nyumba (LEFT SIDE) - Only show for non-landlords */}
-            {!user || (user && profile?.user_type !== 'landlord') ? (
+            {/* Host Dashboard Link - Kiungo cha dashibodi ya mwenye nyumba (LEFT SIDE) - Only show for logged in non-landlords */}
+            {user && profile?.user_type !== 'landlord' ? (
               <Link to="/signup?type=landlord" className="block">
                 <Button
                   variant="ghost"
@@ -175,6 +175,69 @@ const Navigation = () => {
                 </Button>
               </Link>
             ) : null}
+          </div>
+
+          {/* Enhanced Navigation Menu - Desktop and Mobile Center */}
+          {/* Mobile Center Navigation - Uongozaji wa katikati kwa simu */}
+          <div className={`md:hidden flex items-center space-x-1 backdrop-blur-md rounded-full px-2 py-1.5 ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property') ? 'bg-gray-100 border border-gray-200' : location.pathname === '/' ? (isScrolled ? 'bg-white/60 border border-white/20' : 'bg-white/10 border border-white/20') : 'bg-white/60 border border-white/80 shadow-sm'}`}>
+            
+            {/* Mobile Colleges Button */}
+            <Button
+              variant="ghost"
+              onClick={() => setIsCollegesModalOpen(true)}
+              className={`px-2 py-1 rounded-full transition-all duration-300 text-xs font-medium
+                         ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
+                           ? 'text-gray-700 hover:bg-gray-200'
+                           : location.pathname === '/'
+                           ? (isScrolled ? 'text-gray-700 hover:bg-gray-200' : 'text-white hover:bg-white/30')
+                           : 'text-gray-700 hover:bg-white/70'}`}
+            >
+              Colleges
+            </Button>
+            
+            {/* Mobile Marketplace Link - COMMENTED OUT FOR NOW */}
+            {/* <Link to="/marketplace">
+              <Button
+                variant="ghost"
+                className={`px-2 py-1 rounded-full transition-all duration-300 text-xs font-medium ${
+                  location.pathname === '/marketplace' || location.pathname.startsWith('/marketplace/')
+                    ? location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
+                      ? 'bg-gray-200'
+                      : location.pathname === '/'
+                      ? (isScrolled ? 'bg-gray-200' : 'bg-white/30')
+                      : 'bg-white/60'
+                    : ''
+                } ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
+                     ? 'text-gray-700 hover:bg-gray-200'
+                     : location.pathname === '/'
+                     ? (isScrolled ? 'text-gray-700 hover:bg-gray-200' : 'text-white hover:bg-white/30')
+                     : 'text-gray-700 hover:bg-white/70'}`}
+              >
+                Market
+              </Button>
+            </Link> */}
+            
+            {/* Mobile About Link */}
+            <Link to="/about">
+              <Button
+                variant="ghost"
+                className={`px-2 py-1 rounded-full transition-all duration-300 text-xs font-medium ${
+                  location.pathname === '/about' 
+                    ? location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
+                      ? 'bg-gray-200'
+                      : location.pathname === '/'
+                      ? (isScrolled ? 'bg-gray-200' : 'bg-white/30')
+                      : 'bg-white/60'
+                    : ''
+                } ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
+                     ? 'text-gray-700 hover:bg-gray-200'
+                     : location.pathname === '/'
+                     ? (isScrolled ? 'text-gray-700 hover:bg-gray-200' : 'text-white hover:bg-white/30')
+                     : 'text-gray-700 hover:bg-white/70'}`}
+              >
+                About
+              </Button>
+            </Link>
           </div>
 
           {/* Enhanced Desktop Navigation Menu - Menyu ya uongozaji wa kompyuta */}
@@ -216,6 +279,28 @@ const Navigation = () => {
               </Button>
             </Link>
             
+            {/* Marketplace Link - Kiungo cha soko - COMMENTED OUT FOR NOW */}
+            {/* <Link to="/marketplace">
+              <Button
+                variant="ghost"
+                className={`px-5 py-2 rounded-full transition-all duration-300 text-sm sm:text-base font-medium ${
+                  location.pathname === '/marketplace' || location.pathname.startsWith('/marketplace/')
+                    ? location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
+                      ? 'bg-gray-200'
+                      : location.pathname === '/'
+                      ? (isScrolled ? 'bg-gray-200' : 'bg-white/30')
+                      : 'bg-white/60'
+                    : ''
+                } ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
+                     ? 'text-gray-700 hover:bg-gray-200 hover:text-gray-900'
+                     : location.pathname === '/'
+                     ? (isScrolled ? 'text-gray-700 hover:bg-gray-200 hover:text-gray-900' : 'text-white hover:bg-white/30 hover:text-white')
+                     : 'text-gray-700 hover:bg-white/70 hover:text-gray-900'}`}
+              >
+                Marketplace
+              </Button>
+            </Link> */}
+
             {/* Contact Link - Kiungo cha mawasiliano */}
             <Link to="/contact">
               <Button
@@ -348,6 +433,14 @@ const Navigation = () => {
                     </Link>
                   </DropdownMenuItem>
                   
+                  {/* Marketplace Link - COMMENTED OUT FOR NOW */}
+                  {/* <DropdownMenuItem asChild>
+                    <Link to="/marketplace" className="flex items-center">
+                      <Package className="mr-2 h-4 w-4" />
+                      <span>Marketplace</span>
+                    </Link>
+                  </DropdownMenuItem> */}
+                  
                   {/* Admin Dashboard Link - Only show for admin users */}
                   {(profile?.role === 'admin' || profile?.role === 'super_admin') && (
                     <>
@@ -478,47 +571,19 @@ const Navigation = () => {
             
             {/* Mobile Menu Content - Maudhui ya menyu ya simu */}
             <div className="flex-1 px-2 sm:px-4 py-2 sm:py-4 space-y-1 sm:space-y-2 overflow-y-auto">
-              {/* Enhanced Mobile Home Link with Close Button - Kiungo cha nyumbani kwa simu na kitufe cha kufunga */}
-              <div className="flex items-center justify-between">
-                <Link
-                  to="/"
-                  className={`flex-1 px-3 sm:px-4 py-2 sm:py-3 text-gray-700 hover:bg-primary/10 hover:text-primary 
-                             rounded-lg sm:rounded-xl text-sm transition-all duration-300 ${
-                    location.pathname === '/' ? 'bg-primary/15 text-primary border border-primary/20' : ''
-                  }`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <div className="flex items-center">
-                    <Home className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-gray-400" />
-                    {t('navigation.home')}
-                  </div>
-                </Link>
-                
-                {/* Close Menu Button */}
+              {/* Close Menu Button at Top - Kitufe cha kufunga juu */}
+              <div className="flex justify-end mb-2">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => setIsMenuOpen(false)}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-all duration-300 hover:scale-105 ml-2"
+                  className="p-2 hover:bg-gray-100 rounded-full transition-all duration-300 hover:scale-105"
                 >
                   <X className="h-4 w-4 sm:h-5 sm:w-5 text-gray-500" />
                 </Button>
               </div>
               
-              {/* Enhanced Mobile Browse Link - Kiungo cha kutazama kwa simu */}
-              <Link
-                to="/browse"
-                className={`block px-3 sm:px-4 py-2 sm:py-3 text-gray-700 hover:bg-primary/10 hover:text-primary 
-                           rounded-lg sm:rounded-xl text-sm transition-all duration-300 ${
-                  location.pathname === '/browse' ? 'bg-primary/15 text-primary border border-primary/20' : ''
-                }`}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <div className="flex items-center">
-                  <Search className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-gray-400" />
-                  {t('navigation.browse')}
-                </div>
-              </Link>
+              {/* Main Navigation Links - Same as Desktop */}
               
               {/* Mobile Colleges Link - Kiungo cha vyuo kwa simu */}
               <button
@@ -535,6 +600,21 @@ const Navigation = () => {
                 </div>
               </button>
               
+              {/* Mobile Marketplace Link - Kiungo cha soko kwa simu - COMMENTED OUT FOR NOW */}
+              {/* <Link
+                to="/marketplace"
+                className={`block px-3 sm:px-4 py-2 sm:py-3 text-gray-700 hover:bg-primary/10 hover:text-primary 
+                           rounded-lg sm:rounded-xl text-sm transition-all duration-300 ${
+                  location.pathname === '/marketplace' || location.pathname.startsWith('/marketplace/') ? 'bg-primary/15 text-primary border border-primary/20' : ''
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <div className="flex items-center">
+                  <Package className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-gray-400" />
+                  Marketplace
+                </div>
+              </Link> */}
+              
               {/* Enhanced Mobile About Link - Kiungo cha kuhusu kwa simu */}
               <Link
                 to="/about"
@@ -546,7 +626,55 @@ const Navigation = () => {
               >
                 <div className="flex items-center">
                   <User className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-gray-400" />
-                  {t('navigation.about')}
+                  About
+                </div>
+              </Link>
+              
+              {/* Mobile Contact Link - Kiungo cha mawasiliano kwa simu */}
+              <Link
+                to="/contact"
+                className={`block px-3 sm:px-4 py-2 sm:py-3 text-gray-700 hover:bg-primary/10 hover:text-primary 
+                           rounded-lg sm:rounded-xl text-sm transition-all duration-300 ${
+                  location.pathname === '/contact' ? 'bg-primary/15 text-primary border border-primary/20' : ''
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <div className="flex items-center">
+                  <User className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-gray-400" />
+                  Contact
+                </div>
+              </Link>
+              
+              {/* Divider before secondary links */}
+              <div className="border-t border-gray-200 my-2 sm:my-3"></div>
+              
+              {/* Enhanced Mobile Home Link - Kiungo cha nyumbani kwa simu */}
+              <Link
+                to="/"
+                className={`block px-3 sm:px-4 py-2 sm:py-3 text-gray-700 hover:bg-primary/10 hover:text-primary 
+                           rounded-lg sm:rounded-xl text-sm transition-all duration-300 ${
+                  location.pathname === '/' ? 'bg-primary/15 text-primary border border-primary/20' : ''
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <div className="flex items-center">
+                  <Home className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-gray-400" />
+                  {t('navigation.home')}
+                </div>
+              </Link>
+              
+              {/* Enhanced Mobile Browse Link - Kiungo cha kutazama kwa simu */}
+              <Link
+                to="/browse"
+                className={`block px-3 sm:px-4 py-2 sm:py-3 text-gray-700 hover:bg-primary/10 hover:text-primary 
+                           rounded-lg sm:rounded-xl text-sm transition-all duration-300 ${
+                  location.pathname === '/browse' ? 'bg-primary/15 text-primary border border-primary/20' : ''
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <div className="flex items-center">
+                  <Search className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-gray-400" />
+                  {t('navigation.browse')}
                 </div>
               </Link>
               
@@ -594,6 +722,21 @@ const Navigation = () => {
                       {t('navigation.dashboard')}
                     </div>
                   </Link>
+                  
+                  {/* Marketplace Link - COMMENTED OUT FOR NOW */}
+                  {/* <Link
+                    to="/marketplace"
+                    className={`block px-3 sm:px-4 py-2 sm:py-3 text-gray-700 hover:bg-primary/10 hover:text-primary 
+                               rounded-lg sm:rounded-xl text-sm transition-all duration-300 ${
+                      location.pathname === '/marketplace' || location.pathname.startsWith('/marketplace/') ? 'bg-primary/15 text-primary border border-primary/20' : ''
+                    }`}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <div className="flex items-center">
+                      <Package className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-gray-400" />
+                      Marketplace
+                    </div>
+                  </Link> */}
                   
                   {/* Admin Panel Link - Only show for admin users */}
                   {(profile?.role === 'admin' || profile?.role === 'super_admin') && (
