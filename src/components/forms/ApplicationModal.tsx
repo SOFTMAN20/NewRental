@@ -39,44 +39,34 @@ const ApplicationModal: React.FC<ApplicationModalProps> = ({
     applicant_email: '',
     applicant_phone: '',
     message: '',
-    move_in_date: '',
-    move_out_date: ''
+    move_in_date: ''
   });
 
-  // Pre-fill email from user
-  useEffect(() => {
-    if (user?.email) {
-      setFormData(prev => ({
-        ...prev,
-        applicant_email: user.email || ''
-      }));
-    }
-  }, [user]);
-
-  // Fetch user profile to pre-fill name and phone
+  // Pre-fill from user profile
   useEffect(() => {
     const fetchProfile = async () => {
       if (!user) return;
 
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('profiles')
-        .select('full_name, phone')
+        .select('full_name, email, phone')
         .eq('id', user.id)
         .single();
 
-      if (data && !error) {
+      if (data) {
         setFormData(prev => ({
           ...prev,
           applicant_name: data.full_name || '',
+          applicant_email: user.email || '',
           applicant_phone: data.phone || ''
         }));
       }
     };
 
-    if (isOpen) {
+    if (isOpen && user) {
       fetchProfile();
     }
-  }, [user, isOpen]);
+  }, [isOpen, user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -100,32 +90,10 @@ const ApplicationModal: React.FC<ApplicationModalProps> = ({
       return;
     }
 
-    // Phone number validation - must be digits only and between 10-13 characters
-    const phoneDigits = formData.applicant_phone.replace(/\D/g, ''); // Remove non-digits
-    if (phoneDigits.length < 10 || phoneDigits.length > 13) {
-      toast({
-        variant: 'destructive',
-        title: 'Namba ya Simu Si Sahihi',
-        description: 'Tafadhali jaza namba halisi ya simu (10-13 digits)'
-      });
-      return;
-    }
-
-    // Check if phone contains only numbers (after removing spaces, +, -)
-    const cleanPhone = formData.applicant_phone.replace(/[\s\+\-]/g, '');
-    if (!/^\d+$/.test(cleanPhone)) {
-      toast({
-        variant: 'destructive',
-        title: 'Namba ya Simu Si Sahihi',
-        description: 'Namba ya simu lazima iwe na namba tu, sio maneno'
-      });
-      return;
-    }
-
     try {
       setSubmitting(true);
 
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('applications')
         .insert([
           {
@@ -136,11 +104,9 @@ const ApplicationModal: React.FC<ApplicationModalProps> = ({
             applicant_phone: formData.applicant_phone,
             message: formData.message || null,
             move_in_date: formData.move_in_date,
-            move_out_date: formData.move_out_date || null,
             status: 'pending'
           }
-        ])
-        .select();
+        ]);
 
       if (error) throw error;
 
@@ -152,11 +118,10 @@ const ApplicationModal: React.FC<ApplicationModalProps> = ({
       // Reset form and close
       setFormData({
         applicant_name: '',
-        applicant_email: user?.email || '',
+        applicant_email: '',
         applicant_phone: '',
         message: '',
-        move_in_date: '',
-        move_out_date: ''
+        move_in_date: ''
       });
       onClose();
 
@@ -173,13 +138,7 @@ const ApplicationModal: React.FC<ApplicationModalProps> = ({
   };
 
   const handleInputChange = (field: string, value: string) => {
-    // For phone number, only allow digits, spaces, +, and -
-    if (field === 'applicant_phone') {
-      const sanitized = value.replace(/[^\d\s\+\-]/g, '');
-      setFormData(prev => ({ ...prev, [field]: sanitized }));
-    } else {
-      setFormData(prev => ({ ...prev, [field]: value }));
-    }
+    setFormData(prev => ({ ...prev, [field]: value }));
   };
 
   return (
@@ -202,7 +161,6 @@ const ApplicationModal: React.FC<ApplicationModalProps> = ({
             </Label>
             <Input
               id="applicant_name"
-              type="text"
               value={formData.applicant_name}
               onChange={(e) => handleInputChange('applicant_name', e.target.value)}
               placeholder="Jina lako kamili"
@@ -236,15 +194,8 @@ const ApplicationModal: React.FC<ApplicationModalProps> = ({
               value={formData.applicant_phone}
               onChange={(e) => handleInputChange('applicant_phone', e.target.value)}
               placeholder="+255 XXX XXX XXX"
-              pattern="[\d\s\+\-]+"
-              title="Jaza namba halisi ya simu (namba tu)"
-              minLength={10}
-              maxLength={15}
               required
             />
-            <p className="text-xs text-gray-500 mt-1">
-              Mfano: +255712345678 au 0712345678
-            </p>
           </div>
 
           {/* Move In Date */}
@@ -260,23 +211,6 @@ const ApplicationModal: React.FC<ApplicationModalProps> = ({
                 onChange={(e) => handleInputChange('move_in_date', e.target.value)}
                 min={new Date().toISOString().split('T')[0]}
                 required
-              />
-              <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-            </div>
-          </div>
-
-          {/* Move Out Date (Optional) */}
-          <div>
-            <Label htmlFor="move_out_date">
-              Tarehe ya Kutoka (Optional)
-            </Label>
-            <div className="relative">
-              <Input
-                id="move_out_date"
-                type="date"
-                value={formData.move_out_date}
-                onChange={(e) => handleInputChange('move_out_date', e.target.value)}
-                min={formData.move_in_date || new Date().toISOString().split('T')[0]}
               />
               <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
             </div>

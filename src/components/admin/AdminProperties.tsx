@@ -354,8 +354,6 @@ const AdminProperties = () => {
                           >
                             <Eye className="h-4 w-4" />
                           </Button>
-                            <Eye className="h-4 w-4" />
-                          </Button>
                           <Button
                             variant="ghost"
                             size="sm"

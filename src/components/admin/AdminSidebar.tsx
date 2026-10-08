@@ -16,6 +16,7 @@ import {
   Shield,
   ChevronLeft,
   Menu,
+  FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -50,6 +51,13 @@ const AdminSidebar = ({ currentView, onViewChange }: AdminSidebarProps) => {
       labelEn: "Properties",
       icon: Home,
       description: "Manage properties",
+    },
+    {
+      id: "applications",
+      label: "Maombi",
+      labelEn: "Applications",
+      icon: FileText,
+      description: "View applications",
     },
     {
       id: "analytics",

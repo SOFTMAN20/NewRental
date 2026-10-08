@@ -19,6 +19,7 @@ import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminOverview from "@/components/admin/AdminOverview";
 import AdminUsers from "@/components/admin/AdminUsers";
 import AdminProperties from "@/components/admin/AdminProperties";
+import AdminApplications from "@/components/admin/AdminApplications";
 import AdminAnalytics from "@/components/admin/AdminAnalytics";
 import AdminSettings from "@/components/admin/AdminSettings";
 import { Shield, AlertCircle } from "lucide-react";
@@ -155,6 +156,8 @@ const Admin = () => {
         return <AdminUsers />;
       case "properties":
         return <AdminProperties />;
+      case "applications":
+        return <AdminApplications />;
       case "analytics":
         return <AdminAnalytics />;
       case "settings":
@@ -222,6 +225,11 @@ const menuItems = [
     id: "properties",
     label: "Mali",
     description: "Manage all properties",
+  },
+  {
+    id: "applications",
+    label: "Maombi",
+    description: "View and manage applications",
   },
   {
     id: "analytics",
