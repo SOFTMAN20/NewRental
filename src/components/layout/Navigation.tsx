@@ -179,13 +179,13 @@ const Navigation = () => {
 
           {/* Enhanced Navigation Menu - Desktop and Mobile Center */}
           {/* Mobile Center Navigation - Uongozaji wa katikati kwa simu */}
-          <div className={`md:hidden flex items-center space-x-1 backdrop-blur-md rounded-full px-2 py-1.5 ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property') ? 'bg-gray-100 border border-gray-200' : location.pathname === '/' ? (isScrolled ? 'bg-white/60 border border-white/20' : 'bg-white/10 border border-white/20') : 'bg-white/60 border border-white/80 shadow-sm'}`}>
+          <div className={`md:hidden inline-flex items-center space-x-0.5 backdrop-blur-md rounded-full px-1 py-1 ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property') ? 'bg-gray-100 border border-gray-200' : location.pathname === '/' ? (isScrolled ? 'bg-white/60 border border-white/20' : 'bg-white/10 border border-white/20') : 'bg-white/60 border border-white/80 shadow-sm'}`}>
             
             {/* Mobile Colleges Button */}
             <Button
               variant="ghost"
               onClick={() => setIsCollegesModalOpen(true)}
-              className={`px-2 py-1 rounded-full transition-all duration-300 text-xs font-medium
+              className={`px-2.5 py-1 h-auto rounded-full transition-all duration-300 text-xs font-medium
                          ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
                            ? 'text-gray-700 hover:bg-gray-200'
                            : location.pathname === '/'
@@ -199,7 +199,7 @@ const Navigation = () => {
             {/* <Link to="/marketplace">
               <Button
                 variant="ghost"
-                className={`px-2 py-1 rounded-full transition-all duration-300 text-xs font-medium ${
+                className={`px-2.5 py-1 h-auto rounded-full transition-all duration-300 text-xs font-medium ${
                   location.pathname === '/marketplace' || location.pathname.startsWith('/marketplace/')
                     ? location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
                       ? 'bg-gray-200'
@@ -221,7 +221,7 @@ const Navigation = () => {
             <Link to="/about">
               <Button
                 variant="ghost"
-                className={`px-2 py-1 rounded-full transition-all duration-300 text-xs font-medium ${
+                className={`px-2.5 py-1 h-auto rounded-full transition-all duration-300 text-xs font-medium ${
                   location.pathname === '/about' 
                     ? location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
                       ? 'bg-gray-200'
@@ -241,13 +241,13 @@ const Navigation = () => {
           </div>
 
           {/* Enhanced Desktop Navigation Menu - Menyu ya uongozaji wa kompyuta */}
-          <div className={`hidden md:flex items-center space-x-2 backdrop-blur-md rounded-full px-3 py-2.5 ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property') ? 'bg-gray-100 border border-gray-200' : location.pathname === '/' ? 'bg-white/10 border border-white/20' : 'bg-white/60 border border-white/80 shadow-sm'}`}>
+          <div className={`hidden md:inline-flex items-center space-x-1 backdrop-blur-md rounded-full px-2 py-1.5 ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property') ? 'bg-gray-100 border border-gray-200' : location.pathname === '/' ? 'bg-white/10 border border-white/20' : 'bg-white/60 border border-white/80 shadow-sm'}`}>
             
             {/* Colleges Link - Kiungo cha vyuo */}
             <Button
               variant="ghost"
               onClick={() => setIsCollegesModalOpen(true)}
-              className={`px-5 py-2 rounded-full transition-all duration-300 text-sm sm:text-base font-medium
+              className={`px-4 py-1.5 h-auto rounded-full transition-all duration-300 text-sm font-medium
                          ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
                            ? 'text-gray-700 hover:bg-gray-200 hover:text-gray-900'
                            : location.pathname === '/'
@@ -261,7 +261,7 @@ const Navigation = () => {
             <Link to="/about">
               <Button
                 variant="ghost"
-                className={`px-5 py-2 rounded-full transition-all duration-300 text-sm sm:text-base font-medium ${
+                className={`px-4 py-1.5 h-auto rounded-full transition-all duration-300 text-sm font-medium ${
                   location.pathname === '/about' 
                     ? location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
                       ? 'bg-gray-200'
@@ -518,8 +518,8 @@ const Navigation = () => {
 
           {/* Enhanced Mobile Menu Toggle Button - Kitufe cha menyu ya simu */}
           <div className="md:hidden flex items-center space-x-1">
-            {/* Mobile Search Button - Takes user to browse page */}
-            <Link to="/browse">
+            {/* Mobile Search Button - HIDDEN */}
+            {/* <Link to="/browse">
               <Button
                 variant="ghost"
                 size="sm"
@@ -531,7 +531,7 @@ const Navigation = () => {
               >
                 <Search className="h-4 w-4 sm:h-5 sm:w-5" />
               </Button>
-            </Link>
+            </Link> */}
             
             {/* Mobile Menu Toggle */}
             <Button
