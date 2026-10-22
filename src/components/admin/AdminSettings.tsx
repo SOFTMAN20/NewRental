@@ -19,9 +19,11 @@ import {
   Save,
   Phone,
   Building2,
+  AlertCircle,
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const AdminSettings = () => {
   const { toast } = useToast();
@@ -71,7 +73,7 @@ const AdminSettings = () => {
       data?.forEach(setting => {
         switch (setting.key) {
           case 'platform_name':
-            setPlatformName(setting.value || 'Nyumba Link');
+            setPlatformName(setting.value || 'Wanachuo');
             break;
           case 'support_email':
             setSupportEmail(setting.value || '');
@@ -190,6 +192,21 @@ const AdminSettings = () => {
 
   return (
     <div className="space-y-6">
+      {/* Company Contact Mode Active Banner */}
+      {useCompanyContact && (
+        <Alert className="bg-green-50 border-green-200">
+          <AlertCircle className="h-4 w-4 text-green-600" />
+          <AlertTitle className="text-green-900">Company Contact Mode Active</AlertTitle>
+          <AlertDescription className="text-green-800">
+            All property inquiries are currently being routed to the company WhatsApp: <strong>{companyWhatsApp}</strong>
+            <br />
+            <span className="text-sm text-green-700 mt-1 block">
+              Users will see "Contact via WhatsApp (Company)" instead of property owner contacts.
+            </span>
+          </AlertDescription>
+        </Alert>
+      )}
+
       <Tabs defaultValue="general" className="space-y-6">
         <TabsList className="grid w-full grid-cols-3 lg:w-[400px]">
           <TabsTrigger value="general">

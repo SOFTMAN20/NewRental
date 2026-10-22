@@ -63,6 +63,7 @@ import {
 import { useProperties, type Property } from '@/hooks/useProperties';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useTranslation } from 'react-i18next';
+import { useToast } from '@/hooks/use-toast';
 import ServiceFeeCalculator from '@/components/common/ServiceFeeCalculator';
 
 /**
@@ -80,6 +81,7 @@ const PropertyDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { toast } = useToast();
 
   // UI state management - Usimamizi wa hali ya UI
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -99,7 +101,7 @@ const PropertyDetail = () => {
     window.scrollTo(0, 0);
   }, []);
   
-  // Fetch platform settings
+  // Fetch platform settings with real-time updates
   useEffect(() => {
     const fetchPlatformSettings = async () => {
       try {
@@ -135,7 +137,59 @@ const PropertyDetail = () => {
       }
     };
     
+    // Initial fetch
     fetchPlatformSettings();
+    
+    // Subscribe to real-time changes
+    console.log('🔔 Setting up real-time subscription for platform settings...');
+    const channel = supabase
+      .channel('platform_settings_realtime')
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'platform_settings',
+          filter: 'key=in.(use_company_contact,company_whatsapp,support_phone)'
+        },
+        (payload) => {
+          console.log('⚡ Real-time update received:', payload);
+          const { key, value } = payload.new as { key: string; value: string };
+          
+          if (key === 'use_company_contact') {
+            const useCompany = value === 'true';
+            const previousValue = useCompanyContact;
+            setUseCompanyContact(useCompany);
+            console.log(`📞 [REALTIME] Use Company Contact updated: ${useCompany ? 'YES' : 'NO'}`);
+            
+            // Only show toast if value actually changed
+            if (previousValue !== useCompany) {
+              toast({
+                title: "Contact Settings Updated",
+                description: useCompany 
+                  ? "📞 Now showing company contact for all properties" 
+                  : "👤 Now showing property owner contacts",
+                duration: 4000,
+              });
+            }
+          } else if (key === 'company_whatsapp') {
+            setCompanyWhatsApp(value || '+255792072561');
+            console.log(`💬 [REALTIME] Company WhatsApp updated: ${value}`);
+            
+            toast({
+              title: "Company WhatsApp Updated",
+              description: `New number: ${value}`,
+              duration: 3000,
+            });
+          } else if (key === 'support_phone') {
+            setCompanyPhone(value || '+255 750 929 317');
+            console.log(`📱 [REALTIME] Company Phone updated: ${value}`);
+          }
+        }
+      )
+      .subscribe((status) => {
+        console.log('📡 Subscription status:', status);
+      });
     
     // Listen for focus event to refresh settings when user comes back
     const handleFocus = () => {
@@ -146,7 +200,9 @@ const PropertyDetail = () => {
     window.addEventListener('focus', handleFocus);
     
     return () => {
+      console.log('🔌 Unsubscribing from real-time updates...');
       window.removeEventListener('focus', handleFocus);
+      supabase.removeChannel(channel);
     };
   }, []);
 
