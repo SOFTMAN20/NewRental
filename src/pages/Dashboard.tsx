@@ -123,6 +123,9 @@ const Dashboard = () => {
   const { toast } = useToast();
   const { t } = useTranslation();
   
+  // Track initial load vs refetch
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  
   // Centralized UI state management
   const [uiState, setUIState] = useState<UIState>({
     showAddForm: false,
@@ -363,7 +366,10 @@ const Dashboard = () => {
     if (!user) return;
 
     try {
-      updateUIState({ loading: true });
+      // Only show loading skeleton on initial load, not on refetch
+      if (isInitialLoad) {
+        updateUIState({ loading: true });
+      }
       
       const { data, error } = await supabase
         .from('properties')
@@ -373,6 +379,11 @@ const Dashboard = () => {
 
       if (error) throw error;
       setProperties(data || []);
+      
+      // Mark initial load as complete
+      if (isInitialLoad) {
+        setIsInitialLoad(false);
+      }
     } catch (error) {
       console.error('Error fetching properties:', error);
       showErrorToast('Imeshindikana kupata nyumba zako');
@@ -881,8 +892,9 @@ const Dashboard = () => {
   /**
    * LOADING STATE RENDERING
    * ======================
+   * Only show skeleton on initial load, not on background refetches
    */
-  if (uiState.loading) {
+  if (uiState.loading && isInitialLoad) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50">
         {/* Dashboard Layout with Sidebar - No Navbar */}

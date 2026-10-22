@@ -20,6 +20,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Search, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { supabase } from '@/lib/integrations/supabase/client';
 
 interface College {
   id: string;
@@ -27,102 +28,103 @@ interface College {
   abbreviation: string;
   city: string;
   image: string;
+  propertyCount?: number; // Add property count
 }
 
 const colleges: College[] = [
   {
-    id: '9',
+    id: 'b9fd4ef3-343c-4035-b3a7-13b6d085823c', // MUST UUID from database
     name: 'Mbeya University of Science and Technology',
     abbreviation: 'MUST',
     city: 'Mbeya',
     image: '/images/collegephotos/must.png'
   },
   {
-    id: '11',
+    id: '89baa0cd-6d38-4dbc-a8fe-eced5006a1eb', // TEKU UUID from database
     name: 'Teofilo Kisanji University',
     abbreviation: 'TEKU',
     city: 'Mbeya',
     image: '/images/collegephotos/teku.jpeg'
   },
   {
-    id: '1',
+    id: '9c0445e4-5492-46ad-87d8-7aa19564a0d1', // UDSM UUID
     name: 'University of Dar es Salaam',
     abbreviation: 'UDSM',
     city: 'Dar es Salaam',
     image: '/images/collegephotos/udsm.jpg'
   },
   {
-    id: '2',
+    id: '3a66a06e-0dde-402c-9c85-69c992085f39', // DIT UUID
     name: 'Dar es Salaam Institute of Technology',
     abbreviation: 'DIT',
     city: 'Dar es Salaam',
     image: '/images/collegephotos/dit.jpg'
   },
   {
-    id: '10',
+    id: '4f57b203-d56d-4f7d-8685-79c5752ae658', // OUT UUID
     name: 'Open University of Tanzania',
     abbreviation: 'OUT',
     city: 'Dar es Salaam',
     image: '/images/collegephotos/out.jpg'
   },
   {
-    id: '3',
+    id: '993c5329-9588-4d10-ba81-c0bfde085940', // ARU UUID
     name: 'Ardhi University',
     abbreviation: 'ARU',
     city: 'Dar es Salaam',
     image: '/images/collegephotos/aru.jpg'
   },
   {
-    id: '4',
+    id: '4b003b77-b817-4371-bb2e-e3efc2f035f4', // MUHAS UUID
     name: 'Muhimbili University',
     abbreviation: 'MUHAS',
     city: 'Dar es Salaam',
     image: '/images/collegephotos/muhas.jpg'
   },
   {
-    id: '5',
+    id: '6321d492-87f2-49a3-899f-73380410366c', // UDOM UUID
     name: 'University of Dodoma',
     abbreviation: 'UDOM',
     city: 'Dodoma',
     image: '/images/collegephotos/udom.jpg'
   },
   {
-    id: '6',
+    id: '3fb45e07-d761-48c6-851c-61058ae42c17', // MU UUID
     name: 'Mzumbe University',
     abbreviation: 'MU',
     city: 'Morogoro',
     image: '/images/collegephotos/mzumbe.jpg'
   },
   {
-    id: '13',
+    id: '13', // MU Mbeya - need UUID
     name: 'Mzumbe University Mbeya Campus',
     abbreviation: 'MU Mbeya',
     city: 'Mbeya',
     image: '/images/collegephotos/mzumbe.jpg'
   },
   {
-    id: '7',
+    id: '68794951-3342-4633-9970-ae19cbea45c7', // SUA UUID
     name: 'Sokoine University',
     abbreviation: 'SUA',
     city: 'Morogoro',
     image: 'https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=400&h=300&fit=crop'
   },
   {
-    id: '8',
+    id: '369442a2-5421-4eb3-add0-e5677f541ebe', // IFM UUID
     name: 'Institute of Finance Management',
     abbreviation: 'IFM',
     city: 'Dar es Salaam',
     image: '/images/collegephotos/ifm.jpg'
   },
   {
-    id: '12',
+    id: '12', // CUOM - need UUID
     name: 'Catholic University of Mbeya',
     abbreviation: 'CUOM',
     city: 'Mbeya',
     image: '/images/collegephotos/cuom.jpg'
   },
   {
-    id: '14',
+    id: '14', // CBE - need UUID
     name: 'College of Business Education',
     abbreviation: 'CBE',
     city: 'Dar es Salaam',
@@ -137,6 +139,68 @@ interface CollegesModalProps {
 
 const CollegesModal: React.FC<CollegesModalProps> = ({ open, onClose }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [collegesWithCounts, setCollegesWithCounts] = useState<College[]>(colleges);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Fetch property counts for each university
+  useEffect(() => {
+    const fetchPropertyCounts = async () => {
+      if (!open) return;
+      
+      setIsLoading(true);
+      console.log('🔍 Fetching property counts for universities...');
+      
+      try {
+        // Fetch all active properties with university info
+        const { data: properties, error } = await supabase
+          .from('properties')
+          .select('university_id, universities(id, name, abbreviation)')
+          .eq('status', 'active')
+          .eq('is_available', true);
+
+        if (error) {
+          console.error('❌ Error fetching properties:', error);
+          return;
+        }
+
+        console.log('✅ Properties fetched:', properties?.length);
+        console.log('📋 Sample properties:', properties?.slice(0, 5));
+
+        // Count properties per university
+        const propertyCounts: Record<string, number> = {};
+        properties?.forEach(property => {
+          if (property.university_id) {
+            const uniId = property.university_id.toString();
+            propertyCounts[uniId] = (propertyCounts[uniId] || 0) + 1;
+          }
+        });
+
+        console.log('📊 Property counts by ID:', propertyCounts);
+        console.log('🎓 MUST (id=9):', propertyCounts['9'] || 0);
+        console.log('🎓 TEKU (id=11):', propertyCounts['11'] || 0);
+
+        // Update colleges with counts
+        const updatedColleges = colleges.map(college => ({
+          ...college,
+          propertyCount: propertyCounts[college.id] || 0
+        }));
+
+        console.log('✅ Colleges with counts:', updatedColleges.map(c => ({ 
+          id: c.id, 
+          abbr: c.abbreviation, 
+          count: c.propertyCount 
+        })));
+
+        setCollegesWithCounts(updatedColleges);
+      } catch (error) {
+        console.error('💥 Error fetching property counts:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPropertyCounts();
+  }, [open]);
 
   // Force higher z-index for overlay and content when modal opens
   useEffect(() => {
@@ -157,7 +221,7 @@ const CollegesModal: React.FC<CollegesModalProps> = ({ open, onClose }) => {
     }
   }, [open]);
 
-  const filteredColleges = colleges.filter(college =>
+  const filteredColleges = collegesWithCounts.filter(college =>
     college.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     college.abbreviation.toLowerCase().includes(searchQuery.toLowerCase()) ||
     college.city.toLowerCase().includes(searchQuery.toLowerCase())
@@ -196,33 +260,81 @@ const CollegesModal: React.FC<CollegesModalProps> = ({ open, onClose }) => {
 
         {/* University Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {filteredColleges.map((college) => (
-            <Link
-              key={college.id}
-              to={`/browse?university=${college.abbreviation}`}
-              onClick={onClose}
-              className="group relative overflow-hidden rounded-2xl shadow-md hover:shadow-xl transition-all duration-300"
-            >
-              {/* College Image */}
-              <div className="aspect-[4/3] overflow-hidden">
-                <img
-                  src={college.image}
-                  alt={college.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-              </div>
+          {filteredColleges.map((college) => {
+            // Force enable MUST and TEKU even if no properties yet
+            const isAlwaysEnabled = ['b9fd4ef3-343c-4035-b3a7-13b6d085823c', '89baa0cd-6d38-4dbc-a8fe-eced5006a1eb'].includes(college.id);
+            const hasProperties = (college.propertyCount || 0) > 0 || isAlwaysEnabled;
+            
+            // For Mbeya universities (MUST & TEKU), show all Mbeya properties
+            const isMbeyaUniversity = college.city === 'Mbeya';
+            const browseUrl = isMbeyaUniversity 
+              ? `/browse?city=Mbeya` 
+              : `/browse?university=${college.abbreviation}`;
+            
+            if (hasProperties) {
+              // University with properties - clickable link
+              return (
+                <Link
+                  key={college.id}
+                  to={browseUrl}
+                  onClick={onClose}
+                  className="group relative overflow-hidden rounded-2xl shadow-md hover:shadow-xl transition-all duration-300"
+                >
+                  {/* College Image */}
+                  <div className="aspect-[4/3] overflow-hidden">
+                    <img
+                      src={college.image}
+                      alt={college.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    {/* Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                  </div>
 
-              {/* College Info */}
-              <div className="absolute bottom-0 left-0 right-0 p-3">
-                <h4 className="text-white font-bold text-sm sm:text-base line-clamp-2">
-                  {college.abbreviation}
-                </h4>
-                <p className="text-white/80 text-xs mt-0.5">{college.city}</p>
-              </div>
-            </Link>
-          ))}
+                  {/* College Info */}
+                  <div className="absolute bottom-0 left-0 right-0 p-3">
+                    <h4 className="text-white font-bold text-sm sm:text-base line-clamp-2">
+                      {college.abbreviation}
+                    </h4>
+                    <p className="text-white/80 text-xs mt-0.5">{college.city}</p>
+                  </div>
+                </Link>
+              );
+            } else {
+              // University without properties - disabled card
+              return (
+                <div
+                  key={college.id}
+                  className="relative overflow-hidden rounded-2xl shadow-md opacity-50 cursor-not-allowed"
+                  title="No properties available yet"
+                >
+                  {/* College Image */}
+                  <div className="aspect-[4/3] overflow-hidden">
+                    <img
+                      src={college.image}
+                      alt={college.name}
+                      className="w-full h-full object-cover grayscale"
+                    />
+                    {/* Overlay with "Coming Soon" */}
+                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                      <div className="text-center px-2">
+                        <p className="text-white font-bold text-xs sm:text-sm">Coming Soon</p>
+                        <p className="text-white/80 text-xs mt-1">No properties yet</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* College Info */}
+                  <div className="absolute bottom-0 left-0 right-0 p-3 bg-gray-900/80">
+                    <h4 className="text-white font-bold text-sm sm:text-base line-clamp-2">
+                      {college.abbreviation}
+                    </h4>
+                    <p className="text-white/60 text-xs mt-0.5">{college.city}</p>
+                  </div>
+                </div>
+              );
+            }
+          })}
         </div>
 
         {/* No Results */}
