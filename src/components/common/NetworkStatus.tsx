@@ -19,12 +19,8 @@ const NetworkStatus: React.FC = () => {
       setIsOnline(true);
       if (wasOffline) {
         setShowNotification(true);
-        
-        // Auto-reload page when network comes back to refresh data
-        console.log('🌐 Network restored - Auto-reloading page...');
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+        // Network restored - React Query will auto-refetch on reconnect
+        console.log('🌐 Network restored - Data will refresh automatically');
       }
       setWasOffline(false);
     };

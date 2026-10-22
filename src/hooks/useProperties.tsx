@@ -219,14 +219,13 @@ export const useProperties = () => {
       
       return transformedData as Property[];
     },
-    // AGGRESSIVE REFRESH - NO CACHE DELAYS
-    staleTime: 0, // ALWAYS fetch fresh data - NO cache delays
-    gcTime: 0, // Clear cache immediately (was cacheTime)
-    refetchOnWindowFocus: true, // ALWAYS refetch when user returns
-    refetchOnMount: 'always', // ALWAYS refetch when component mounts
-    refetchOnReconnect: true, // ALWAYS refetch when internet reconnects
-    refetchInterval: 10 * 1000, // Auto-refetch every 10 seconds
-    refetchIntervalInBackground: true, // Keep refetching in background
+    // Optimized refresh settings - Balance between fresh data and performance
+    staleTime: 30 * 1000, // Consider data fresh for 30 seconds
+    gcTime: 5 * 60 * 1000, // Keep in cache for 5 minutes
+    refetchOnWindowFocus: true, // Refetch when user returns to tab
+    refetchOnMount: true, // Refetch when component mounts
+    refetchOnReconnect: true, // Refetch when internet reconnects
+    refetchInterval: false, // DISABLED: No auto-refresh to prevent interruptions
     retry: 2, // Limit retries for faster failure handling
   });
 };
