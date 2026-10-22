@@ -167,11 +167,29 @@ const FeaturedProperties = () => {
   const { t } = useTranslation();
   const { data: allProperties = [], isLoading, error } = useProperties();
 
+  /**
+   * SHUFFLE ALGORITHM - Fisher-Yates
+   * ================================
+   * Randomly shuffles array in-place for dynamic property display.
+   * Each visitor sees different properties in different order.
+   */
+  const shuffleArray = <T,>(array: T[]): T[] => {
+    const shuffled = [...array]; // Create copy to avoid mutating original
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
   // Get featured properties - 8 for mobile, 16 for desktop
   const isMobile = window.innerWidth < 768; // md breakpoint
   const propertyLimit = isMobile ? 8 : 16;
   const typedProperties = allProperties as Property[];
-  const properties = typedProperties.slice(0, propertyLimit);
+  
+  // Shuffle properties for dynamic display (different for each visitor)
+  const shuffledProperties = shuffleArray(typedProperties);
+  const properties = shuffledProperties.slice(0, propertyLimit);
 
   const getAmenityIcon = (amenity: string) => {
     switch (amenity) {
