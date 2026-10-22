@@ -95,7 +95,7 @@ const PWAInstallPrompt: React.FC = () => {
   if (!showPrompt) return null;
 
   return (
-    <div className="fixed bottom-32 sm:bottom-28 left-1/2 -translate-x-1/2 z-[100] animate-in slide-in-from-bottom">
+    <div className="fixed bottom-32 sm:bottom-6 left-1/2 sm:left-auto sm:right-6 -translate-x-1/2 sm:translate-x-0 z-[100] animate-in slide-in-from-bottom">
       <div className="bg-white rounded-xl shadow-2xl border-2 border-primary/30 p-4 w-fit relative">
         {/* Content - Everything in One Row */}
         <div className="flex items-center gap-3">
