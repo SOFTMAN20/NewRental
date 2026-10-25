@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Eye, EyeOff, Home, Check } from 'lucide-react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -27,15 +27,26 @@ const SignUp = () => {
     userType: 'tenant' // Default to tenant (student)
   });
   const navigate = useNavigate();
+  const location = useLocation();
   const { signUp, user, loading, checkUserTypeAndRedirect } = useAuth();
   const { t } = useTranslation();
+
+  // Get return URL from location state
+  const returnTo = location.state?.returnTo;
+  const openApplication = location.state?.openApplication;
 
   // Redirect if already authenticated
   useEffect(() => {
     if (!loading && user) {
-      checkUserTypeAndRedirect(navigate);
+      if (returnTo) {
+        // Return to the page user came from
+        navigate(returnTo, { state: { openApplication }, replace: true });
+      } else {
+        // Default redirect based on user type
+        checkUserTypeAndRedirect(navigate);
+      }
     }
-  }, [user, loading, navigate, checkUserTypeAndRedirect]);
+  }, [user, loading, navigate, checkUserTypeAndRedirect, returnTo, openApplication]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,15 +65,19 @@ const SignUp = () => {
     });
 
     if (!error) {
-      // Navigate landlords to dashboard using the new redirect function
-      if (formData.userType === 'landlord') {
-        // Small delay to ensure profile is created
-        setTimeout(() => {
+      // Small delay to ensure profile is created
+      setTimeout(() => {
+        if (returnTo) {
+          // Return to the page user came from (e.g., property detail)
+          navigate(returnTo, { state: { openApplication }, replace: true });
+        } else if (formData.userType === 'landlord') {
+          // Navigate landlords to dashboard
           checkUserTypeAndRedirect(navigate);
-        }, 1000);
-      } else {
-        navigate('/', { replace: true });
-      }
+        } else {
+          // Navigate other users to homepage
+          navigate('/', { replace: true });
+        }
+      }, 1000);
       
       setFormData({
         fullName: '',
@@ -270,7 +285,11 @@ const SignUp = () => {
               <div className="mt-6 text-center">
                 <p className="text-sm text-gray-600">
                   {t('auth.alreadyHaveAccount')}{' '}
-                  <Link to="/signin" className="text-primary hover:underline font-medium">
+                  <Link 
+                    to="/signin" 
+                    state={{ returnTo, openApplication }}
+                    className="text-primary hover:underline font-medium"
+                  >
                     {t('auth.signInHere')}
                   </Link>
                 </p>

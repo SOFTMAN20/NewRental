@@ -64,6 +64,7 @@ import { useProperties, type Property } from '@/hooks/useProperties';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 import ServiceFeeCalculator from '@/components/common/ServiceFeeCalculator';
 
 /**
@@ -82,6 +83,7 @@ const PropertyDetail = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { toast } = useToast();
+  const { user } = useAuth();
 
   // UI state management - Usimamizi wa hali ya UI
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -90,7 +92,7 @@ const PropertyDetail = () => {
   
   // Platform settings - Mipangilio ya jukwaa
   const [useCompanyContact, setUseCompanyContact] = useState(false);
-  const [companyWhatsApp, setCompanyWhatsApp] = useState('+255792072561');
+  const [companyWhatsApp, setCompanyWhatsApp] = useState('+255722429317');
   const [companyPhone, setCompanyPhone] = useState('+255 750 929 317');
 
   // Favorites functionality - Utendakazi wa vipendwa
@@ -125,7 +127,7 @@ const PropertyDetail = () => {
             setUseCompanyContact(useCompany);
             console.log(`📞 Use Company Contact: ${useCompany ? 'YES' : 'NO'}`);
           } else if (setting.key === 'company_whatsapp') {
-            setCompanyWhatsApp(setting.value || '+255792072561');
+            setCompanyWhatsApp(setting.value || '+255722429317');
             console.log(`💬 Company WhatsApp: ${setting.value}`);
           } else if (setting.key === 'support_phone') {
             setCompanyPhone(setting.value || '+255 750 929 317');
@@ -173,7 +175,7 @@ const PropertyDetail = () => {
               });
             }
           } else if (key === 'company_whatsapp') {
-            setCompanyWhatsApp(value || '+255792072561');
+            setCompanyWhatsApp(value || '+255722429317');
             console.log(`💬 [REALTIME] Company WhatsApp updated: ${value}`);
             
             toast({
@@ -352,6 +354,76 @@ ${imageUrl ? `📸 *Picha:* ${imageUrl}` : ''}`;
 
     await toggleFavorite(property.id);
   };
+
+  /**
+   * APPLICATION MODAL HANDLER WITH AUTHENTICATION CHECK
+   * ==================================================
+   * 
+   * Checks if user is logged in before opening application modal.
+   * If not logged in, shows friendly message and redirects to login.
+   * 
+   * Kuangalia kama mtumiaji amelogin kabla ya kufungua modal ya maombi.
+   * Kama hajaingiza, inaonyesha ujumbe wa kirafiki na kumwelekeza kwenda login.
+   */
+  const handleApplyClick = () => {
+    if (!user) {
+      // User not logged in - show friendly informational message
+      toast({
+        variant: 'info',
+        title: '🔐 Ingia Kwanza',
+        description: 'Tafadhali ingia akaunti yako ili kuomba kupanga nyumba hii. Je, una akaunti? Ikiwa haujajiandikisha, jiandikishe sasa!',
+        duration: 5000,
+      });
+      
+      // Redirect to login page after 1.5 seconds with return URL
+      setTimeout(() => {
+        navigate('/signin', { 
+          state: { 
+            returnTo: `/property/${id}`,
+            openApplication: true,
+            message: 'Ingia ili kuomba kupanga nyumba'
+          } 
+        });
+      }, 1500);
+      
+      return;
+    }
+    
+    // User is logged in - open application modal
+    setIsApplicationModalOpen(true);
+  };
+
+  /**
+   * AUTO-OPEN APPLICATION MODAL AFTER LOGIN
+   * ======================================
+   * 
+   * If user returns from login/signup with openApplication flag,
+   * automatically open the application modal.
+   * 
+   * Kama mtumiaji anarudi kutoka login/signup na flag ya openApplication,
+   * fungua modal ya application moja kwa moja.
+   */
+  useEffect(() => {
+    const state = window.history.state?.usr;
+    
+    if (user && state?.openApplication && !isApplicationModalOpen) {
+      // Small delay to ensure component is fully loaded
+      setTimeout(() => {
+        setIsApplicationModalOpen(true);
+        
+        // Show success message
+        toast({
+          variant: 'success',
+          title: '✅ Karibu!',
+          description: 'Sasa unaweza kuomba kupanga nyumba hii.',
+          duration: 3000,
+        });
+        
+        // Clear the state to prevent reopening on refresh
+        window.history.replaceState({}, document.title);
+      }, 500);
+    }
+  }, [user, isApplicationModalOpen, toast]);
 
   /**
    * LOADING STATE RENDERING
@@ -957,7 +1029,7 @@ ${imageUrl ? `📸 *Picha:* ${imageUrl}` : ''}`;
                     <Button
                       className="w-full bg-primary hover:bg-primary/90 text-white text-sm sm:text-base py-3 sm:py-4 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                       disabled={!property.is_available}
-                      onClick={() => setIsApplicationModalOpen(true)}
+                      onClick={handleApplyClick}
                     >
                       {property.is_available ? 'Apply Now' : 'Not Available'}
                     </Button>
@@ -1112,7 +1184,7 @@ ${imageUrl ? `📸 *Picha:* ${imageUrl}` : ''}`;
                 <Button
                   className="bg-primary hover:bg-primary/90 active:bg-primary/80 text-white px-5 sm:px-8 py-3 sm:py-4 font-bold disabled:opacity-50 disabled:cursor-not-allowed flex-1 transition-all duration-200 shadow-lg hover:shadow-xl text-sm sm:text-base"
                   disabled={!property.is_available}
-                  onClick={() => setIsApplicationModalOpen(true)}
+                  onClick={handleApplyClick}
                 >
                   {property.is_available ? 'Apply' : 'Unavailable'}
                 </Button>

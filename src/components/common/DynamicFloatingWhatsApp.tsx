@@ -11,7 +11,7 @@ import { supabase } from '@/lib/integrations/supabase/client';
 import FloatingWhatsApp from './FloatingWhatsApp';
 
 const DynamicFloatingWhatsApp = () => {
-  const [whatsappNumber, setWhatsappNumber] = useState('+255792072561'); // Default fallback
+  const [whatsappNumber, setWhatsappNumber] = useState('+255722429317'); // Default fallback
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

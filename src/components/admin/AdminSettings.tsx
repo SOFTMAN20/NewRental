@@ -34,7 +34,7 @@ const AdminSettings = () => {
   const [platformName, setPlatformName] = useState("Nyumba Link");
   const [supportEmail, setSupportEmail] = useState("info@nyumbalink.co.tz");
   const [supportPhone, setSupportPhone] = useState("+255 750 929 317");
-  const [companyWhatsApp, setCompanyWhatsApp] = useState("+255792072561");
+  const [companyWhatsApp, setCompanyWhatsApp] = useState("+255722429317");
   const [useCompanyContact, setUseCompanyContact] = useState(false);
   const [maintenanceMode, setMaintenanceMode] = useState(false);
   const [registrationOpen, setRegistrationOpen] = useState(true);

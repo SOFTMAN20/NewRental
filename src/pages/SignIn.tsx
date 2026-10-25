@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Eye, EyeOff, Home } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -19,15 +19,26 @@ const SignIn = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { signIn, user, loading, checkUserTypeAndRedirect } = useAuth();
   const { t } = useTranslation();
+
+  // Get return URL from location state
+  const returnTo = location.state?.returnTo;
+  const openApplication = location.state?.openApplication;
 
   // Redirect if already authenticated
   useEffect(() => {
     if (!loading && user) {
-      checkUserTypeAndRedirect(navigate);
+      if (returnTo) {
+        // Return to the page user came from
+        navigate(returnTo, { state: { openApplication }, replace: true });
+      } else {
+        // Default redirect based on user type
+        checkUserTypeAndRedirect(navigate);
+      }
     }
-  }, [user, loading, navigate, checkUserTypeAndRedirect]);
+  }, [user, loading, navigate, checkUserTypeAndRedirect, returnTo, openApplication]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,9 +47,15 @@ const SignIn = () => {
     const { error } = await signIn(formData.email, formData.password);
     
     if (!error) {
-      // Wait a moment for the user state to update, then check user type and redirect
+      // Wait a moment for the user state to update
       setTimeout(() => {
-        checkUserTypeAndRedirect(navigate);
+        if (returnTo) {
+          // Return to the page user came from (e.g., property detail)
+          navigate(returnTo, { state: { openApplication }, replace: true });
+        } else {
+          // Default redirect based on user type
+          checkUserTypeAndRedirect(navigate);
+        }
       }, 500);
     }
     
@@ -166,7 +183,11 @@ const SignIn = () => {
               <div className="mt-6 text-center">
                 <p className="text-sm text-gray-600">
                   {t('auth.noAccount')}{' '}
-                  <Link to="/signup" className="text-primary hover:underline font-medium">
+                  <Link 
+                    to="/signup" 
+                    state={{ returnTo, openApplication }}
+                    className="text-primary hover:underline font-medium"
+                  >
                     {t('auth.signUpHere')}
                   </Link>
                 </p>
