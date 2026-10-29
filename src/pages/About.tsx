@@ -161,10 +161,10 @@ const About = () => {
    */
   const team = [
     {
-      name: 'StarLabs AI',
-      role: t('about.leadDeveloper'),
+      name: 'Sachi AI',
+      role: t('about.systemCreators'),
       description: t('about.aiTeamDescription'),
-      image: '/images/starlabs.jpg',
+      image: '/images/team2.png',
       gradient: 'from-primary to-serengeti-500',
       skills: ['AI Development', 'System Architecture', 'Innovation']
     },
@@ -172,7 +172,7 @@ const About = () => {
       name: t('about.developmentTeam'),
       role: t('about.systemCreators'),
       description: t('about.developersDescription'),
-      image: '/images/starlabs.jpg',
+      image: '/images/team1.png',
       gradient: 'from-blue-500 to-purple-500',
       skills: ['React Development', 'UI/UX Design', 'Database Management']
     },
@@ -180,7 +180,7 @@ const About = () => {
       name: t('about.serviceTeam'),
       role: t('about.customerSupport'),
       description: t('about.supportDescription'),
-      image: '/images/services.jpg',
+      image: '/images/operations.png',
       gradient: 'from-green-500 to-teal-500',
       skills: ['Customer Support', 'Problem Solving', '24/7 Service']
     }

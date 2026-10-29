@@ -93,22 +93,30 @@ const ApplicationModal: React.FC<ApplicationModalProps> = ({
     try {
       setSubmitting(true);
 
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('applications')
         .insert([
           {
             property_id: propertyId,
             applicant_id: user.id,
+            tenant_id: user.id,  // Required field
             applicant_name: formData.applicant_name,
             applicant_email: formData.applicant_email,
             applicant_phone: formData.applicant_phone,
-            message: formData.message || null,
+            additional_info: formData.message || null,  // Changed from 'message' to 'additional_info'
             move_in_date: formData.move_in_date,
             status: 'pending'
           }
-        ]);
+        ])
+        .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('❌ Supabase insert error:', error);
+        console.error('Error details:', JSON.stringify(error, null, 2));
+        throw error;
+      }
+
+      console.log('✅ Application submitted successfully:', data);
 
       toast({
         title: 'Ombi Limetumwa!',
@@ -125,12 +133,28 @@ const ApplicationModal: React.FC<ApplicationModalProps> = ({
       });
       onClose();
 
-    } catch (error) {
-      console.error('Error submitting application:', error);
+    } catch (error: any) {
+      console.error('❌ Error submitting application:', error);
+      console.error('Error code:', error?.code);
+      console.error('Error message:', error?.message);
+      console.error('Error details:', error?.details);
+      console.error('Error hint:', error?.hint);
+      
+      // More specific error messages
+      let errorMessage = 'Imeshindikana kutuma ombi. Tafadhali jaribu tena.';
+      
+      if (error?.message?.includes('violates row-level security')) {
+        errorMessage = 'Huna ruhusa ya kutuma ombi. Tafadhali ingia tena.';
+      } else if (error?.message?.includes('duplicate')) {
+        errorMessage = 'Umeshatuma ombi kwa nyumba hii. Angalia maombi yako.';
+      } else if (error?.code === '23503') {
+        errorMessage = 'Nyumba hii haipatikani tena.';
+      }
+      
       toast({
         variant: 'destructive',
         title: 'Hitilafu',
-        description: 'Imeshindikana kutuma ombi. Tafadhali jaribu tena.'
+        description: errorMessage
       });
     } finally {
       setSubmitting(false);
