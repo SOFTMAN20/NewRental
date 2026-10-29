@@ -366,63 +366,6 @@ const About = () => {
         </div>
       </section>
 
-      {/* Enhanced Statistics Section with Dark Theme - HIDDEN FOR NOW */}
-      {/* 
-      <section className="py-16 sm:py-24 lg:py-32 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0)`,
-            backgroundSize: '30px 30px sm:50px 50px'
-          }}></div>
-        </div>
-        
-        <div className="absolute inset-0">
-          <div className="absolute top-10 sm:top-20 left-1/4 w-48 h-48 sm:w-96 sm:h-96 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-10 sm:bottom-20 right-1/4 w-48 h-48 sm:w-96 sm:h-96 bg-serengeti-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 sm:w-64 sm:h-64 bg-blue-500/20 rounded-full blur-2xl animate-pulse delay-500"></div>
-        </div>
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 sm:mb-16 lg:mb-24">
-            <Badge className="mb-6 sm:mb-8 bg-white/10 text-white border-white/20 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-lg backdrop-blur-sm">
-              <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" />
-              Our Impact
-            </Badge>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-6 sm:mb-8 leading-tight px-4">
-              {t('about.achievements')}
-            </h2>
-            <p className="text-lg sm:text-xl lg:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed px-4">
-              {t('about.achievementsSubtitle')}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-            {stats.map((stat, index) => (
-              <Card key={index} className={`group border-0 bg-white/10 backdrop-blur-lg hover:bg-white/20 transition-all duration-700 transform hover:-translate-y-3 sm:hover:-translate-y-6 hover:scale-105 sm:hover:scale-110 ${stat.delay} animate-fade-in relative overflow-hidden`}>
-                <div className={`absolute inset-0 ${stat.bgGlow} opacity-0 group-hover:opacity-30 transition-opacity duration-500 blur-xl`}></div>
-                
-                <CardContent className="p-4 sm:p-6 lg:p-10 text-center relative">
-                  <div className={`w-12 h-12 sm:w-16 sm:h-16 lg:w-24 lg:h-24 bg-gradient-to-br ${stat.gradient} rounded-2xl sm:rounded-3xl flex items-center justify-center mx-auto mb-4 sm:mb-6 lg:mb-8 group-hover:scale-125 group-hover:rotate-12 transition-all duration-500 shadow-2xl`}>
-                    <stat.icon className="h-6 w-6 sm:h-8 sm:w-8 lg:h-12 lg:w-12 text-white" />
-                  </div>
-                  <div className="text-2xl sm:text-3xl lg:text-4xl xl:text-6xl font-bold text-white mb-2 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
-                    {stat.number}
-                  </div>
-                  <div className="text-gray-300 font-medium text-xs sm:text-sm lg:text-lg">
-                    {stat.label}
-                  </div>
-                  
-                  <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="w-3 h-3 bg-white rounded-full animate-ping"></div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-      */}
-
       {/* Enhanced Values Section with Interactive Cards */}
       <section className="py-16 sm:py-24 lg:py-32 bg-gradient-to-br from-gray-50 via-white to-blue-50 relative overflow-hidden">
         {/* Background Pattern */}
