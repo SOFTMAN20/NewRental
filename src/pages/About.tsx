@@ -203,7 +203,11 @@ const About = () => {
             <div className="w-8 h-8 sm:w-12 sm:h-12 bg-white/80 rounded-full flex items-center justify-center shadow-lg overflow-hidden">
               <img 
                 src="/images/logo.png" 
-                alt="Wanachuo.com Logo" 
+                alt="Wanachuo.com Logo"
+                loading="lazy"
+                decoding="async"
+                width="32"
+                height="32"
                 className="h-5 w-5 sm:h-8 sm:w-8 object-contain"
               />
             </div>
@@ -224,7 +228,11 @@ const About = () => {
                 <div className="relative w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-primary to-serengeti-500 rounded-2xl flex items-center justify-center shadow-2xl transform hover:scale-110 transition-all duration-300 overflow-hidden">
                   <img 
                     src="/images/logo.png" 
-                    alt="Wanachuo.com Logo" 
+                    alt="Wanachuo.com Logo"
+                    loading="eager"
+                    decoding="async"
+                    width="64"
+                    height="64"
                     className="h-10 w-10 sm:h-16 sm:w-16 object-contain"
                   />
                 </div>
@@ -358,9 +366,9 @@ const About = () => {
         </div>
       </section>
 
-      {/* Enhanced Statistics Section with Dark Theme */}
+      {/* Enhanced Statistics Section with Dark Theme - HIDDEN FOR NOW */}
+      {/* 
       <section className="py-16 sm:py-24 lg:py-32 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 relative overflow-hidden">
-        {/* Animated Background Grid */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
             backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0)`,
@@ -368,7 +376,6 @@ const About = () => {
           }}></div>
         </div>
         
-        {/* Floating Orbs */}
         <div className="absolute inset-0">
           <div className="absolute top-10 sm:top-20 left-1/4 w-48 h-48 sm:w-96 sm:h-96 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute bottom-10 sm:bottom-20 right-1/4 w-48 h-48 sm:w-96 sm:h-96 bg-serengeti-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
@@ -392,7 +399,6 @@ const About = () => {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             {stats.map((stat, index) => (
               <Card key={index} className={`group border-0 bg-white/10 backdrop-blur-lg hover:bg-white/20 transition-all duration-700 transform hover:-translate-y-3 sm:hover:-translate-y-6 hover:scale-105 sm:hover:scale-110 ${stat.delay} animate-fade-in relative overflow-hidden`}>
-                {/* Glow Effect */}
                 <div className={`absolute inset-0 ${stat.bgGlow} opacity-0 group-hover:opacity-30 transition-opacity duration-500 blur-xl`}></div>
                 
                 <CardContent className="p-4 sm:p-6 lg:p-10 text-center relative">
@@ -406,7 +412,6 @@ const About = () => {
                     {stat.label}
                   </div>
                   
-                  {/* Hover Effect Indicator */}
                   <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <div className="w-3 h-3 bg-white rounded-full animate-ping"></div>
                   </div>
@@ -416,6 +421,7 @@ const About = () => {
           </div>
         </div>
       </section>
+      */}
 
       {/* Enhanced Values Section with Interactive Cards */}
       <section className="py-16 sm:py-24 lg:py-32 bg-gradient-to-br from-gray-50 via-white to-blue-50 relative overflow-hidden">
@@ -508,13 +514,17 @@ const About = () => {
                 <div className="absolute inset-0 bg-gradient-to-br from-transparent to-gray-100 opacity-0 group-hover:opacity-50 transition-opacity duration-500"></div>
                 
                 <CardContent className="p-0 relative">
-                  {/* Enhanced Image Section with Overlay */}
+                  {/* Enhanced Image Section with Lazy Loading & Optimization */}
                   <div className="relative overflow-hidden">
-                    <div className="w-full h-64 sm:h-80 lg:h-96 overflow-hidden">
+                    <div className="w-full h-64 sm:h-80 lg:h-96 overflow-hidden bg-gray-100">
                       <img
                         src={member.image}
                         alt={member.name}
-                        className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700"
+                        loading="lazy"
+                        decoding="async"
+                        width="800"
+                        height="600"
+                        className="w-full h-full object-cover object-top group-hover:scale-125 transition-transform duration-700"
                       />
                     </div>
                     
@@ -711,7 +721,11 @@ const About = () => {
             <div className="w-8 h-8 sm:w-12 sm:h-12 bg-white/80 rounded-full flex items-center justify-center shadow-lg overflow-hidden">
               <img 
                 src="/images/logo.png" 
-                alt="Wanachuo.com Logo" 
+                alt="Wanachuo.com Logo"
+                loading="lazy"
+                decoding="async"
+                width="32"
+                height="32"
                 className="h-5 w-5 sm:h-8 sm:w-8 object-contain"
               />
             </div>
