@@ -275,6 +275,23 @@ const Marketplace = () => {
         created_at: '2026-10-18T14:30:00.000Z',
         updated_at: '2026-10-18T14:30:00.000Z',
         category: { id: 'furniture', name: 'Furniture', name_sw: 'Samani', slug: 'furniture', icon: 'sofa', parent_id: null, display_order: 1, created_at: '', updated_at: '' }
+      },
+      {
+        id: 'mock-12',
+        title: 'Gas Cylinders - Mnjis, Ogas, Taifa & Orxy Available',
+        description: 'Quality gas cylinders available with competitive prices. Choose your preferred brand!\n\n💰 PRICES:\n• Mnjis: TZS 45,000 (complete) | Refill: TZS 27,000\n• Ogas: TZS 50,000 (complete) | Refill: TZS 27,000\n• Taifa Gas: TZS 50,000 (complete) | Refill: TZS 27,000\n• Orxy: TZS 60,000 (complete) | Refill: TZS 28,000\n\nAll cylinders come with regulator and safety accessories when you buy complete package.',
+        price: 45000,
+        condition: 'new',
+        category_id: 'gas',
+        location: 'MUST, Mbeya',
+        images: ['/images/market image/gas.jpeg'],
+        seller_id: 'mock-user',
+        status: 'active',
+        is_sold: false,
+        views_count: 98,
+        created_at: '2026-10-17T09:00:00.000Z',
+        updated_at: '2026-10-17T09:00:00.000Z',
+        category: { id: 'gas', name: 'Gas', name_sw: 'Gesi', slug: 'gas', icon: 'package', parent_id: null, display_order: 3, created_at: '', updated_at: '' }
       }
     ];
 

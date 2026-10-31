@@ -354,6 +354,30 @@ const MarketplaceItemDetail = () => {
           phone: '+255722429317',
           university: 'Mbeya University of Science and Technology'
         }
+      },
+      'mock-12': {
+        id: 'mock-12',
+        title: 'Gas Cylinders - Mnjis, Ogas, Taifa & Orxy Available',
+        description: 'Quality gas cylinders available with competitive prices. Choose your preferred brand!\n\n💰 COMPLETE PACKAGES (Cylinder + Regulator + Accessories):\n• Mnjis Gas: TZS 45,000\n• Ogas Gas: TZS 50,000\n• Taifa Gas: TZS 50,000\n• Orxy Gas: TZS 60,000\n\n🔄 REFILL ONLY:\n• Mnjis: TZS 27,000\n• Ogas: TZS 27,000\n• Taifa: TZS 27,000\n• Orxy: TZS 28,000\n\nAll cylinders are 6kg capacity, perfect for student cooking. Complete packages include regulator, pipe, and safety valve. Safe and reliable brands trusted by students.',
+        price: 45000,
+        condition: 'new',
+        category_id: 'gas',
+        location: 'MUST, Mbeya',
+        images: ['/images/market image/gas.jpeg'],
+        seller_id: 'mock-user-12',
+        status: 'active',
+        is_sold: false,
+        views_count: 98,
+        created_at: '2026-10-17T09:00:00.000Z',
+        updated_at: '2026-10-17T09:00:00.000Z',
+        category: { id: 'gas', name: 'Gas', name_sw: 'Gesi', slug: 'gas', icon: 'package', parent_id: null, display_order: 3, created_at: '', updated_at: '' },
+        seller: {
+          id: 'mock-user-12',
+          name: 'Joseph Mlunde',
+          email: 'joseph.m@example.com',
+          phone: '+255722429317',
+          university: 'Mbeya University of Science and Technology'
+        }
       }
     };
 
@@ -374,6 +398,7 @@ const MarketplaceItemDetail = () => {
       getMockListing('mock-9'),
       getMockListing('mock-10'),
       getMockListing('mock-11'),
+      getMockListing('mock-12'),
     ].filter((item): item is MarketplaceListing => item !== null);
 
     return allMockItems
