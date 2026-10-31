@@ -95,7 +95,7 @@ const MarketplaceItemDetail = () => {
         id: 'mock-1',
         title: 'Kitanda cha Mbao - Wooden Bed Frame',
         description: 'Beautiful wooden bed frame, solid construction. Perfect for student rooms. Strong and durable.\n\nFeatures:\n- Solid wood construction\n- Strong and sturdy design\n- Easy to assemble\n- Good quality finish\n- Spacious sleeping area\n\nSelling because I\'m graduating. Great condition and ready for new owner!',
-        price: 250000,
+        price: 220000,
         condition: 'good',
         category_id: 'furniture',
         location: 'MUST, Mbeya',
@@ -117,10 +117,10 @@ const MarketplaceItemDetail = () => {
       },
       'mock-2': {
         id: 'mock-2',
-        title: 'Kitanda - Complete Bed with Mattress',
-        description: 'Complete bed setup ready to use. Good quality mattress included. Clean and well maintained.\n\nIncludes:\n- Bed frame\n- Comfortable mattress\n- All assembly parts\n- Clean and sanitized\n\nPerfect for students looking for complete sleeping solution. Used with care!',
-        price: 180000,
-        condition: 'good',
+        title: 'Kitanda Complete 5×6 - Bed with Mattress',
+        description: 'Complete 5×6 feet bed setup with quality mattress. Special discount offer!\n\n💰 PRICING:\n• Regular Price: TZS 450,000\n• Special Price: TZS 400,000 ✨\n• Save: TZS 50,000!\n\n📏 SPECIFICATIONS:\n• Size: 5 feet × 6 feet\n• Includes bed frame\n• Includes quality mattress\n• Strong wooden construction\n• Modern design\n\n⚠️ STATUS:\n• Kazi inafanyika (Work in progress)\n• Will be ready soon\n• Reserve now at special price!\n\nPerfect for couples or those who want extra sleeping space. High quality materials and craftsmanship.',
+        price: 400000,
+        condition: 'like_new',
         category_id: 'mattress',
         location: 'MUST, Mbeya',
         images: ['/images/market image/kitanda.jpeg'],
@@ -141,9 +141,9 @@ const MarketplaceItemDetail = () => {
       },
       'mock-3': {
         id: 'mock-3',
-        title: 'Kitanda 250k - Student Bed',
-        description: 'Affordable student bed in excellent condition. Space-saving design perfect for hostel rooms.\n\nFeatures:\n- Compact design\n- Strong frame\n- Easy to move\n- Perfect size for student rooms\n- Well maintained\n\nGreat value for money. Selling as I\'m moving to a new place!',
-        price: 250000,
+        title: 'Kitanda - Bed Frame 5×6 & 4×6',
+        description: 'Quality bed frames available in two sizes. Choose what fits your room best!\n\n💰 PRICING BY SIZE:\n• 5 feet × 6 feet: TZS 250,000\n• 4 feet × 6 feet: TZS 200,000\n\n✨ FEATURES:\n• Space-saving design\n• Strong frame\n• Easy to move\n• Perfect for student rooms\n• Like new condition\n• Well maintained\n\n📏 SIZE OPTIONS:\n• Large (5×6): Extra space and comfort\n• Standard (4×6): Ideal for hostels\n\nGreat value for money. Both sizes available - contact seller to specify!',
+        price: 200000,
         condition: 'like_new',
         category_id: 'furniture',
         location: 'MUST, Mbeya',
@@ -215,7 +215,7 @@ const MarketplaceItemDetail = () => {
         id: 'mock-6',
         title: 'Meza ya Gesi 45k - Small Gas Table',
         description: 'Compact gas table perfect for small spaces. Affordable and functional for student needs.\n\nFeatures:\n- Space-saving design\n- Stable and sturdy\n- Perfect for small kitchens\n- Good condition\n- Easy to move\n\nAffordable solution for student cooking. Still in good working condition!',
-        price: 45000,
+        price: 70000,
         condition: 'fair',
         category_id: 'gas',
         location: 'MUST, Mbeya',
@@ -239,7 +239,7 @@ const MarketplaceItemDetail = () => {
         id: 'mock-7',
         title: 'Kabati - Large Wardrobe',
         description: 'Spacious wooden wardrobe with multiple compartments. Great for organizing clothes and belongings.\n\nFeatures:\n- Multiple shelves\n- Hanging space\n- Solid wood construction\n- Large storage capacity\n- Good condition\n\nPerfect for keeping your room organized!',
-        price: 160000,
+        price: 260000,
         condition: 'good',
         category_id: 'furniture',
         location: 'MUST, Mbeya',
@@ -287,7 +287,7 @@ const MarketplaceItemDetail = () => {
         id: 'mock-9',
         title: 'Skeleton ya Nguo - Clothes Rack',
         description: 'Portable clothes hanger rack. Easy to assemble and move. Perfect for hostels without closets.\n\nFeatures:\n- Easy assembly\n- Portable design\n- Multiple hanging bars\n- Stable base\n- Good for small spaces\n\nAffordable solution for hanging clothes!',
-        price: 35000,
+        price: 75000,
         condition: 'good',
         category_id: 'furniture',
         location: 'MUST, Mbeya',
@@ -311,7 +311,7 @@ const MarketplaceItemDetail = () => {
         id: 'mock-10',
         title: 'Kuekea Viatu - Shoe Rack',
         description: 'Multi-tier shoe rack with good capacity. Keep your room organized. Sturdy metal construction.\n\nFeatures:\n- Multiple tiers\n- Metal frame\n- Holds many pairs of shoes\n- Easy to assemble\n- Space-saving design\n\nKeep your shoes organized and accessible!',
-        price: 28000,
+        price: 70000,
         condition: 'good',
         category_id: 'furniture',
         location: 'MUST, Mbeya',
@@ -333,10 +333,10 @@ const MarketplaceItemDetail = () => {
       },
       'mock-11': {
         id: 'mock-11',
-        title: 'Student Room Setup - Complete Package',
-        description: 'Save money with this complete room package! Everything you need to start living comfortably.\n\nIncludes multiple items:\n- Basic furniture pieces\n- Good condition\n- Ready to use\n- Value bundle\n\nPerfect starter package for new students!',
+        title: 'Bed Frame - 5×6 & 4×6 Sizes Available',
+        description: 'Quality bed frames in two sizes. Perfect for student rooms and hostels!\n\n💰 PRICING BY SIZE:\n• 5 feet × 6 feet: TZS 210,000\n• 4 feet × 6 feet: TZS 160,000\n\n✨ FEATURES:\n• Strong construction\n• Durable materials\n• Modern design\n• Easy to assemble\n• Smooth finish\n• Long-lasting\n\n📏 SIZE OPTIONS:\n• Large (5×6): Spacious for couples or extra room\n• Standard (4×6): Perfect for single students\n\nBoth sizes in stock. Contact seller to specify your preferred size.',
         price: 160000,
-        condition: 'good',
+        condition: 'new',
         category_id: 'furniture',
         location: 'MUST, Mbeya',
         images: ['/images/market image/160.jpeg'],
@@ -378,6 +378,30 @@ const MarketplaceItemDetail = () => {
           phone: '+255722429317',
           university: 'Mbeya University of Science and Technology'
         }
+      },
+      'mock-13': {
+        id: 'mock-13',
+        title: 'Wooden Bed Frame - 5×6 & 4×6 Available',
+        description: 'Quality wooden bed frames in two sizes. Choose the size that fits your room!\n\n💰 PRICING BY SIZE:\n• 5 feet × 6 feet: TZS 380,000\n• 4 feet × 6 feet: TZS 280,000\n\n✨ FEATURES:\n• Solid wood construction\n• Strong and durable\n• Modern design\n• Easy assembly\n• Smooth finish\n• Long-lasting quality\n\n📏 SIZE OPTIONS:\n• Large (5×6): Perfect for couples or spacious rooms\n• Standard (4×6): Ideal for single rooms and hostels\n\nBoth sizes available. Contact seller to specify your preferred size when ordering.',
+        price: 280000,
+        condition: 'new',
+        category_id: 'furniture',
+        location: 'MUST, Mbeya',
+        images: ['/images/market image/bed.jpeg'],
+        seller_id: 'mock-user-13',
+        status: 'active',
+        is_sold: false,
+        views_count: 76,
+        created_at: '2026-10-16T11:00:00.000Z',
+        updated_at: '2026-10-16T11:00:00.000Z',
+        category: { id: 'furniture', name: 'Furniture', name_sw: 'Samani', slug: 'furniture', icon: 'sofa', parent_id: null, display_order: 1, created_at: '', updated_at: '' },
+        seller: {
+          id: 'mock-user-13',
+          name: 'Ibrahim Msangi',
+          email: 'ibrahim.m@example.com',
+          phone: '+255722429317',
+          university: 'Mbeya University of Science and Technology'
+        }
       }
     };
 
@@ -399,6 +423,7 @@ const MarketplaceItemDetail = () => {
       getMockListing('mock-10'),
       getMockListing('mock-11'),
       getMockListing('mock-12'),
+      getMockListing('mock-13'),
     ].filter((item): item is MarketplaceListing => item !== null);
 
     return allMockItems
