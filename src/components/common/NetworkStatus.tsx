@@ -21,6 +21,11 @@ const NetworkStatus: React.FC = () => {
         setShowNotification(true);
         // Network restored - React Query will auto-refetch on reconnect
         console.log('🌐 Network restored - Data will refresh automatically');
+        
+        // Hide notification after 3 seconds
+        setTimeout(() => {
+          setShowNotification(false);
+        }, 3000);
       }
       setWasOffline(false);
     };
@@ -64,7 +69,7 @@ const NetworkStatus: React.FC = () => {
             {isOnline ? (
               <>
                 <Wifi className="h-5 w-5" />
-                <span className="font-medium">Mtandao Umerejea! Inafanya refresh...</span>
+                <span className="font-medium">Mtandao Umerejea! ✅</span>
               </>
             ) : (
               <>

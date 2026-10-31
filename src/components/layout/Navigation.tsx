@@ -149,10 +149,8 @@ const Navigation = () => {
                 />
               </div>
               <div className="transform group-hover:scale-105 transition-transform duration-300">
-                {/* Mobile label: Wanachuo */}
-                <span className={`md:hidden text-base sm:text-lg lg:text-2xl font-bold bg-gradient-to-r from-primary to-serengeti-600 bg-clip-text text-transparent`}>Wanachuo</span>
-                <span className="md:hidden text-base sm:text-lg lg:text-2xl font-bold text-serengeti-600"></span>
-
+                {/* Mobile: Logo only (no text) */}
+                
                 {/* Desktop/large label: Wanachuo.com */}
                 <span className={`hidden md:inline text-base sm:text-lg lg:text-2xl font-bold bg-gradient-to-r from-primary to-serengeti-600 bg-clip-text text-transparent`}>Wanachuo.com</span>
                 <span className="hidden md:inline text-base sm:text-lg lg:text-2xl font-bold text-serengeti-600"> </span>
@@ -195,8 +193,8 @@ const Navigation = () => {
               Colleges
             </Button>
             
-            {/* Mobile Marketplace Link - COMMENTED OUT FOR NOW */}
-            {/* <Link to="/marketplace">
+            {/* Mobile Marketplace Link */}
+            <Link to="/marketplace">
               <Button
                 variant="ghost"
                 className={`px-2.5 py-1 h-auto rounded-full transition-all duration-300 text-xs font-medium ${
@@ -215,10 +213,32 @@ const Navigation = () => {
               >
                 Market
               </Button>
-            </Link> */}
+            </Link>
+            
+            {/* Mobile Opportunities Link */}
+            <Link to="/opportunities">
+              <Button
+                variant="ghost"
+                className={`px-2.5 py-1 h-auto rounded-full transition-all duration-300 text-xs font-medium ${
+                  location.pathname === '/opportunities' || location.pathname.startsWith('/opportunities/')
+                    ? location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
+                      ? 'bg-gray-200'
+                      : location.pathname === '/'
+                      ? (isScrolled ? 'bg-gray-200' : 'bg-white/30')
+                      : 'bg-white/60'
+                    : ''
+                } ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
+                     ? 'text-gray-700 hover:bg-gray-200'
+                     : location.pathname === '/'
+                     ? (isScrolled ? 'text-gray-700 hover:bg-gray-200' : 'text-white hover:bg-white/30')
+                     : 'text-gray-700 hover:bg-white/70'}`}
+              >
+                Fursa
+              </Button>
+            </Link>
             
             {/* Mobile About Link */}
-            <Link to="/about">
+            {/* <Link to="/about">
               <Button
                 variant="ghost"
                 className={`px-2.5 py-1 h-auto rounded-full transition-all duration-300 text-xs font-medium ${
@@ -237,7 +257,7 @@ const Navigation = () => {
               >
                 About
               </Button>
-            </Link>
+            </Link> */}
           </div>
 
           {/* Enhanced Desktop Navigation Menu - Menyu ya uongozaji wa kompyuta */}
@@ -258,7 +278,7 @@ const Navigation = () => {
             </Button>
             
             {/* About Link - Kiungo cha kuhusu */}
-            <Link to="/about">
+            {/* <Link to="/about">
               <Button
                 variant="ghost"
                 className={`px-4 py-1.5 h-auto rounded-full transition-all duration-300 text-sm font-medium ${
@@ -277,13 +297,13 @@ const Navigation = () => {
               >
                 About
               </Button>
-            </Link>
+            </Link> */}
             
-            {/* Marketplace Link - Kiungo cha soko - COMMENTED OUT FOR NOW */}
-            {/* <Link to="/marketplace">
+            {/* Marketplace Link - Kiungo cha soko */}
+            <Link to="/marketplace">
               <Button
                 variant="ghost"
-                className={`px-5 py-2 rounded-full transition-all duration-300 text-sm sm:text-base font-medium ${
+                className={`px-4 py-1.5 h-auto rounded-full transition-all duration-300 text-sm font-medium ${
                   location.pathname === '/marketplace' || location.pathname.startsWith('/marketplace/')
                     ? location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
                       ? 'bg-gray-200'
@@ -297,12 +317,34 @@ const Navigation = () => {
                      ? (isScrolled ? 'text-gray-700 hover:bg-gray-200 hover:text-gray-900' : 'text-white hover:bg-white/30 hover:text-white')
                      : 'text-gray-700 hover:bg-white/70 hover:text-gray-900'}`}
               >
-                Marketplace
+                Market
               </Button>
-            </Link> */}
+            </Link>
+
+            {/* Opportunities Link - Kiungo cha fursa */}
+            <Link to="/opportunities">
+              <Button
+                variant="ghost"
+                className={`px-4 py-1.5 h-auto rounded-full transition-all duration-300 text-sm font-medium ${
+                  location.pathname === '/opportunities' || location.pathname.startsWith('/opportunities/')
+                    ? location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
+                      ? 'bg-gray-200'
+                      : location.pathname === '/'
+                      ? (isScrolled ? 'bg-gray-200' : 'bg-white/30')
+                      : 'bg-white/60'
+                    : ''
+                } ${location.pathname.includes('/dashboard') || location.pathname.includes('/favorites') || location.pathname.includes('/add-property')
+                     ? 'text-gray-700 hover:bg-gray-200 hover:text-gray-900'
+                     : location.pathname === '/'
+                     ? (isScrolled ? 'text-gray-700 hover:bg-gray-200 hover:text-gray-900' : 'text-white hover:bg-white/30 hover:text-white')
+                     : 'text-gray-700 hover:bg-white/70 hover:text-gray-900'}`}
+              >
+                🎯 Opportunities
+              </Button>
+            </Link>
 
             {/* Contact Link - Kiungo cha mawasiliano */}
-            <Link to="/contact">
+            {/* <Link to="/contact">
               <Button
                 variant="ghost"
                 className={`px-5 py-2 rounded-full transition-all duration-300 text-sm sm:text-base font-medium ${
@@ -321,7 +363,7 @@ const Navigation = () => {
               >
                 Contact
               </Button>
-            </Link>
+            </Link> */}
           </div>
 
           {/* Enhanced Desktop Right Side Controls - Vidhibiti vya upande wa kulia vya kompyuta */}
@@ -433,13 +475,13 @@ const Navigation = () => {
                     </Link>
                   </DropdownMenuItem>
                   
-                  {/* Marketplace Link - COMMENTED OUT FOR NOW */}
-                  {/* <DropdownMenuItem asChild>
+                  {/* Marketplace Link */}
+                  <DropdownMenuItem asChild>
                     <Link to="/marketplace" className="flex items-center">
                       <Package className="mr-2 h-4 w-4" />
                       <span>Marketplace</span>
                     </Link>
-                  </DropdownMenuItem> */}
+                  </DropdownMenuItem>
                   
                   {/* Admin Dashboard Link - Only show for admin users */}
                   {(profile?.role === 'admin' || profile?.role === 'super_admin') && (

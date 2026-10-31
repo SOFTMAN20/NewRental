@@ -65,15 +65,16 @@ const ItemCard: React.FC<ItemCardProps> = ({
   return (
     <Link to={`/marketplace/${id}`}>
       <Card className="group overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-300 bg-white rounded-2xl">
-        {/* Item Image */}
-        <div className="relative overflow-hidden rounded-2xl">
+        {/* Item Image with Optimized Loading */}
+        <div className="relative overflow-hidden rounded-2xl bg-gray-100" style={{ aspectRatio: '5/4' }}>
           <OptimizedImage
             src={imageUrl}
             alt={title}
-            className={`w-full h-48 sm:h-56 object-cover group-hover:scale-105 transition-transform duration-500 rounded-2xl ${is_sold ? 'opacity-60' : ''}`}
+            className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 rounded-2xl ${is_sold ? 'opacity-60' : ''}`}
             width={500}
             height={400}
             placeholder="blur"
+            priority={false}
           />
           
           {/* Favorite Button */}

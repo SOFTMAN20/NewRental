@@ -26,7 +26,7 @@ import LoadingSpinner from '@/components/ui/loading-spinner';
 import { 
   Search, Plus, Filter, X, 
   Sofa, Laptop, BookOpen, UtensilsCrossed, 
-  Shirt, Dumbbell, Wrench, Package,
+  Shirt, Dumbbell, Wrench, Package, Bed,
   TrendingUp, Clock, DollarSign
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -52,10 +52,12 @@ interface FilterState {
   sortBy: string;
 }
 
-// Category icons mapping - Only Furniture and Mattresses for now
+// Category icons mapping - Main categories
 const CATEGORY_ICONS: Record<string, React.ReactNode> = {
   'Furniture': <Sofa className="h-5 w-5" />,
-  'Mattresses': <Package className="h-5 w-5" />,
+  'Home Utensils': <UtensilsCrossed className="h-5 w-5" />,
+  'Gas': <Package className="h-5 w-5" />,
+  'Mattress': <Bed className="h-5 w-5" />,
 };
 
 const Marketplace = () => {
@@ -79,19 +81,238 @@ const Marketplace = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
 
-  // Fetch categories - Filter to only show Furniture and Mattresses
+  // Mock data for demo purposes - Using real product images
+  const getMockListings = (): MarketplaceListing[] => {
+    // Get listings from localStorage
+    const localStorageListings = localStorage.getItem('marketplace_listings');
+    const userListings = localStorageListings ? JSON.parse(localStorageListings) : [];
+
+    // Default mock listings with real product images from public/images/market image/
+    const defaultMockListings: MarketplaceListing[] = [
+      {
+        id: 'mock-1',
+        title: 'Kitanda cha Mbao - Wooden Bed Frame',
+        description: 'Beautiful wooden bed frame, solid construction. Perfect for student rooms. Strong and durable.',
+        price: 250000,
+        condition: 'good',
+        category_id: 'furniture',
+        location: 'MUST, Mbeya',
+        images: ['/images/market image/kitanda cha mbao.jpeg'],
+        seller_id: 'mock-user',
+        status: 'active',
+        is_sold: false,
+        views_count: 89,
+        created_at: '2026-10-28T10:00:00.000Z',
+        updated_at: '2026-10-28T10:00:00.000Z',
+        category: { id: 'furniture', name: 'Furniture', name_sw: 'Samani', slug: 'furniture', icon: 'sofa', parent_id: null, display_order: 1, created_at: '', updated_at: '' }
+      },
+      {
+        id: 'mock-2',
+        title: 'Kitanda - Complete Bed with Mattress',
+        description: 'Complete bed setup ready to use. Good quality mattress included. Clean and well maintained.',
+        price: 180000,
+        condition: 'good',
+        category_id: 'mattress',
+        location: 'MUST, Mbeya',
+        images: ['/images/market image/kitanda.jpeg'],
+        seller_id: 'mock-user',
+        status: 'active',
+        is_sold: false,
+        views_count: 124,
+        created_at: '2026-10-27T14:30:00.000Z',
+        updated_at: '2026-10-27T14:30:00.000Z',
+        category: { id: 'mattress', name: 'Mattress', name_sw: 'Godoro', slug: 'mattress', icon: 'bed', parent_id: null, display_order: 4, created_at: '', updated_at: '' }
+      },
+      {
+        id: 'mock-3',
+        title: 'Kitanda 250k - Student Bed',
+        description: 'Affordable student bed in excellent condition. Space-saving design perfect for hostel rooms.',
+        price: 250000,
+        condition: 'like_new',
+        category_id: 'furniture',
+        location: 'MUST, Mbeya',
+        images: ['/images/market image/kitanda 250k.jpeg'],
+        seller_id: 'mock-user',
+        status: 'active',
+        is_sold: false,
+        views_count: 67,
+        created_at: '2026-10-26T09:15:00.000Z',
+        updated_at: '2026-10-26T09:15:00.000Z',
+        category: { id: 'furniture', name: 'Furniture', name_sw: 'Samani', slug: 'furniture', icon: 'sofa', parent_id: null, display_order: 1, created_at: '', updated_at: '' }
+      },
+      {
+        id: 'mock-4',
+        title: 'Meza na Kiti - Study Desk with Chair',
+        description: 'Complete study set with desk and matching chair. Perfect for studying and assignments.',
+        price: 95000,
+        condition: 'good',
+        category_id: 'furniture',
+        location: 'MUST, Mbeya',
+        images: ['/images/market image/meza na kiti.jpeg'],
+        seller_id: 'mock-user',
+        status: 'active',
+        is_sold: false,
+        views_count: 156,
+        created_at: '2026-10-25T16:45:00.000Z',
+        updated_at: '2026-10-25T16:45:00.000Z',
+        category: { id: 'furniture', name: 'Furniture', name_sw: 'Samani', slug: 'furniture', icon: 'sofa', parent_id: null, display_order: 1, created_at: '', updated_at: '' }
+      },
+      {
+        id: 'mock-5',
+        title: 'Meza ya Gas 80k - Gas Cooker Table',
+        description: 'Sturdy gas cooker table with storage space. Perfect for student kitchens. Good quality build.',
+        price: 80000,
+        condition: 'good',
+        category_id: 'gas',
+        location: 'MUST, Mbeya',
+        images: ['/images/market image/meza ya gas 80k.jpeg'],
+        seller_id: 'mock-user',
+        status: 'active',
+        is_sold: false,
+        views_count: 78,
+        created_at: '2026-10-24T11:20:00.000Z',
+        updated_at: '2026-10-24T11:20:00.000Z',
+        category: { id: 'gas', name: 'Gas', name_sw: 'Gesi', slug: 'gas', icon: 'package', parent_id: null, display_order: 3, created_at: '', updated_at: '' }
+      },
+      {
+        id: 'mock-6',
+        title: 'Meza ya Gesi 45k - Small Gas Table',
+        description: 'Compact gas table perfect for small spaces. Affordable and functional for student needs.',
+        price: 45000,
+        condition: 'fair',
+        category_id: 'gas',
+        location: 'MUST, Mbeya',
+        images: ['/images/market image/45k meza ya gesi.jpeg'],
+        seller_id: 'mock-user',
+        status: 'active',
+        is_sold: false,
+        views_count: 92,
+        created_at: '2026-10-23T13:00:00.000Z',
+        updated_at: '2026-10-23T13:00:00.000Z',
+        category: { id: 'gas', name: 'Gas', name_sw: 'Gesi', slug: 'gas', icon: 'package', parent_id: null, display_order: 3, created_at: '', updated_at: '' }
+      },
+      {
+        id: 'mock-7',
+        title: 'Kabati - Large Wardrobe',
+        description: 'Spacious wooden wardrobe with multiple compartments. Great for organizing clothes and belongings.',
+        price: 160000,
+        condition: 'good',
+        category_id: 'furniture',
+        location: 'MUST, Mbeya',
+        images: ['/images/market image/kabati.jpeg'],
+        seller_id: 'mock-user',
+        status: 'active',
+        is_sold: false,
+        views_count: 103,
+        created_at: '2026-10-22T08:30:00.000Z',
+        updated_at: '2026-10-22T08:30:00.000Z',
+        category: { id: 'furniture', name: 'Furniture', name_sw: 'Samani', slug: 'furniture', icon: 'sofa', parent_id: null, display_order: 1, created_at: '', updated_at: '' }
+      },
+      {
+        id: 'mock-8',
+        title: 'Kabati 260k - Premium Wardrobe',
+        description: 'High-quality wardrobe with excellent storage capacity. Solid wood construction. Like new condition.',
+        price: 260000,
+        condition: 'like_new',
+        category_id: 'furniture',
+        location: 'MUST, Mbeya',
+        images: ['/images/market image/kabati260.jpeg'],
+        seller_id: 'mock-user',
+        status: 'active',
+        is_sold: false,
+        views_count: 45,
+        created_at: '2026-10-21T15:45:00.000Z',
+        updated_at: '2026-10-21T15:45:00.000Z',
+        category: { id: 'furniture', name: 'Furniture', name_sw: 'Samani', slug: 'furniture', icon: 'sofa', parent_id: null, display_order: 1, created_at: '', updated_at: '' }
+      },
+      {
+        id: 'mock-9',
+        title: 'Skeleton ya Nguo - Clothes Rack',
+        description: 'Portable clothes hanger rack. Easy to assemble and move. Perfect for hostels without closets.',
+        price: 35000,
+        condition: 'good',
+        category_id: 'furniture',
+        location: 'MUST, Mbeya',
+        images: ['/images/market image/skeleton ya nguo.jpeg'],
+        seller_id: 'mock-user',
+        status: 'active',
+        is_sold: false,
+        views_count: 71,
+        created_at: '2026-10-20T10:15:00.000Z',
+        updated_at: '2026-10-20T10:15:00.000Z',
+        category: { id: 'furniture', name: 'Furniture', name_sw: 'Samani', slug: 'furniture', icon: 'sofa', parent_id: null, display_order: 1, created_at: '', updated_at: '' }
+      },
+      {
+        id: 'mock-10',
+        title: 'Kuekea Viatu - Shoe Rack',
+        description: 'Multi-tier shoe rack with good capacity. Keep your room organized. Sturdy metal construction.',
+        price: 28000,
+        condition: 'good',
+        category_id: 'furniture',
+        location: 'MUST, Mbeya',
+        images: ['/images/market image/kuekea viatu.jpeg'],
+        seller_id: 'mock-user',
+        status: 'active',
+        is_sold: false,
+        views_count: 58,
+        created_at: '2026-10-19T12:00:00.000Z',
+        updated_at: '2026-10-19T12:00:00.000Z',
+        category: { id: 'furniture', name: 'Furniture', name_sw: 'Samani', slug: 'furniture', icon: 'sofa', parent_id: null, display_order: 1, created_at: '', updated_at: '' }
+      },
+      {
+        id: 'mock-11',
+        title: 'Student Room Setup - Complete Package',
+        description: 'Save money with this complete room package! Everything you need to start living comfortably.',
+        price: 160000,
+        condition: 'good',
+        category_id: 'furniture',
+        location: 'MUST, Mbeya',
+        images: ['/images/market image/160.jpeg'],
+        seller_id: 'mock-user',
+        status: 'active',
+        is_sold: false,
+        views_count: 134,
+        created_at: '2026-10-18T14:30:00.000Z',
+        updated_at: '2026-10-18T14:30:00.000Z',
+        category: { id: 'furniture', name: 'Furniture', name_sw: 'Samani', slug: 'furniture', icon: 'sofa', parent_id: null, display_order: 1, created_at: '', updated_at: '' }
+      }
+    ];
+
+    // Combine user-created listings with default mock listings
+    // User listings come first (newest on top)
+    return [...userListings, ...defaultMockListings];
+  };
+
+  // Fetch categories - Filter to only show Furniture, Home Utensils, and Gas
   useEffect(() => {
     const fetchCategories = async () => {
-      // Fetch main categories (Furniture and Mattresses)
+      // Fetch main categories (Furniture, Home Utensils, Gas)
       const { data: mainCats, error: mainError } = await supabase
         .from('marketplace_categories')
         .select('*')
-        .in('slug', ['furniture', 'mattresses'])
+        .in('slug', ['furniture', 'home-utensils', 'gas', 'mattress'])
         .is('parent_id', null)
         .order('display_order');
 
       if (!mainError && mainCats) {
-        setCategories(mainCats);
+        // Add mock Mattress category if not in database
+        const hasMattress = mainCats.some(c => c.slug === 'mattress');
+        if (!hasMattress) {
+          const mockMattress = {
+            id: 'mattress',
+            name: 'Mattress',
+            name_sw: 'Godoro',
+            slug: 'mattress',
+            icon: 'bed',
+            parent_id: null,
+            display_order: 4,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          };
+          setCategories([...mainCats, mockMattress]);
+        } else {
+          setCategories(mainCats);
+        }
         
         // Fetch furniture subcategories
         const furnitureCategory = mainCats.find(c => c.slug === 'furniture');
@@ -112,11 +333,15 @@ const Marketplace = () => {
     fetchCategories();
   }, []);
 
-  // Fetch listings
+  // Fetch listings and combine with mock data
   useEffect(() => {
     const fetchListings = async () => {
       setIsLoading(true);
       
+      // TEMPORARILY USING MOCK DATA ONLY - Database fetch commented out
+      // TODO: Uncomment when database is ready
+      
+      /* 
       let query = supabase
         .from('marketplace_listings')
         .select(`
@@ -127,9 +352,20 @@ const Marketplace = () => {
 
       const { data, error } = await query;
 
+      // Combine real listings with mock data
+      const mockData = getMockListings();
       if (!error && data) {
-        setListings(data);
+        // Real data comes first, then mock data
+        setListings([...data, ...mockData]);
+      } else {
+        // If error or no data, just show mock data
+        setListings(mockData);
       }
+      */
+      
+      // Use mock data only for now
+      const mockData = getMockListings();
+      setListings(mockData);
       
       setIsLoading(false);
     };
@@ -277,293 +513,60 @@ const Marketplace = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
       <Navigation />
 
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-primary/5 to-serengeti-50 border-b pt-20 sm:pt-20 lg:pt-24">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 pb-4 sm:pb-6 lg:pb-8">
-          {/* Title */}
-          <div className="text-center mb-4">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
-              Student Marketplace
-            </h1>
-            <p className="text-gray-600 text-sm sm:text-base">
-              Buy and sell furniture and mattresses for students
-            </p>
-          </div>
-
-          {/* Category Quick Filters */}
-          <div className="space-y-3 mb-4">
-            {/* Main Categories */}
-            <div className="flex flex-wrap gap-2 justify-center">
-              <Button
-                variant={filters.category === 'all' ? 'default' : 'outline'}
-                onClick={() => setFilters({ ...filters, category: 'all' })}
-                className="rounded-full"
-                size="sm"
-              >
-                All Items
-              </Button>
-              {categories.map((category) => (
-                <Button
-                  key={category.id}
-                  variant={filters.category === category.id ? 'default' : 'outline'}
-                  onClick={() => setFilters({ ...filters, category: category.id })}
-                  className="rounded-full flex items-center gap-2"
-                  size="sm"
-                >
-                  {CATEGORY_ICONS[category.name]}
-                  <span className="hidden sm:inline">{category.name}</span>
-                </Button>
-              ))}
+      {/* Simple Header with Categories */}
+      <div className="bg-white border-b border-gray-200 pt-20 sm:pt-24 lg:pt-28">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+          {/* Title & Add Button */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+            <div>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 flex items-center gap-3">
+                <Package className="h-8 w-8 text-primary" />
+                Student Marketplace
+              </h1>
+              <p className="text-gray-600 mt-2">Buy and sell student essentials</p>
             </div>
             
-            {/* Furniture Subcategories - Show when furniture items exist */}
-            {subcategories.length > 0 && (
-              <div className="flex flex-wrap gap-2 justify-center">
-                <span className="text-xs text-gray-500 self-center mr-2">Furniture Types:</span>
-                {subcategories.map((subcategory) => (
-                  <Button
-                    key={subcategory.id}
-                    variant={filters.category === subcategory.id ? 'default' : 'outline'}
-                    onClick={() => setFilters({ ...filters, category: subcategory.id })}
-                    className="rounded-full text-xs"
-                    size="sm"
-                  >
-                    {subcategory.name_sw || subcategory.name}
-                  </Button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Search and Filter Bar */}
-          <div className="flex flex-col lg:flex-row gap-3">
-            {/* Search Input */}
-            <div className="flex-1">
-              <div className="relative border-2 border-gray-300 rounded-full hover:border-primary/50 transition-colors duration-200 focus-within:border-primary shadow-lg bg-white">
-                <Input
-                  placeholder="Search for items..."
-                  value={filters.searchQuery}
-                  onChange={(e) => setFilters({ ...filters, searchQuery: e.target.value })}
-                  className="pl-4 sm:pl-5 lg:pl-6 pr-14 sm:pr-16 lg:pr-20 h-10 sm:h-12 lg:h-14 text-sm sm:text-base lg:text-lg border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 rounded-full"
-                />
-                <button
-                  type="button"
-                  className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-full p-2 sm:p-2.5 lg:p-3 transition-all duration-200 shadow-md hover:shadow-lg"
-                >
-                  <Search className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />
-                </button>
-              </div>
-            </div>
-
-            {/* Price and Filter Controls */}
-            <div className="flex gap-2">
-              {/* Price Range */}
-              <Select value={filters.priceRange} onValueChange={(value) => setFilters({ ...filters, priceRange: value })}>
-                <SelectTrigger className="flex-1 h-10 sm:h-12 lg:h-14 border-2 border-gray-300 rounded-full hover:border-primary/50 min-w-[120px] focus:ring-2 focus:ring-primary/20 transition-all duration-200 bg-white shadow-lg">
-                  <SelectValue placeholder="Price" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Any Price</SelectItem>
-                  <SelectItem value="0-50000">Under 50k</SelectItem>
-                  <SelectItem value="50000-100000">50k - 100k</SelectItem>
-                  <SelectItem value="100000-200000">100k - 200k</SelectItem>
-                  <SelectItem value="200000-500000">200k - 500k</SelectItem>
-                  <SelectItem value="500000+">Over 500k</SelectItem>
-                </SelectContent>
-              </Select>
-
-              {/* Advanced Filters Button */}
-              <Button
-                variant="outline"
-                onClick={() => setShowFilters(!showFilters)}
-                className="h-10 sm:h-12 lg:h-14 border-2 border-gray-300 rounded-full hover:border-primary/50 hover:bg-primary/5 px-4 transition-all duration-200 bg-white shadow-lg"
-              >
-                <Filter className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
-                <span className="hidden sm:inline">Filters</span>
-                {hasActiveFilters && (
-                  <span className="ml-2 bg-primary text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                    !
-                  </span>
-                )}
+            {/* Sell Item Button */}
+            <Link to={user ? "/marketplace/add" : "/signin?returnTo=/marketplace/add"}>
+              <Button className="rounded-xl bg-gradient-to-r from-primary to-serengeti-500 hover:from-primary/90 hover:to-serengeti-600 shadow-lg hover:shadow-xl transition-all duration-300 h-11 px-6 font-semibold">
+                <Plus className="h-5 w-5 mr-2" />
+                {user ? 'Sell Item' : 'Sign In to Sell'}
               </Button>
-
-              {/* Sell Item Button */}
-              {user && (
-                <Link to="/marketplace/add">
-                  <Button className="h-10 sm:h-12 lg:h-14 rounded-full px-4 sm:px-6 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 shadow-lg">
-                    <Plus className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
-                    <span className="hidden sm:inline">Sell Item</span>
-                    <span className="sm:hidden">Sell</span>
-                  </Button>
-                </Link>
-              )}
-            </div>
+            </Link>
           </div>
 
-          {/* Advanced Filters Panel */}
-          {showFilters && (
-            <div className="mt-4 p-4 bg-white rounded-2xl shadow-lg border border-gray-200">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {/* Condition Filter */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Condition</label>
-                  <Select value={filters.condition} onValueChange={(value) => setFilters({ ...filters, condition: value })}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Any Condition" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Any Condition</SelectItem>
-                      <SelectItem value="new">New</SelectItem>
-                      <SelectItem value="like_new">Like New</SelectItem>
-                      <SelectItem value="good">Good</SelectItem>
-                      <SelectItem value="fair">Fair</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Min Price */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Min Price (TZS)</label>
-                  <Input
-                    type="number"
-                    placeholder="0"
-                    value={filters.minPrice}
-                    onChange={(e) => setFilters({ ...filters, minPrice: e.target.value })}
-                  />
-                </div>
-
-                {/* Max Price */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Max Price (TZS)</label>
-                  <Input
-                    type="number"
-                    placeholder="No limit"
-                    value={filters.maxPrice}
-                    onChange={(e) => setFilters({ ...filters, maxPrice: e.target.value })}
-                  />
-                </div>
-              </div>
-
-              {/* Clear Filters */}
-              <div className="mt-4 flex justify-end">
-                <Button
-                  variant="outline"
-                  onClick={handleClearFilters}
-                  size="sm"
-                >
-                  Clear All Filters
-                </Button>
-              </div>
-            </div>
-          )}
+          {/* Category Filters */}
+          <div className="flex flex-wrap gap-2 sm:gap-3">
+            <Button
+              variant={filters.category === 'all' ? 'default' : 'outline'}
+              onClick={() => setFilters({ ...filters, category: 'all' })}
+              className="rounded-full"
+              size="sm"
+            >
+              All Items
+            </Button>
+            {categories.map((category) => (
+              <Button
+                key={category.id}
+                variant={filters.category === category.slug ? 'default' : 'outline'}
+                onClick={() => setFilters({ ...filters, category: category.slug })}
+                className="rounded-full flex items-center gap-1.5"
+                size="sm"
+              >
+                {CATEGORY_ICONS[category.name]}
+                <span>{category.name}</span>
+              </Button>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Results Section */}
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
-        {/* Results Header */}
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3">
-          <div>
-            <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
-              {sortedListings.length} {sortedListings.length === 1 ? 'Item' : 'Items'} Found
-            </h2>
-            {filters.searchQuery && (
-              <p className="text-sm text-gray-600 mt-1">
-                Results for "{filters.searchQuery}"
-              </p>
-            )}
-          </div>
-
-          {/* Sort Controls */}
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 hidden sm:inline">Sort by:</span>
-            <Select value={filters.sortBy} onValueChange={(value) => setFilters({ ...filters, sortBy: value })}>
-              <SelectTrigger className="w-[140px] sm:w-[160px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="newest">
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4" />
-                    Newest First
-                  </div>
-                </SelectItem>
-                <SelectItem value="price-low">
-                  <div className="flex items-center gap-2">
-                    <DollarSign className="h-4 w-4" />
-                    Price: Low to High
-                  </div>
-                </SelectItem>
-                <SelectItem value="price-high">
-                  <div className="flex items-center gap-2">
-                    <DollarSign className="h-4 w-4" />
-                    Price: High to Low
-                  </div>
-                </SelectItem>
-                <SelectItem value="popular">
-                  <div className="flex items-center gap-2">
-                    <TrendingUp className="h-4 w-4" />
-                    Most Viewed
-                  </div>
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        {/* Active Filters Display */}
-        {hasActiveFilters && (
-          <div className="mb-4 flex flex-wrap gap-2">
-            {filters.searchQuery && (
-              <Badge variant="secondary" className="px-3 py-1">
-                Search: {filters.searchQuery}
-                <button
-                  onClick={() => setFilters({ ...filters, searchQuery: '' })}
-                  className="ml-2 hover:text-red-500"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </Badge>
-            )}
-            {filters.category !== 'all' && (
-              <Badge variant="secondary" className="px-3 py-1">
-                Category: {categories.find(c => c.id === filters.category)?.name}
-                <button
-                  onClick={() => setFilters({ ...filters, category: 'all' })}
-                  className="ml-2 hover:text-red-500"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </Badge>
-            )}
-            {filters.condition !== 'all' && (
-              <Badge variant="secondary" className="px-3 py-1">
-                Condition: {filters.condition.replace('_', ' ')}
-                <button
-                  onClick={() => setFilters({ ...filters, condition: 'all' })}
-                  className="ml-2 hover:text-red-500"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </Badge>
-            )}
-            {filters.priceRange !== 'all' && (
-              <Badge variant="secondary" className="px-3 py-1">
-                Price: TZS {filters.priceRange}
-                <button
-                  onClick={() => setFilters({ ...filters, priceRange: 'all' })}
-                  className="ml-2 hover:text-red-500"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </Badge>
-            )}
-          </div>
-        )}
-
+      {/* Main Content Area */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        
         {/* Loading State */}
         {isLoading && (
           <div className="flex justify-center items-center py-20">
@@ -571,33 +574,50 @@ const Marketplace = () => {
           </div>
         )}
 
-        {/* Empty State */}
+        {/* Empty State - Enhanced */}
         {!isLoading && sortedListings.length === 0 && (
-          <div className="text-center py-20">
-            <Package className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              No items found
-            </h3>
-            <p className="text-gray-600 mb-6">
-              {hasActiveFilters 
-                ? 'Try adjusting your filters to see more results'
-                : 'Be the first to list an item!'
-              }
-            </p>
-            {user && (
-              <Link to="/marketplace/add">
-                <Button>
-                  <Plus className="h-4 w-4 mr-2" />
-                  List Your First Item
-                </Button>
-              </Link>
-            )}
+          <div className="text-center py-16 sm:py-20">
+            <div className="max-w-md mx-auto">
+              <div className="relative mb-6">
+                <div className="absolute inset-0 bg-primary/5 rounded-full blur-3xl"></div>
+                <div className="relative bg-gradient-to-br from-primary/10 to-serengeti-500/10 rounded-3xl p-8 sm:p-12">
+                  <Package className="h-16 w-16 sm:h-20 sm:w-20 text-primary mx-auto" />
+                </div>
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
+                {hasActiveFilters ? 'No items match your search' : 'No items yet'}
+              </h3>
+              <p className="text-gray-600 mb-6 text-sm sm:text-base leading-relaxed">
+                {hasActiveFilters 
+                  ? 'Try adjusting your filters or search terms to find what you need. Or be the first to list this type of item!'
+                  : 'Be a pioneer! List the first item on our marketplace and help build our student community.'
+                }
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                {hasActiveFilters && (
+                  <Button
+                    variant="outline"
+                    onClick={handleClearFilters}
+                    className="rounded-full"
+                  >
+                    <X className="h-4 w-4 mr-2" />
+                    Clear Filters
+                  </Button>
+                )}
+                <Link to={user ? "/marketplace/add" : "/signin?returnTo=/marketplace/add"}>
+                  <Button className="w-full sm:w-auto rounded-full bg-gradient-to-r from-primary to-serengeti-500 hover:from-primary/90 hover:to-serengeti-600 shadow-lg hover:shadow-xl transition-all duration-300">
+                    <Plus className="h-4 w-4 mr-2" />
+                    {user ? 'List Your First Item' : 'Sign In to List Item'}
+                  </Button>
+                </Link>
+              </div>
+            </div>
           </div>
         )}
 
-        {/* Items Grid */}
+        {/* Items Grid - Improved Layout */}
         {!isLoading && sortedListings.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
             {sortedListings.map((listing) => (
               <ItemCard
                 key={listing.id}

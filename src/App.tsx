@@ -98,6 +98,11 @@ const Marketplace = lazy(() => import("./pages/Marketplace"));
 const MarketplaceItemDetail = lazy(() => import("./pages/MarketplaceItemDetail"));
 const AddMarketplaceListing = lazy(() => import("./pages/AddMarketplaceListing"));
 
+// Opportunities pages
+const OpportunitiesIndex = lazy(() => import("./pages/opportunities/OpportunitiesIndex"));
+const OpportunitiesTest = lazy(() => import("./pages/opportunities/OpportunitiesTest"));
+const OpportunityDetail = lazy(() => import("./pages/opportunities/OpportunityDetail"));
+
 /**
  * REACT QUERY CLIENT CONFIGURATION
  * ================================
@@ -169,6 +174,11 @@ const App = () => (
                 <Route path="/marketplace" element={<Marketplace />} />
                 <Route path="/marketplace/:id" element={<MarketplaceItemDetail />} />
                 <Route path="/marketplace/add" element={<AddMarketplaceListing />} />
+
+                {/* Opportunities routes - Njia za fursa */}
+                <Route path="/opportunities" element={<OpportunitiesIndex />} />
+                <Route path="/opportunities/:id" element={<OpportunityDetail />} />
+                <Route path="/opportunities-test" element={<OpportunitiesTest />} />
 
                 {/* User-specific routes - Njia za mtumiaji */}
                 <Route path="/dashboard" element={<Dashboard />} />

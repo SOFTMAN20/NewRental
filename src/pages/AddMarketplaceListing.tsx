@@ -81,6 +81,25 @@ const AddMarketplaceListing = () => {
     fetchCategories();
   }, []);
 
+  // Load images from localStorage on mount
+  useEffect(() => {
+    if (user) {
+      try {
+        const storageKey = `marketplace_images_${user.id}`;
+        const savedImages = localStorage.getItem(storageKey);
+        if (savedImages) {
+          const parsedImages = JSON.parse(savedImages);
+          setFormData(prev => ({
+            ...prev,
+            images: parsedImages
+          }));
+        }
+      } catch (error) {
+        console.error('Failed to load images from localStorage:', error);
+      }
+    }
+  }, [user]);
+
   // Scroll to top
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -97,9 +116,12 @@ const AddMarketplaceListing = () => {
     setUploadingImages(true);
 
     try {
-      const uploadedUrls: string[] = [];
+      const uploadedBase64: string[] = [];
 
-      for (let i = 0; i < Math.min(files.length, 5); i++) {
+      // Limit to 3 images max for localStorage space
+      const maxImages = Math.min(files.length, 3);
+
+      for (let i = 0; i < maxImages; i++) {
         const file = files[i];
         
         if (!file.type.startsWith('image/')) {
@@ -120,41 +142,74 @@ const AddMarketplaceListing = () => {
           continue;
         }
 
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${user!.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+        // Compress and convert image to base64
+        const compressedBase64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+              // Create canvas to resize/compress
+              const canvas = document.createElement('canvas');
+              const ctx = canvas.getContext('2d');
+              
+              // Resize to max 600px width/height (smaller for localStorage)
+              let width = img.width;
+              let height = img.height;
+              const maxSize = 600;
+              
+              if (width > height && width > maxSize) {
+                height = (height * maxSize) / width;
+                width = maxSize;
+              } else if (height > maxSize) {
+                width = (width * maxSize) / height;
+                height = maxSize;
+              }
+              
+              canvas.width = width;
+              canvas.height = height;
+              
+              // Draw and compress (0.5 quality = 50% for smaller size)
+              ctx?.drawImage(img, 0, 0, width, height);
+              const compressedBase64 = canvas.toDataURL('image/jpeg', 0.5);
+              resolve(compressedBase64);
+            };
+            img.onerror = () => reject(new Error('Failed to load image'));
+            img.src = e.target?.result as string;
+          };
+          reader.onerror = () => reject(new Error('Failed to read file'));
+          reader.readAsDataURL(file);
+        });
 
-        const { data, error } = await supabase.storage
-          .from('marketplace-images')
-          .upload(fileName, file, {
-            cacheControl: '3600',
-            upsert: false
-          });
+        uploadedBase64.push(compressedBase64);
+      }
 
-        if (error) {
-          console.error('Upload error:', error);
-          toast({
-            title: 'Upload Failed',
-            description: `Failed to upload ${file.name}`,
-            variant: 'destructive'
-          });
-          continue;
-        }
-
-        const { data: { publicUrl } } = supabase.storage
-          .from('marketplace-images')
-          .getPublicUrl(data.path);
-
-        uploadedUrls.push(publicUrl);
+      // Store in localStorage
+      const currentImages = formData.images;
+      const allImages = [...currentImages, ...uploadedBase64].slice(0, 3); // Max 3 images total
+      
+      // Save to localStorage with user's id as key
+      try {
+        const storageKey = `marketplace_images_${user!.id}`;
+        localStorage.setItem(storageKey, JSON.stringify(allImages));
+      } catch (storageError) {
+        console.error('LocalStorage error:', storageError);
+        toast({
+          title: 'Storage Full',
+          description: 'Please clear browser data or use fewer images.',
+          variant: 'destructive'
+        });
+        setUploadingImages(false);
+        return;
       }
 
       setFormData(prev => ({
         ...prev,
-        images: [...prev.images, ...uploadedUrls]
+        images: allImages
       }));
 
       toast({
         title: 'Success',
-        description: `${uploadedUrls.length} image(s) uploaded`
+        description: `${uploadedBase64.length} image(s) uploaded (max 3 total)`
       });
     } catch (error) {
       console.error('Error uploading images:', error);
@@ -169,9 +224,23 @@ const AddMarketplaceListing = () => {
   };
 
   const handleRemoveImage = (index: number) => {
+    const updatedImages = formData.images.filter((_, i) => i !== index);
+    
+    // Update localStorage
+    try {
+      const storageKey = `marketplace_images_${user!.id}`;
+      if (updatedImages.length > 0) {
+        localStorage.setItem(storageKey, JSON.stringify(updatedImages));
+      } else {
+        localStorage.removeItem(storageKey);
+      }
+    } catch (error) {
+      console.error('LocalStorage error:', error);
+    }
+
     setFormData(prev => ({
       ...prev,
-      images: prev.images.filter((_, i) => i !== index)
+      images: updatedImages
     }));
   };
 
@@ -235,57 +304,91 @@ const AddMarketplaceListing = () => {
     try {
       setSubmitting(true);
 
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-      if (sessionError || !session) {
+      // Create listing object with unique ID
+      const newListing = {
+        id: `listing-${Date.now()}-${Math.random().toString(36).substring(7)}`,
+        seller_id: user.id,
+        seller_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Anonymous',
+        seller_email: user.email || '',
+        title: formData.title.trim(),
+        description: formData.description.trim(),
+        price: parseFloat(formData.price),
+        category_id: formData.category_id,
+        category_name: categories.find(c => c.id === formData.category_id)?.name || 'Other',
+        condition: formData.condition,
+        location: formData.location.trim(),
+        images: formData.images,
+        status: 'active',
+        is_sold: false,
+        views_count: 0,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
+      // Save to localStorage
+      try {
+        // Get existing listings
+        const existingListingsJson = localStorage.getItem('marketplace_listings');
+        const existingListings = existingListingsJson ? JSON.parse(existingListingsJson) : [];
+        
+        // Keep only last 10 listings to save space
+        const recentListings = existingListings.slice(0, 10);
+        
+        // Add new listing
+        recentListings.unshift(newListing); // Add at the beginning
+        
+        // Try to save
+        const newListingsJson = JSON.stringify(recentListings);
+        
+        try {
+          localStorage.setItem('marketplace_listings', newListingsJson);
+        } catch (quotaError: any) {
+          // If still fails, keep only last 5 listings
+          const minimalListings = recentListings.slice(0, 5);
+          localStorage.setItem('marketplace_listings', JSON.stringify(minimalListings));
+          
+          toast({
+            title: 'Storage Warning',
+            description: 'Old listings cleared to make space.',
+            variant: 'default'
+          });
+        }
+
+        // Clear the images storage for this user
+        const storageKey = `marketplace_images_${user.id}`;
+        localStorage.removeItem(storageKey);
+
         toast({
-          title: 'Error',
-          description: 'Session expired. Please sign in again.',
-          variant: 'destructive'
+          title: 'Success! 🎉',
+          description: 'Your item has been listed',
         });
-        navigate('/signin');
-        return;
+
+        // Navigate to the listing detail page
+        navigate(`/marketplace/${newListing.id}`);
+      } catch (storageError: any) {
+        console.error('LocalStorage error:', storageError);
+        
+        let errorMsg = 'Failed to save listing. ';
+        
+        if (storageError.name === 'QuotaExceededError') {
+          errorMsg += 'Storage is full. Please clear browser data: Press F12 → Application → Storage → Clear Site Data';
+        } else {
+          errorMsg += 'Please try with fewer or smaller images.';
+        }
+        
+        toast({
+          title: 'Storage Error',
+          description: errorMsg,
+          variant: 'destructive',
+          duration: 10000
+        });
       }
-
-      const { data, error } = await supabase
-        .from('marketplace_listings')
-        .insert({
-          seller_id: user.id,
-          title: formData.title.trim(),
-          description: formData.description.trim(),
-          price: parseFloat(formData.price),
-          category_id: formData.category_id,
-          condition: formData.condition,
-          location: formData.location.trim(),
-          images: formData.images,
-          status: 'active',
-          is_sold: false,
-          views_count: 0
-        })
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Error creating listing:', error);
-        throw error;
-      }
-
-      toast({
-        title: 'Success! 🎉',
-        description: 'Your item has been listed',
-      });
-
-      navigate(`/marketplace/${data.id}`);
     } catch (error: any) {
       console.error('Error submitting listing:', error);
-      
-      let errorMessage = 'Failed to create listing';
-      if (error.message?.includes('foreign key')) {
-        errorMessage = 'Invalid category. Please refresh.';
-      }
 
       toast({
         title: 'Error',
-        description: errorMessage,
+        description: 'Failed to create listing',
         variant: 'destructive'
       });
     } finally {
@@ -308,76 +411,84 @@ const AddMarketplaceListing = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
       <Navigation />
 
-      <div className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-8 lg:py-12 pt-20 sm:pt-24">
-        <div className="mb-6">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pt-20 sm:pt-24">
+        {/* Header Section */}
+        <div className="mb-8 sm:mb-12">
           <Button
             variant="ghost"
             onClick={() => navigate('/marketplace')}
-            className="mb-4"
+            className="mb-6 hover:bg-gray-100 rounded-full"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
+            Back to Marketplace
           </Button>
 
-          <div className="flex items-center gap-3 mb-2">
-            <Package className="h-8 w-8 text-primary" />
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+          <div className="text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-primary to-serengeti-500 rounded-3xl mb-4 shadow-xl">
+              <Package className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
               List Your Item
             </h1>
+            <p className="text-gray-600 text-base sm:text-lg">
+              Share what you don't need with fellow students
+            </p>
           </div>
-          <p className="text-gray-600">
-            Fill in the details to list your item
-          </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Basic Info */}
-          <Card className="border-0 shadow-lg">
-            <CardHeader>
-              <CardTitle>Basic Information</CardTitle>
+        <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
+          {/* Basic Info Card */}
+          <Card className="border-0 shadow-xl rounded-2xl overflow-hidden">
+            <CardHeader className="bg-gradient-to-r from-primary/5 to-serengeti-50 border-b">
+              <CardTitle className="text-xl font-bold">📝 Item Details</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="p-6 sm:p-8 space-y-6">
+              {/* Title */}
               <div>
-                <Label htmlFor="title">
+                <Label htmlFor="title" className="text-base font-semibold text-gray-900 mb-2">
                   Title <span className="text-red-500">*</span>
                 </Label>
                 <Input
                   id="title"
-                  placeholder="e.g., Study Desk with Chair"
+                  placeholder="e.g., Study Desk with Chair - Good Condition"
                   value={formData.title}
                   onChange={(e) => handleInputChange('title', e.target.value)}
                   maxLength={100}
+                  className="h-12 text-base rounded-xl border-2 focus:border-primary"
                   required
                 />
-                <p className="text-xs text-gray-500 mt-1">
-                  {formData.title.length}/100
+                <p className="text-sm text-gray-500 mt-1.5">
+                  {formData.title.length}/100 characters
                 </p>
               </div>
 
+              {/* Description */}
               <div>
-                <Label htmlFor="description">
+                <Label htmlFor="description" className="text-base font-semibold text-gray-900 mb-2">
                   Description <span className="text-red-500">*</span>
                 </Label>
                 <Textarea
                   id="description"
-                  placeholder="Describe your item - condition, features, etc."
+                  placeholder="Describe your item in detail - condition, features, dimensions, why you're selling, etc."
                   value={formData.description}
                   onChange={(e) => handleInputChange('description', e.target.value)}
                   rows={6}
                   maxLength={2000}
+                  className="text-base rounded-xl border-2 focus:border-primary resize-none"
                   required
                 />
-                <p className="text-xs text-gray-500 mt-1">
-                  {formData.description.length}/2000 (min 20)
+                <p className="text-sm text-gray-500 mt-1.5">
+                  {formData.description.length}/2000 characters (minimum 20)
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Category & Condition Row */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div>
-                  <Label htmlFor="category">
+                  <Label htmlFor="category" className="text-base font-semibold text-gray-900 mb-2">
                     Category <span className="text-red-500">*</span>
                   </Label>
                   <Select
@@ -385,7 +496,7 @@ const AddMarketplaceListing = () => {
                     onValueChange={(value) => handleInputChange('category_id', value)}
                     required
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="h-12 rounded-xl border-2">
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
@@ -399,7 +510,7 @@ const AddMarketplaceListing = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="condition">
+                  <Label htmlFor="condition" className="text-base font-semibold text-gray-900 mb-2">
                     Condition <span className="text-red-500">*</span>
                   </Label>
                   <Select
@@ -407,37 +518,39 @@ const AddMarketplaceListing = () => {
                     onValueChange={(value) => handleInputChange('condition', value)}
                     required
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="h-12 rounded-xl border-2">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="new">New</SelectItem>
-                      <SelectItem value="like_new">Like New</SelectItem>
-                      <SelectItem value="good">Good</SelectItem>
-                      <SelectItem value="fair">Fair</SelectItem>
+                      <SelectItem value="new">✨ Brand New</SelectItem>
+                      <SelectItem value="like_new">🌟 Like New</SelectItem>
+                      <SelectItem value="good">👍 Good</SelectItem>
+                      <SelectItem value="fair">👌 Fair</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Price & Location Row */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div>
-                  <Label htmlFor="price">
+                  <Label htmlFor="price" className="text-base font-semibold text-gray-900 mb-2">
                     Price (TZS) <span className="text-red-500">*</span>
                   </Label>
                   <Input
                     id="price"
                     type="number"
-                    placeholder="e.g., 50000"
+                    placeholder="50,000"
                     value={formData.price}
                     onChange={(e) => handleInputChange('price', e.target.value)}
                     min="1"
+                    className="h-12 text-base rounded-xl border-2 focus:border-primary"
                     required
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="location">
+                  <Label htmlFor="location" className="text-base font-semibold text-gray-900 mb-2">
                     Location <span className="text-red-500">*</span>
                   </Label>
                   <Input
@@ -445,6 +558,7 @@ const AddMarketplaceListing = () => {
                     placeholder="e.g., UDSM, Dar es Salaam"
                     value={formData.location}
                     onChange={(e) => handleInputChange('location', e.target.value)}
+                    className="h-12 text-base rounded-xl border-2 focus:border-primary"
                     required
                   />
                 </div>
@@ -452,40 +566,48 @@ const AddMarketplaceListing = () => {
             </CardContent>
           </Card>
 
-          {/* Images */}
-          <Card className="border-0 shadow-lg">
-            <CardHeader>
-              <CardTitle>Photos</CardTitle>
+          {/* Images Card */}
+          <Card className="border-0 shadow-xl rounded-2xl overflow-hidden">
+            <CardHeader className="bg-gradient-to-r from-serengeti-500/5 to-primary/5 border-b">
+              <CardTitle className="text-xl font-bold">📸 Photos</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="p-6 sm:p-8 space-y-6">
               <div>
-                <Label>
+                <Label className="text-base font-semibold text-gray-900 mb-2">
                   Upload Images <span className="text-red-500">*</span>
                 </Label>
-                <p className="text-sm text-gray-600 mb-3">
-                  Add up to 5 images (max 5MB each)
+                <p className="text-sm text-gray-600 mb-4">
+                  Add up to 3 clear photos (max 5MB each). First image will be the cover.
                 </p>
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
+                {/* Image Grid & Upload Button */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mb-4">
+                  {/* Existing Images */}
                   {formData.images.map((url, index) => (
-                    <div key={index} className="relative aspect-square rounded-lg overflow-hidden border-2 border-gray-200">
+                    <div key={index} className="relative aspect-square rounded-xl overflow-hidden border-2 border-gray-200 group">
                       <img
                         src={url}
-                        alt={`Preview ${index + 1}`}
+                        alt={`Item ${index + 1}`}
                         className="w-full h-full object-cover"
                       />
+                      {index === 0 && (
+                        <div className="absolute top-2 left-2 bg-primary text-white px-2 py-1 rounded-lg text-xs font-semibold">
+                          Cover
+                        </div>
+                      )}
                       <button
                         type="button"
                         onClick={() => handleRemoveImage(index)}
-                        className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
+                        className="absolute top-2 right-2 bg-red-500/90 backdrop-blur-sm text-white p-2 rounded-full hover:bg-red-600 transition-all duration-200 opacity-0 group-hover:opacity-100"
                       >
                         <X className="h-4 w-4" />
                       </button>
                     </div>
                   ))}
 
-                  {formData.images.length < 5 && (
-                    <label className="aspect-square rounded-lg border-2 border-dashed border-gray-300 hover:border-primary flex flex-col items-center justify-center cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                  {/* Upload Button - Always visible when less than 3 images */}
+                  {formData.images.length < 3 && (
+                    <label className="aspect-square rounded-xl border-2 border-dashed border-gray-300 hover:border-primary flex flex-col items-center justify-center cursor-pointer bg-gray-50 hover:bg-primary/5 transition-all duration-200">
                       <input
                         type="file"
                         accept="image/*"
@@ -495,43 +617,61 @@ const AddMarketplaceListing = () => {
                         disabled={uploadingImages}
                       />
                       {uploadingImages ? (
-                        <Loader2 className="h-8 w-8 text-gray-400 animate-spin" />
+                        <div className="text-center">
+                          <Loader2 className="h-8 w-8 sm:h-10 sm:w-10 text-primary mx-auto mb-2 animate-spin" />
+                          <span className="text-xs sm:text-sm text-gray-600">Uploading...</span>
+                        </div>
                       ) : (
-                        <>
-                          <Upload className="h-8 w-8 text-gray-400 mb-2" />
-                          <span className="text-sm text-gray-600">Upload</span>
-                        </>
+                        <div className="text-center">
+                          <Upload className="h-8 w-8 sm:h-10 sm:w-10 text-gray-400 mx-auto mb-2" />
+                          <span className="text-xs sm:text-sm font-medium text-gray-600">Add Photo</span>
+                          <span className="text-xs text-gray-400 mt-1 block">
+                            {3 - formData.images.length} left
+                          </span>
+                        </div>
                       )}
                     </label>
                   )}
                 </div>
+
+                {/* Help Text */}
+                {formData.images.length === 0 && (
+                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                    <p className="text-sm text-blue-800">
+                      💡 <strong>Tip:</strong> Add clear, well-lit photos to attract more buyers. Show different angles and any defects honestly.
+                    </p>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
 
-          {/* Submit */}
-          <div className="flex gap-4">
+          {/* Submit Buttons */}
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 sticky bottom-4 sm:relative sm:bottom-0 bg-white sm:bg-transparent p-4 sm:p-0 rounded-2xl sm:rounded-none shadow-2xl sm:shadow-none border sm:border-0">
             <Button
               type="button"
               variant="outline"
               onClick={() => navigate('/marketplace')}
-              className="flex-1"
+              className="flex-1 h-12 sm:h-14 rounded-xl font-semibold text-base border-2 hover:bg-gray-50"
               disabled={submitting}
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="flex-1"
+              className="flex-1 h-12 sm:h-14 rounded-xl font-semibold text-base bg-gradient-to-r from-primary to-serengeti-500 hover:from-primary/90 hover:to-serengeti-600 shadow-lg hover:shadow-xl transition-all duration-300"
               disabled={submitting || uploadingImages}
             >
               {submitting ? (
                 <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Creating...
+                  <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                  Creating Listing...
                 </>
               ) : (
-                'Create Listing'
+                <>
+                  <Package className="h-5 w-5 mr-2" />
+                  Publish Listing
+                </>
               )}
             </Button>
           </div>
