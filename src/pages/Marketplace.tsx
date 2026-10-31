@@ -529,13 +529,14 @@ const Marketplace = () => {
               <p className="text-gray-600 mt-2">Buy and sell student essentials</p>
             </div>
             
-            {/* Sell Item Button */}
-            <Link to={user ? "/marketplace/add" : "/signin?returnTo=/marketplace/add"}>
-              <Button className="rounded-xl bg-gradient-to-r from-primary to-serengeti-500 hover:from-primary/90 hover:to-serengeti-600 shadow-lg hover:shadow-xl transition-all duration-300 h-11 px-6 font-semibold">
-                <Plus className="h-5 w-5 mr-2" />
-                {user ? 'Sell Item' : 'Sign In to Sell'}
-              </Button>
-            </Link>
+            {/* Sell Item Button - Disabled */}
+            <Button 
+              disabled
+              className="rounded-xl bg-gray-400 cursor-not-allowed shadow-lg h-11 px-6 font-semibold opacity-60"
+            >
+              <Plus className="h-5 w-5 mr-2" />
+              Sell Item
+            </Button>
           </div>
 
           {/* Category Filters */}
@@ -604,12 +605,13 @@ const Marketplace = () => {
                     Clear Filters
                   </Button>
                 )}
-                <Link to={user ? "/marketplace/add" : "/signin?returnTo=/marketplace/add"}>
-                  <Button className="w-full sm:w-auto rounded-full bg-gradient-to-r from-primary to-serengeti-500 hover:from-primary/90 hover:to-serengeti-600 shadow-lg hover:shadow-xl transition-all duration-300">
-                    <Plus className="h-4 w-4 mr-2" />
-                    {user ? 'List Your First Item' : 'Sign In to List Item'}
-                  </Button>
-                </Link>
+                <Button 
+                  disabled
+                  className="w-full sm:w-auto rounded-full bg-gray-400 cursor-not-allowed opacity-60"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  List Item
+                </Button>
               </div>
             </div>
           </div>

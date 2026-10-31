@@ -69,14 +69,17 @@ const MobileBottomNav = () => {
   // Check if we're on homepage
   const isHomePage = location.pathname === '/';
   
+  // Check if we're on marketplace item detail page
+  const isMarketplaceDetail = location.pathname.startsWith('/marketplace/') && location.pathname !== '/marketplace/add';
+  
   // Use custom hook for scroll-based visibility (disabled on homepage)
   const { isVisible } = useScrollDirection({
     threshold: 10,   // Only hide/show after scrolling 10px
     minScrollY: 100  // Only hide after scrolling past 100px from top
   });
 
-  // Always show on homepage, otherwise use scroll-based visibility
-  const shouldShowNav = isHomePage || isVisible;
+  // Always show on homepage, hide on marketplace detail, otherwise use scroll-based visibility
+  const shouldShowNav = isMarketplaceDetail ? false : (isHomePage || isVisible);
 
   // Determine profile path based on user type
   const getProfilePath = () => {

@@ -611,7 +611,7 @@ ${imageUrl ? `📸 *Image:* ${imageUrl}` : ''}`;
   const timeAgo = formatDistanceToNow(new Date(listing.created_at), { addSuffix: true });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50 pb-20 lg:pb-0">
+    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-serengeti-50 to-kilimanjaro-50 pb-24 lg:pb-0">
       <Navigation />
 
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-8 lg:py-12 pt-20 sm:pt-24">
