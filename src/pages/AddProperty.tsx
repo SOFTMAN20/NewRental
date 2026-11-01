@@ -70,7 +70,7 @@ const AddProperty = () => {
     bedrooms: '',
     bathrooms: '',
     area_sqm: '',
-    contact_phone: '',
+    contact_phone: '+255',
     contact_whatsapp_phone: '',
     electricity: false,
     water: false,
@@ -99,12 +99,18 @@ const AddProperty = () => {
       if (error) throw error;
       setProfile(data);
       
-      // Pre-fill contact phone from profile if available
+      // Pre-fill contact phone from profile if available, ensure +255 prefix
       if (data.phone) {
+        const normalizedPhone = data.phone.startsWith('+255') 
+          ? data.phone 
+          : data.phone.startsWith('255') 
+          ? `+${data.phone}` 
+          : `+255${data.phone.replace(/^\+/, '')}`;
+        
         setFormData(prev => ({
           ...prev,
-          contact_phone: data.phone || '',
-          contact_whatsapp_phone: data.phone || ''
+          contact_phone: normalizedPhone,
+          contact_whatsapp_phone: normalizedPhone
         }));
       }
     } catch (error) {
@@ -148,6 +154,24 @@ const AddProperty = () => {
     }
     if (!formData.images || formData.images.length === 0) {
       errors.push('Ongeza angalau picha moja ya nyumba');
+    }
+    
+    // Validate phone numbers always start with +255
+    if (!formData.contact_phone?.trim()) {
+      errors.push('Namba ya simu inahitajika');
+    } else if (!formData.contact_phone.startsWith('+255')) {
+      errors.push('Namba ya simu lazima ianze na +255');
+    } else if (formData.contact_phone.length !== 13) {
+      errors.push('Namba ya simu lazima iwe na tarakimu 9 baada ya +255');
+    }
+    
+    // Validate WhatsApp phone if provided
+    if (formData.contact_whatsapp_phone?.trim()) {
+      if (!formData.contact_whatsapp_phone.startsWith('+255')) {
+        errors.push('Namba ya WhatsApp lazima ianze na +255');
+      } else if (formData.contact_whatsapp_phone.length !== 13) {
+        errors.push('Namba ya WhatsApp lazima iwe na tarakimu 9 baada ya +255');
+      }
     }
 
     const allowedTypes = [

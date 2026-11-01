@@ -932,15 +932,25 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
           <Phone className="h-4 w-4 text-primary" />
           {t('dashboard.contactPhone')} *
         </Label>
-        <Input
-          id="contact_phone"
-          type="tel"
-          value={formData.contact_phone}
-          onChange={(e) => onInputChange('contact_phone', e.target.value)}
-          placeholder="+255712345678"
-          className={`transition-all duration-200 ${formData.contact_phone ? 'border-green-300 bg-green-50' : ''}`}
-          required
-        />
+        <div className="relative">
+          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600 font-medium pointer-events-none">
+            +255
+          </div>
+          <Input
+            id="contact_phone"
+            type="tel"
+            value={formData.contact_phone.replace(/^\+255/, '')}
+            onChange={(e) => {
+              const value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+              const phoneNumber = value.startsWith('255') ? `+${value}` : `+255${value}`;
+              onInputChange('contact_phone', phoneNumber);
+            }}
+            placeholder="712345678"
+            className={`pl-16 transition-all duration-200 ${formData.contact_phone ? 'border-green-300 bg-green-50' : ''}`}
+            maxLength={9}
+            required
+          />
+        </div>
         {profile?.phone && formData.contact_phone === profile.phone && (
           <p className="text-xs text-green-600 flex items-center gap-1">
             <CheckCircle className="h-3 w-3" />
@@ -948,7 +958,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
           </p>
         )}
         <p className="text-xs text-gray-500">
-          {t('dashboard.contactPhoneDescription')}
+          {t('dashboard.contactPhoneDescription')} (Namba itaanza na +255 kiotomatiki)
         </p>
       </div>
 
@@ -959,14 +969,28 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
           {t('dashboard.whatsappNumber')}
           <Badge variant="secondary" className="ml-2 text-xs">Si lazima</Badge>
         </Label>
-        <Input
-          id="contact_whatsapp_phone"
-          type="tel"
-          value={formData.contact_whatsapp_phone}
-          onChange={(e) => onInputChange('contact_whatsapp_phone', e.target.value)}
-          placeholder="+255712345678"
-          className={`transition-all duration-200 ${formData.contact_whatsapp_phone ? 'border-green-300 bg-green-50' : ''}`}
-        />
+        <div className="relative">
+          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600 font-medium pointer-events-none">
+            +255
+          </div>
+          <Input
+            id="contact_whatsapp_phone"
+            type="tel"
+            value={formData.contact_whatsapp_phone.replace(/^\+255/, '')}
+            onChange={(e) => {
+              const value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+              if (value === '') {
+                onInputChange('contact_whatsapp_phone', '');
+              } else {
+                const phoneNumber = value.startsWith('255') ? `+${value}` : `+255${value}`;
+                onInputChange('contact_whatsapp_phone', phoneNumber);
+              }
+            }}
+            placeholder="712345678"
+            className={`pl-16 transition-all duration-200 ${formData.contact_whatsapp_phone ? 'border-green-300 bg-green-50' : ''}`}
+            maxLength={9}
+          />
+        </div>
         {profile?.phone && formData.contact_whatsapp_phone === profile.phone && (
           <p className="text-xs text-green-600 flex items-center gap-1">
             <CheckCircle className="h-3 w-3" />
@@ -974,7 +998,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
           </p>
         )}
         <p className="text-xs text-gray-500">
-          {t('dashboard.whatsappOptional')}
+          {t('dashboard.whatsappOptional')} (Namba itaanza na +255 kiotomatiki)
         </p>
       </div>
 

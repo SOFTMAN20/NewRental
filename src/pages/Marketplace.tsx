@@ -108,11 +108,11 @@ const Marketplace = () => {
       },
       {
         id: 'mock-2',
-        title: 'Kitanda Complete 5×6 - Bed with Mattress',
-        description: 'Complete 5×6 feet bed setup with quality mattress. Special discount available! Work in progress - ready soon.',
+        title: 'Kitanda 5×6 - Bed Frame Only',
+        description: 'Quality 5×6 feet bed frame. Bed frame only - no mattress. Special discount available!',
         price: 400000,
         condition: 'like_new',
-        category_id: 'mattress',
+        category_id: 'furniture',
         location: 'MUST, Mbeya',
         images: ['/images/market image/kitanda.jpeg'],
         seller_id: 'mock-user',
@@ -121,7 +121,7 @@ const Marketplace = () => {
         views_count: 124,
         created_at: '2026-10-27T14:30:00.000Z',
         updated_at: '2026-10-27T14:30:00.000Z',
-        category: { id: 'mattress', name: 'Mattress', name_sw: 'Godoro', slug: 'mattress', icon: 'bed', parent_id: null, display_order: 4, created_at: '', updated_at: '' }
+        category: { id: 'furniture', name: 'Furniture', name_sw: 'Samani', slug: 'furniture', icon: 'sofa', parent_id: null, display_order: 1, created_at: '', updated_at: '' }
       },
       {
         id: 'mock-3',

@@ -171,7 +171,7 @@ const Dashboard = () => {
     bedrooms: '',
     bathrooms: '',
     area_sqm: '',
-    contact_phone: '',
+    contact_phone: '+255',
     contact_whatsapp_phone: '',
     electricity: false,
     water: false,
@@ -744,6 +744,15 @@ const Dashboard = () => {
 
   const handleEditProperty = (property: Property): void => {
     setEditingProperty(property);
+    
+    // Normalize phone numbers to ensure +255 prefix
+    const normalizePhone = (phone: string | null | undefined) => {
+      if (!phone) return '+255';
+      if (phone.startsWith('+255')) return phone;
+      if (phone.startsWith('255')) return `+${phone}`;
+      return `+255${phone.replace(/^\+/, '')}`;
+    };
+    
     setFormData({
       title: property.title || '',
       description: property.description || '',
@@ -757,9 +766,9 @@ const Dashboard = () => {
       transport_mode: (property as any).transport_mode || 'walking',
       amenities: property.amenities || {},
       images: property.images || [],
-      // Contact fields
-      contact_phone: property.contact_phone || profile?.phone || '',
-      contact_whatsapp_phone: property.contact_whatsapp_phone || profile?.phone || '',
+      // Contact fields - ensure +255 prefix
+      contact_phone: normalizePhone(property.contact_phone || profile?.phone),
+      contact_whatsapp_phone: property.contact_whatsapp_phone ? normalizePhone(property.contact_whatsapp_phone) : (profile?.phone ? normalizePhone(profile.phone) : ''),
       full_address: property.full_address || '',
       // Deprecated fields (kept for backwards compatibility)
       nearby_services: [],
@@ -836,6 +845,14 @@ const Dashboard = () => {
   };
 
   const resetForm = (): void => {
+    const normalizedPhone = profile?.phone 
+      ? (profile.phone.startsWith('+255') 
+        ? profile.phone 
+        : profile.phone.startsWith('255') 
+        ? `+${profile.phone}` 
+        : `+255${profile.phone.replace(/^\+/, '')}`)
+      : '+255';
+    
     setFormData({
       title: '',
       description: '',
@@ -846,8 +863,8 @@ const Dashboard = () => {
       bedrooms: '',
       bathrooms: '',
       area_sqm: '',
-      contact_phone: profile?.phone || '',
-      contact_whatsapp_phone: profile?.phone || '',
+      contact_phone: normalizedPhone,
+      contact_whatsapp_phone: normalizedPhone === '+255' ? '' : normalizedPhone,
       electricity: false,
       water: false,
       furnished: false,

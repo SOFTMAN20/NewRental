@@ -117,11 +117,11 @@ const MarketplaceItemDetail = () => {
       },
       'mock-2': {
         id: 'mock-2',
-        title: 'Kitanda Complete 5×6 - Bed with Mattress',
-        description: 'Complete 5×6 feet bed setup with quality mattress. Special discount offer!\n\n💰 PRICING:\n• Regular Price: TZS 450,000\n• Special Price: TZS 400,000 ✨\n• Save: TZS 50,000!\n\n📏 SPECIFICATIONS:\n• Size: 5 feet × 6 feet\n• Includes bed frame\n• Includes quality mattress\n• Strong wooden construction\n• Modern design\n\n⚠️ STATUS:\n• Kazi inafanyika (Work in progress)\n• Will be ready soon\n• Reserve now at special price!\n\nPerfect for couples or those who want extra sleeping space. High quality materials and craftsmanship.',
+        title: 'Kitanda 5×6 - Bed Frame Only',
+        description: 'Quality 5×6 feet bed frame. Strong wooden construction. Bed frame only - no mattress included.\n\n💰 PRICING:\n• Regular Price: TZS 450,000\n• Special Price: TZS 400,000 ✨\n• Save: TZS 50,000!\n\n📏 SPECIFICATIONS:\n• Size: 5 feet × 6 feet\n• Bed frame only (mattress NOT included)\n• Strong wooden construction\n• Modern design\n• Like new condition\n\n⚠️ STATUS:\n• Kazi inafanyika (Work in progress)\n• Will be ready soon\n• Reserve now at special price!\n\nPerfect for those who already have a mattress. High quality craftsmanship.',
         price: 400000,
         condition: 'like_new',
-        category_id: 'mattress',
+        category_id: 'furniture',
         location: 'MUST, Mbeya',
         images: ['/images/market image/kitanda.jpeg'],
         seller_id: 'mock-user-2',
@@ -130,7 +130,7 @@ const MarketplaceItemDetail = () => {
         views_count: 124,
         created_at: '2026-10-27T14:30:00.000Z',
         updated_at: '2026-10-27T14:30:00.000Z',
-        category: { id: 'mattress', name: 'Mattress', name_sw: 'Godoro', slug: 'mattress', icon: 'bed', parent_id: null, display_order: 4, created_at: '', updated_at: '' },
+        category: { id: 'furniture', name: 'Furniture', name_sw: 'Samani', slug: 'furniture', icon: 'sofa', parent_id: null, display_order: 1, created_at: '', updated_at: '' },
         seller: {
           id: 'mock-user-2',
           name: 'Mary Juma',
